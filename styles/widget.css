@@ -14,22 +14,6 @@
   box-sizing: border-box !important;
 }
 
-/* Hamburger button mounting animation */
-@keyframes slideInButton {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-.lawma-ai-widget .hamburger-button {
-  animation: slideInButton 0.3s ease-out forwards;
-}
-
 /* Ensure SVGs are visible */
 .lawma-ai-widget svg {
   display: block !important;

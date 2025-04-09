@@ -65,6 +65,7 @@ const Widget = ({ name, apiKey }: WidgetProps) => {
   const [inputMessage, setInputMessage] = useState('');
   const [isAiTyping, setIsAiTyping] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [isButtonVisible, setIsButtonVisible] = useState(false);
 
   console.log({ apiKey })
 
@@ -78,6 +79,10 @@ const Widget = ({ name, apiKey }: WidgetProps) => {
       once: false,
       mirror: true
     });
+
+    // Trigger button animation after a short delay
+    const timer = setTimeout(() => setIsButtonVisible(true), 100);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleSendMessage = () => {
@@ -113,7 +118,8 @@ const Widget = ({ name, apiKey }: WidgetProps) => {
       {!isExpanded && (
         <button
           onClick={() => setIsExpanded(true)}
-          className="hamburger-button tw-w-14 tw-h-14 tw-rounded-l-full tw-rounded-r-none tw-bg-black hover:tw-bg-gray-900 tw-text-white tw-flex tw-items-center tw-justify-center tw-shadow-lg tw-transition-all tw-duration-300 hover:tw-shadow-xl"
+          className={`tw-transform tw-transition-all tw-duration-300 tw-ease-out tw-w-14 tw-h-14 tw-rounded-l-full tw-rounded-r-none tw-bg-black hover:tw-bg-gray-900 tw-text-white tw-flex tw-items-center tw-justify-center tw-shadow-lg hover:tw-shadow-xl ${isButtonVisible ? 'tw-translate-x-0 tw-opacity-100' : 'tw-translate-x-full tw-opacity-0'
+            }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -1,3 +1,4 @@
+// @ts-ignore
 import WidgetModule from '../src/widget';
 
 // To satisfy nextjs component requirement

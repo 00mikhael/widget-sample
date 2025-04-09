@@ -24,6 +24,17 @@ A customizable AI chat widget that can be easily integrated into any web applica
 </script>
 ```
 
+### Vue.js
+```vue
+<script src="cdn/widget-sample@latest/widget.js"></script>
+<script>
+    LAWMAai.init({
+        name: 'Custom.ai',
+        apiKey: 'your-api-key'
+    });
+</script>
+```
+
 ### React (Next.js)
 ```typescript
 'use client';
@@ -48,33 +59,6 @@ export default function LoadWidget() {
     </div>
   );
 }
-```
-
-### Vue.js
-```vue
-<!-- Widget.vue -->
-<template>
-  <div></div>
-</template>
-
-<script>
-export default {
-  name: 'LoadWidget',
-  mounted() {
-    const script = document.createElement('script');
-    script.src = 'cdn/widget-sample@latest/widget.js';
-    script.onload = () => {
-      if (window.LAWMAai) {
-        window.LAWMAai.init({
-          name: 'Custom.ai',
-          apiKey: 'your-api-key'
-        });
-      }
-    };
-    document.body.appendChild(script);
-  }
-}
-</script>
 ```
 
 ## Configuration Options

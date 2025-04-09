@@ -113,7 +113,7 @@ const Widget = ({ name, apiKey }: WidgetProps) => {
       {!isExpanded && (
         <button
           onClick={() => setIsExpanded(true)}
-          className="tw-w-14 tw-h-14 tw-rounded-l-full tw-rounded-r-none tw-bg-black hover:tw-bg-gray-900 tw-text-white tw-flex tw-items-center tw-justify-center tw-shadow-lg tw-transition-all tw-duration-300 hover:tw-shadow-xl"
+          className="hamburger-button tw-w-14 tw-h-14 tw-rounded-l-full tw-rounded-r-none tw-bg-black hover:tw-bg-gray-900 tw-text-white tw-flex tw-items-center tw-justify-center tw-shadow-lg tw-transition-all tw-duration-300 hover:tw-shadow-xl"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

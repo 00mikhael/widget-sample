@@ -5,17 +5,12 @@ A customizable AI chat widget that can be easily integrated into any web applica
 ## Features
 - Easy integration with any web application
 - Customizable chat interface
-- Sample prompts for user guidance
-- Real-time typing indicators
-- Responsive design with slide-in panel
-- Dark mode support
-- Timestamp display for messages
 
 ## Installation & Setup
 
 ### Vanilla JavaScript
 ```html
-<script src="cdn/widget-sample@latest/widget.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/00mikhael/widget-sample@latest/dist/widget.js"></script>
 <script>
     LAWMAai.init({
         name: 'Custom.ai',
@@ -26,7 +21,7 @@ A customizable AI chat widget that can be easily integrated into any web applica
 
 ### Vue.js
 ```vue
-<script src="cdn/widget-sample@latest/widget.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/00mikhael/widget-sample@latest/dist/widget.js"></script>
 <script>
     LAWMAai.init({
         name: 'Custom.ai',
@@ -44,7 +39,7 @@ export default function LoadWidget() {
   return (
     <div>
       <Script
-        src="cdn/widget-sample@latest/dist/widget.js"
+        src="https://cdn.jsdelivr.net/gh/00mikhael/widget-sample@latest/dist/widget.js"
         strategy="lazyOnload"
         onLoad={() => {
           if (typeof window !== 'undefined' && window.LAWMAai) {

@@ -133,7 +133,7 @@ const Widget = ({ name, apiKey }: WidgetProps) => {
       )}
       {/* Slide Pane */}
       <div
-        className={`tw-fixed tw-top-0 tw-right-0 tw-h-full tw-w-[400px] tw-bg-white tw-shadow-2xl tw-transform tw-transition-transform tw-duration-300 tw-ease-in-out tw-isolate ${isExpanded ? 'tw-translate-x-0' : 'tw-translate-x-full'
+        className={`tw-fixed tw-top-0 tw-right-0 tw-h-full tw-w-[400px] tw-bg-white tw-border-l tw-border-gray-100 tw-shadow-xl tw-transform tw-transition-transform tw-duration-300 tw-ease-in-out tw-isolate ${isExpanded ? 'tw-translate-x-0' : 'tw-translate-x-full'
           }`}
       >
         <div className="tw-p-4 tw-flex tw-justify-between tw-items-center tw-border-b tw-bg-gray-50">

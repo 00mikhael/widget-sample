@@ -105,7 +105,7 @@ const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
       {!isExpanded && (
         <button
           onClick={() => setIsExpanded(true)}
-          className="hamburger-button tw-rounded-l-full tw-rounded-r-none tw-bg-black hover:tw-bg-gray-900 tw-text-white tw-flex tw-items-center tw-justify-center tw-shadow-lg tw-transition-all tw-duration-500 hover:tw-shadow-xl tw-gap-2 tw-p-4"
+          className="hamburger-button tw-rounded-l-full tw-rounded-r-none tw-bg-[#1e2530] hover:tw-bg-gray-900 tw-text-white tw-flex tw-items-center tw-justify-center tw-shadow-lg tw-transition-all tw-duration-500 hover:tw-shadow-xl tw-gap-2 tw-p-4"
         >
           <AiOutlineRobot size={24} />
           <div>Ask AI</div>

@@ -44,9 +44,12 @@ type Message = {
 interface WidgetProps extends React.HTMLProps<HTMLDivElement> {
   name: string;
   apiKey: string;
+  primaryColor?: string;
 };
 
-const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
+const DEFAULT_PRIMARY_COLOR = '#1e2530';
+
+const Widget = ({ name, apiKey, primaryColor = DEFAULT_PRIMARY_COLOR, style, ...otherProps }: WidgetProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -105,7 +108,8 @@ const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
       {!isExpanded && (
         <button
           onClick={() => setIsExpanded(true)}
-          className="hamburger-button tw-rounded-l-full tw-rounded-r-none tw-bg-[#1e2530] hover:tw-bg-gray-900 tw-text-white tw-flex tw-items-center tw-justify-center tw-shadow-lg tw-transition-all tw-duration-500 hover:tw-shadow-xl tw-gap-2 tw-p-4"
+          style={{ backgroundColor: primaryColor }}
+          className="hamburger-button tw-rounded-l-full tw-rounded-r-none hover:tw-opacity-90 tw-text-white tw-flex tw-items-center tw-justify-center tw-shadow-lg tw-transition-all tw-duration-500 hover:tw-shadow-xl tw-gap-2 tw-p-4"
         >
           <AiOutlineRobot size={24} />
           <div>Ask AI</div>
@@ -118,7 +122,7 @@ const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
           ${isFullscreen ? 'tw-inset-0 tw-h-screen tw-z-50' : 'tw-top-0 tw-right-0 tw-h-full tw-w-[500px]'}
           ${isExpanded ? 'tw-translate-x-0' : 'tw-translate-x-full'}`}
       >
-        <div className={`tw-px-4 tw-py-3 tw-flex tw-justify-between tw-items-center tw-bg-[#1e2530] tw-text-white
+        <div style={{ backgroundColor: primaryColor }} className={`tw-px-4 tw-py-3 tw-flex tw-justify-between tw-items-center tw-text-white
           ${isFullscreen ? 'tw-transition-all tw-duration-1000 tw-ease-out' : 'tw-transition-transform tw-duration-500 tw-ease-in-out'}
           ${isFullscreen ? 'tw-w-full' : ''}`}>
           <h2 className="tw-text-xl">{name}</h2>
@@ -197,8 +201,9 @@ const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
                   }`}
               >
                 <div
+                  style={message.sender === 'user' ? { backgroundColor: primaryColor } : undefined}
                   className={`tw-max-w-[80%] tw-rounded-lg tw-p-4 ${message.sender === 'user'
-                    ? 'tw-bg-[#1e2530] tw-text-white'
+                    ? 'tw-text-white'
                     : 'tw-bg-gray-100 tw-text-gray-800'
                     }`}
                 >

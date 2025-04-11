@@ -64,3 +64,25 @@
 .lawma-ai-widget .typing-dot:nth-child(3) {
   animation-delay: 0s;
 }
+
+/* AI message styles */
+.lawma-ai-widget .ai-message {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+/* Typewriter cursor animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.lawma-ai-widget .typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background-color: #1e2530;
+  margin-left: 2px;
+  animation: blink 1s infinite;
+  vertical-align: middle;
+}

@@ -4,6 +4,7 @@ import { AiOutlineRobot } from "react-icons/ai";
 import '../styles/widget.css';
 import 'aos/dist/aos.css';
 import AOS from 'aos';
+import TypewriterText from './components/TypewriterText';
 
 // Sample prompts component
 const SamplePrompts = ({ onPromptClick: sendMessage }: { onPromptClick: (prompt: string) => void }) => (
@@ -201,16 +202,18 @@ const Widget = ({ name, apiKey, primaryColor = DEFAULT_PRIMARY_COLOR, style, ...
                   }`}
               >
                 <div
-                  style={message.sender === 'user' ? { backgroundColor: primaryColor } : undefined}
-                  className={`tw-max-w-[80%] tw-rounded-lg tw-p-4 ${message.sender === 'user'
-                    ? 'tw-text-white'
-                    : 'tw-bg-gray-100 tw-text-gray-800'
+                  style={message.sender === 'user' ? { backgroundColor: `#F8F8F8` } : undefined}
+                  className={`tw-max-w-[80%] ${message.sender === 'user'
+                    ? 'tw-bg-[#1e2530] tw-text-gray-800 tw-px-4 tw-py-2 tw-rounded-2xl'
+                    : 'tw-text-gray-800 tw-pl-1'
                     }`}
                 >
-                  <p className="tw-leading-relaxed">{message.content}</p>
-                  <p className={`tw-text-xs tw-mt-2 ${message.sender === 'user' ? 'tw-text-gray-300' : 'tw-text-gray-500'
-                    }`}>
-                    {formatTime(message.timestamp)}
+                  <p className="tw-leading-relaxed">
+                    {message.sender === 'ai' ? (
+                      <TypewriterText text={message.content} />
+                    ) : (
+                      message.content
+                    )}
                   </p>
                 </div>
               </div>

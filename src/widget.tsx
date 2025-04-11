@@ -54,12 +54,12 @@ type Message = {
   timestamp: Date;
 };
 
-type WidgetProps = {
+interface WidgetProps extends React.HTMLProps<HTMLDivElement> {
   name: string;
   apiKey: string;
 };
 
-const Widget = ({ name, apiKey }: WidgetProps) => {
+const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
@@ -247,7 +247,7 @@ const widgetExports = {
     document.body.appendChild(container);
 
     const root = createRoot(container);
-    root.render(<Widget name={options.name} apiKey={options.apiKey} />);
+    root.render(<Widget {...options} />);
   }
 };
 

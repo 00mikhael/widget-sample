@@ -47,6 +47,7 @@ interface WidgetProps extends React.HTMLProps<HTMLDivElement> {
 
 const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isAiTyping, setIsAiTyping] = useState(false);
@@ -65,6 +66,10 @@ const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
       mirror: true
     });
   }, []);
+
+  useEffect(() => {
+    if (!isExpanded) setIsFullscreen(false)
+  }, [isExpanded]);
 
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return;
@@ -99,7 +104,7 @@ const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
       {!isExpanded && (
         <button
           onClick={() => setIsExpanded(true)}
-          className="hamburger-button tw-w-14 tw-h-14 tw-rounded-l-full tw-rounded-r-none tw-bg-black hover:tw-bg-gray-900 tw-text-white tw-flex tw-items-center tw-justify-center tw-shadow-lg tw-transition-all tw-duration-300 hover:tw-shadow-xl"
+          className="hamburger-button tw-w-14 tw-h-14 tw-rounded-l-full tw-rounded-r-none tw-bg-black hover:tw-bg-gray-900 tw-text-white tw-flex tw-items-center tw-justify-center tw-shadow-lg tw-transition-all tw-duration-500 hover:tw-shadow-xl"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -119,9 +124,14 @@ const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
       )}
       {/* Slide Pane */}
       <div
-        className={`tw-fixed tw-top-0 tw-right-0 tw-h-full tw-w-[400px] tw-bg-white tw-shadow-xl tw-transform tw-transition-transform tw-duration-300 tw-ease-in-out tw-isolate ${isExpanded ? 'tw-translate-x-0' : 'tw-translate-x-full'}`}
+        className={`tw-fixed tw-bg-white tw-shadow-xl tw-transform tw-isolate
+          ${isFullscreen ? 'tw-transition-all tw-duration-1000 tw-ease-out' : 'tw-transition-transform tw-duration-500 tw-ease-in-out'}
+          ${isFullscreen ? 'tw-inset-0 tw-h-screen tw-z-50' : 'tw-top-0 tw-right-0 tw-h-full tw-w-[500px]'}
+          ${isExpanded ? 'tw-translate-x-0' : 'tw-translate-x-full'}`}
       >
-        <div className="tw-px-4 tw-py-3 tw-flex tw-justify-between tw-items-center tw-bg-[#1e2530] tw-text-white">
+        <div className={`tw-px-4 tw-py-3 tw-flex tw-justify-between tw-items-center tw-bg-[#1e2530] tw-text-white
+          ${isFullscreen ? 'tw-transition-all tw-duration-1000 tw-ease-out' : 'tw-transition-transform tw-duration-500 tw-ease-in-out'}
+          ${isFullscreen ? 'tw-w-full' : ''}`}>
           <h2 className="tw-text-xl">Mixhers AI Assistant</h2>
           <div className="tw-flex tw-items-center tw-gap-4">
             <button className="tw-p-2 tw-text-[#ff4d4d] hover:tw-opacity-80">
@@ -130,13 +140,25 @@ const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
                 <path d="M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
-            <button className="tw-p-2 hover:tw-text-gray-300">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15 3H21V9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M9 21H3V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M21 3L14 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M3 21L10 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+            <button
+              onClick={() => setIsFullscreen(!isFullscreen)}
+              className="tw-p-2 hover:tw-text-gray-300"
+            >
+              {isFullscreen ? (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 3H3V9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M15 21H21V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M3 3L10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M21 21L14 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              ) : (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15 3H21V9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M9 21H3V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M21 3L14 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M3 21L10 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
             </button>
             <button
               onClick={() => setIsExpanded(false)}
@@ -149,9 +171,9 @@ const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
             </button>
           </div>
         </div>
-        <div className="tw-flex tw-flex-col tw-h-[calc(100%-64px)]">
+        <div className={`tw-flex tw-flex-col ${isFullscreen ? 'tw-transition-all tw-duration-1000 tw-ease-out' : 'tw-transition-transform tw-duration-500 tw-ease-in-out'} ${isFullscreen ? 'tw-h-[calc(100vh-64px)]' : 'tw-h-[calc(100%-64px)]'}`}>
           {/* Messages container */}
-          <div className="tw-flex-1 tw-overflow-y-auto tw-p-6 tw-space-y-6 tw-relative tw-bg-white">
+          <div className={`tw-flex-1 tw-overflow-y-auto tw-p-6 tw-space-y-6 tw-relative tw-bg-white ${isFullscreen ? 'tw-transition-all tw-duration-1000 tw-ease-out' : 'tw-transition-transform tw-duration-500 tw-ease-in-out'} ${isFullscreen ? 'tw-w-full' : ''}`}>
             {messages.length === 0 && (
               <div className="tw-absolute tw-top-1/2 tw-left-1/2 tw-transform -tw-translate-x-1/2 -tw-translate-y-1/2 tw-w-full">
                 <SamplePrompts onPromptClick={(prompt) => {
@@ -207,8 +229,8 @@ const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
             </div>
           )}
           {/* Input area */}
-          <div className="tw-border-t tw-p-4 tw-pb-6 tw-bg-white">
-            <div className="tw-flex tw-space-x-3">
+          <div className={`tw-border-t tw-p-4 tw-pb-6 tw-bg-white ${isFullscreen ? 'tw-w-full' : ''}`}>
+            <div className={`tw-flex tw-space-x-3 ${isFullscreen ? 'tw-max-w-full' : 'tw-max-w-3xl tw-mx-auto'}`}>
               <div className="tw-flex-1 tw-relative">
                 <input
                   type="text"
@@ -216,7 +238,7 @@ const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                   placeholder="Ask AI about Mixhers' hormone support..."
-                  className="tw-w-full tw-pr-10 tw-pl-4 tw-py-3 tw-border tw-border-gray-200 tw-rounded-2xl focus:tw-outline-none focus:tw-border-gray-400 tw-transition-all tw-duration-300"
+                  className="tw-w-full tw-pr-10 tw-pl-4 tw-py-3 tw-border tw-border-gray-200 tw-rounded-2xl focus:tw-outline-none focus:tw-border-gray-400 tw-transition-all tw-duration-500"
                 />
                 <button className="tw-absolute tw-right-4 tw-top-1/2 -tw-translate-y-1/2 tw-text-gray-400 hover:tw-text-gray-600">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

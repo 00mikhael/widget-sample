@@ -6,30 +6,16 @@ import AOS from 'aos';
 
 // Sample prompts component
 const SamplePrompts = ({ onPromptClick: sendMessage }: { onPromptClick: (prompt: string) => void }) => (
-  <div className="tw-flex tw-flex-col tw-items-center tw-gap-4 tw-text-center tw-p-6">
-    <p className="tw-text-gray-600 tw-mb-2 tw-font-medium">Try asking about:</p>
-    {[
-      "What are the waste collection days in my area?",
-      "How do I report illegal dumping?"
-    ].map((prompt) => (
-      <button
-        key={prompt}
-        onClick={() => sendMessage(prompt)}
-        className="tw-bg-gray-50 hover:tw-bg-gray-100 tw-text-gray-800 tw-px-5 tw-py-3.5 tw-rounded-xl tw-text-sm tw-transition-all tw-duration-300 tw-max-w-[280px] tw-text-left tw-shadow-sm hover:tw-shadow-md tw-w-full"
-      >
-        {prompt}
-      </button>
-    ))}
+  <div className="tw-flex tw-items-center tw-justify-center tw-h-full">
+    <div className="tw-text-[28px] tw-text-[#6B7280] tw-font-light tw-text-center tw-max-w-[80%]">
+      Ask AI about Mixhers' hormone support...
+    </div>
   </div>
 );
 
 // Typing indicator component
 const TypingIndicator = () => (
-  <div
-    className="tw-flex tw-space-x-2 tw-p-3.5 tw-bg-gray-100 tw-rounded-xl tw-max-w-[80%]"
-    data-aos="fade"
-    data-aos-duration="500"
-  >
+  <div className="tw-flex tw-space-x-2 tw-p-3.5 tw-bg-gray-100 tw-rounded-lg tw-max-w-[80%]">
     <div className="tw-flex tw-space-x-1">
       <div className="tw-w-2 tw-h-2 tw-bg-gray-400 tw-rounded-full typing-dot"></div>
       <div className="tw-w-2 tw-h-2 tw-bg-gray-400 tw-rounded-full typing-dot"></div>
@@ -133,30 +119,35 @@ const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
       )}
       {/* Slide Pane */}
       <div
-        className={`tw-fixed tw-top-0 tw-right-0 tw-h-full tw-w-[400px] tw-bg-white tw-border-l tw-border-gray-100 tw-shadow-xl tw-transform tw-transition-transform tw-duration-300 tw-ease-in-out tw-isolate ${isExpanded ? 'tw-translate-x-0' : 'tw-translate-x-full'
-          }`}
+        className={`tw-fixed tw-top-0 tw-right-0 tw-h-full tw-w-[400px] tw-bg-white tw-shadow-xl tw-transform tw-transition-transform tw-duration-300 tw-ease-in-out tw-isolate ${isExpanded ? 'tw-translate-x-0' : 'tw-translate-x-full'}`}
       >
-        <div className="tw-p-4 tw-flex tw-justify-between tw-items-center tw-border-b tw-bg-gray-50">
-          <h2 className="tw-text-xl tw-font-semibold">{name}</h2>
-          <button
-            onClick={() => setIsExpanded(false)}
-            className="tw-p-2 hover:tw-bg-gray-100 tw-rounded-full tw-shrink-0"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="tw-h-6 tw-w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+        <div className="tw-px-4 tw-py-3 tw-flex tw-justify-between tw-items-center tw-bg-[#1e2530] tw-text-white">
+          <h2 className="tw-text-xl">Mixhers AI Assistant</h2>
+          <div className="tw-flex tw-items-center tw-gap-4">
+            <button className="tw-p-2 tw-text-[#ff4d4d] hover:tw-opacity-80">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 6H5H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <button className="tw-p-2 hover:tw-text-gray-300">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 3H21V9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M9 21H3V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M21 3L14 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M3 21L10 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <button
+              onClick={() => setIsExpanded(false)}
+              className="tw-p-2 hover:tw-text-gray-300"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </div>
         </div>
         <div className="tw-flex tw-flex-col tw-h-[calc(100%-64px)]">
           {/* Messages container */}
@@ -195,10 +186,10 @@ const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
                   }`}
               >
                 <div
-                  className={`tw-max-w-[80%] tw-rounded-2xl tw-p-4 ${message.sender === 'user'
-                    ? 'tw-bg-gradient-to-br tw-from-gray-800 tw-to-black tw-text-white tw-shadow-md'
-                    : 'tw-bg-gradient-to-br tw-from-gray-50 tw-to-gray-200 tw-text-gray-800 tw-shadow-sm'
-                    } tw-shadow-md tw-transition-all tw-duration-300`}
+                  className={`tw-max-w-[80%] tw-rounded-lg tw-p-4 ${message.sender === 'user'
+                    ? 'tw-bg-[#1e2530] tw-text-white'
+                    : 'tw-bg-gray-100 tw-text-gray-800'
+                    }`}
                 >
                   <p className="tw-leading-relaxed">{message.content}</p>
                   <p className={`tw-text-xs tw-mt-2 ${message.sender === 'user' ? 'tw-text-gray-300' : 'tw-text-gray-500'
@@ -216,22 +207,26 @@ const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
             </div>
           )}
           {/* Input area */}
-          <div className="tw-border-t tw-p-4 tw-pb-6 tw-bg-gray-50">
+          <div className="tw-border-t tw-p-4 tw-pb-6 tw-bg-white">
             <div className="tw-flex tw-space-x-3">
-              <input
-                type="text"
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Type your message..."
-                className="tw-flex-1 tw-border tw-rounded-xl tw-px-5 tw-py-3 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-gray-800 focus:tw-border-transparent tw-transition-all tw-duration-300 hover:tw-border-gray-600 tw-bg-white"
-              />
-              <button
-                onClick={handleSendMessage}
-                className="tw-bg-gradient-to-r tw-from-gray-800 tw-to-black tw-text-white tw-px-6 tw-py-3 tw-rounded-xl hover:tw-opacity-90 tw-transition-all tw-duration-300 tw-shadow-md hover:tw-shadow-lg"
-              >
-                Send
-              </button>
+              <div className="tw-flex-1 tw-relative">
+                <input
+                  type="text"
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  placeholder="Ask AI about Mixhers' hormone support..."
+                  className="tw-w-full tw-pr-10 tw-pl-4 tw-py-3 tw-border tw-border-gray-200 tw-rounded-2xl focus:tw-outline-none focus:tw-border-gray-400 tw-transition-all tw-duration-300"
+                />
+                <button className="tw-absolute tw-right-4 tw-top-1/2 -tw-translate-y-1/2 tw-text-gray-400 hover:tw-text-gray-600">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21.44 11.05L12.25 20.24C11.1242 21.3658 9.59718 21.9983 8.005 21.9983C6.41282 21.9983 4.88584 21.3658 3.76 20.24C2.63416 19.1142 2.00166 17.5872 2.00166 15.995C2.00166 14.4028 2.63416 12.8758 3.76 11.75L12.95 2.56C13.7006 1.80943 14.7185 1.38777 15.78 1.38777C16.8415 1.38777 17.8594 1.80943 18.61 2.56C19.3606 3.31057 19.7822 4.32855 19.7822 5.39C19.7822 6.45145 19.3606 7.46943 18.61 8.22L9.41 17.41C9.03472 17.7853 8.52573 17.9961 7.995 17.9961C7.46427 17.9961 6.95528 17.7853 6.58 17.41C6.20472 17.0347 5.99389 16.5257 5.99389 15.995C5.99389 15.4643 6.20472 14.9553 6.58 14.58L15.07 6.1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div className="tw-text-center tw-text-sm tw-text-gray-500 tw-mt-4">
+              Powered by LAWMA.ai
             </div>
           </div>
         </div>

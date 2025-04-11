@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
+import { AiOutlineRobot } from "react-icons/ai";
 import '../styles/widget.css';
 import 'aos/dist/aos.css';
 import AOS from 'aos';
@@ -104,35 +105,23 @@ const Widget = ({ name, apiKey, style, ...otherProps }: WidgetProps) => {
       {!isExpanded && (
         <button
           onClick={() => setIsExpanded(true)}
-          className="hamburger-button tw-w-14 tw-h-14 tw-rounded-l-full tw-rounded-r-none tw-bg-black hover:tw-bg-gray-900 tw-text-white tw-flex tw-items-center tw-justify-center tw-shadow-lg tw-transition-all tw-duration-500 hover:tw-shadow-xl"
+          className="hamburger-button tw-rounded-l-full tw-rounded-r-none tw-bg-black hover:tw-bg-gray-900 tw-text-white tw-flex tw-items-center tw-justify-center tw-shadow-lg tw-transition-all tw-duration-500 hover:tw-shadow-xl tw-gap-2 tw-p-4"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="tw-h-6 tw-w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16m-7 6h7"
-            />
-          </svg>
+          <AiOutlineRobot size={24} />
+          <div>Ask AI</div>
         </button>
       )}
       {/* Slide Pane */}
       <div
         className={`tw-fixed tw-bg-white tw-shadow-xl tw-transform tw-isolate
-          ${isFullscreen ? 'tw-transition-all tw-duration-1000 tw-ease-out' : 'tw-transition-transform tw-duration-500 tw-ease-in-out'}
+          ${isFullscreen ? 'tw-transition-all tw-duration-500 tw-ease-out' : 'tw-transition-transform tw-duration-500 tw-ease-in-out'}
           ${isFullscreen ? 'tw-inset-0 tw-h-screen tw-z-50' : 'tw-top-0 tw-right-0 tw-h-full tw-w-[500px]'}
           ${isExpanded ? 'tw-translate-x-0' : 'tw-translate-x-full'}`}
       >
         <div className={`tw-px-4 tw-py-3 tw-flex tw-justify-between tw-items-center tw-bg-[#1e2530] tw-text-white
           ${isFullscreen ? 'tw-transition-all tw-duration-1000 tw-ease-out' : 'tw-transition-transform tw-duration-500 tw-ease-in-out'}
           ${isFullscreen ? 'tw-w-full' : ''}`}>
-          <h2 className="tw-text-xl">Mixhers AI Assistant</h2>
+          <h2 className="tw-text-xl">{name}</h2>
           <div className="tw-flex tw-items-center tw-gap-4">
             <button className="tw-p-2 tw-text-[#ff4d4d] hover:tw-opacity-80">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

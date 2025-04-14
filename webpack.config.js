@@ -71,6 +71,20 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.svg$/,
+        issuer: /\.[jt]sx?$/,
+        use: [
+          {
+            loader: '@svgr/webpack',
+            options: {
+              svgo: true,
+              ref: true,
+              titleProp: true,
+            }
+          }
+        ]
       }
     ]
   },

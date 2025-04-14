@@ -70,7 +70,12 @@ const ChatContent: React.FC<ChatContentProps> = ({
   return (
     <div
       ref={chatContentRef}
-      className="tw-absolute tw-inset-0 tw-overflow-y-auto tw-overscroll-none tw-p-4 tw-space-y-4"
+      className={`
+        tw-absolute tw-inset-0 tw-overflow-y-auto
+        tw-overscroll-none tw-p-4 tw-space-y-4
+        hide-scrollbar
+        ${showWelcome ? 'tw-h-auto' : 'tw-h-full'}
+      `}
       style={{ WebkitOverflowScrolling: 'touch' }}
     >
 
@@ -90,7 +95,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
         </div>
       )}
 
-      <div className="tw-flex tw-flex-col tw-space-y-4 tw-min-h-full">
+      <div className={`tw-flex tw-flex-col tw-space-y-4 ${!showWelcome ? 'tw-min-h-full' : ''}`}>
         {previousMessages.map((message) => (
           <ChatMessage
             key={message.id}

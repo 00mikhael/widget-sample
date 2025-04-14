@@ -232,24 +232,14 @@
   pointer-events: none;
 }
 
-/* Custom scrollbar */
-.lawma-ai-widget .chat-content::-webkit-scrollbar {
-  width: 6px;
+/* Hide scrollbar */
+.lawma-ai-widget .hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
 }
 
-.lawma-ai-widget .chat-content::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 3px;
-}
-
-.lawma-ai-widget .chat-content::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-  transition: background 0.2s ease;
-}
-
-.lawma-ai-widget .chat-content::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
+.lawma-ai-widget .hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
 }
 
 /* Scroll to bottom button */

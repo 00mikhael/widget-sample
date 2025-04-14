@@ -1,6 +1,6 @@
 :root {
-  --chat-primary-color: #007bff; /* Default blue color if none provided */
-  --chat-primary-lighter: color-mix(in srgb, var(--chat-primary-color) 80%, white);
+  --chat-primary-color: #29465B; /* Default blue color if none provided */
+  --chat-primary-lighter: color-mix(in srgb, var(--chat-primary-color) 95%, white);
   --chat-primary-darker: color-mix(in srgb, var(--chat-primary-color) 80%, black);
 }
 

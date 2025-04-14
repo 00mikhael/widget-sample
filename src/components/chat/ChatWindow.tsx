@@ -13,11 +13,13 @@ interface ChatWindowProps {
   uploadedFileName?: string;
   chatContentRef: React.RefObject<HTMLDivElement>;
   primaryColor?: string;
+  isFullscreen: boolean;
   onClose: () => void;
   onClearChat: (event?: React.MouseEvent) => void;
   onSendMessage: (messageText: string) => void;
   onFileUpload: (file: File) => void;
   onRemoveFile: () => void;
+  onToggleFullscreen: () => void;
   // onNavigateToAskAi: () => void; // Add if needed
 }
 
@@ -30,11 +32,13 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   error,
   uploadedFileName,
   chatContentRef,
+  isFullscreen,
   onClose,
   onClearChat,
   onSendMessage,
   onFileUpload,
   onRemoveFile,
+  onToggleFullscreen
   // onNavigateToAskAi
 }) => {
   // We control visibility via transform based on isOpen prop
@@ -42,7 +46,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
 
   return (
     <div
-      className={`tw-fixed tw-inset-y-0 tw-right-0 tw-w-[32rem] tw-z-[9999] tw-transform tw-transition-transform tw-duration-300 tw-flex tw-flex-col ${transformClass}`}
+      className={`tw-fixed tw-inset-y-0 tw-right-0 ${isFullscreen ? 'tw-w-full' : 'tw-w-[32rem]'} tw-z-[9999] tw-transform tw-transition-transform tw-duration-300 tw-flex tw-flex-col ${transformClass}`}
       role="dialog"
       aria-modal="true"
       aria-labelledby="chat-widget-title"
@@ -54,7 +58,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           onClose={onClose}
           onClearChat={onClearChat}
           primaryColor={primaryColor}
-        // onNavigateToAskAi={onNavigateToAskAi} // Pass if needed
+          isFullscreen={isFullscreen}
+          onToggleFullscreen={onToggleFullscreen}
         />
 
         {/* Chat Content Area */}

@@ -5,17 +5,11 @@ interface ChatHeaderProps {
   onClose: () => void;
   onClearChat: (event: React.MouseEvent) => void;
   primaryColor?: string;
-  // onNavigateToAskAi?: () => void; // Or handle navigation directly here
+  isFullscreen: boolean;
+  onToggleFullscreen: () => void;
 }
 
-const ChatHeader: React.FC<ChatHeaderProps> = ({ onClose, onClearChat }) => {
-
-  const handleNavigateToAskAi = () => {
-    // Close the widget *before* navigating
-    onClose();
-    // Navigate to the full Ask AI page
-    // navigate('/askai');
-  };
+const ChatHeader: React.FC<ChatHeaderProps> = ({ onClose, onClearChat, isFullscreen, onToggleFullscreen }) => {
 
   return (
     <div className="tw-flex tw-items-center tw-justify-between primary-bg tw-p-4 tw-text-white">
@@ -24,27 +18,33 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onClose, onClearChat }) => {
         {/* Clear Chat Button */}
         <button
           onClick={onClearChat}
-          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl hover:tw-bg-red-50 hover:tw-scale-105 tw-transition-all tw-transform"
+          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl hover:tw-scale-105 tw-transition-all tw-transform"
           aria-label="Clear chat history"
         >
           <Delete size={20} className="tw-text-red-500" />
         </button>
 
-        {/* Navigate to Ask AI Button */}
+        {/* Fullscreen Toggle Button */}
         <button
-          onClick={handleNavigateToAskAi}
-          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl tw-text-gray-300 hover:primary-lighten hover:tw-scale-105 tw-transition-all tw-transform"
-          aria-label="Open full Ask AI page"
+          onClick={onToggleFullscreen}
+          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl tw-text-gray-300 hover:tw-scale-105 tw-transition-all tw-transform"
+          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="tw-w-5 tw-h-5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
-          </svg>
+          {isFullscreen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="tw-w-5 tw-h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 9V4.5M9 9H4.5M15 9V4.5M15 9H19.5M9 15v4.5M9 15H4.5M15 15v4.5M15 15H19.5" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="tw-w-5 tw-h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+            </svg>
+          )}
         </button>
 
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl tw-text-gray-300 hover:primary-lighten hover:tw-scale-105 tw-transition-all tw-transform"
+          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl tw-text-gray-300 hover:tw-scale-105 tw-transition-all tw-transform"
           aria-label="Close chat widget"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="tw-w-5 tw-h-5">

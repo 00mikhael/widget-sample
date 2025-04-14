@@ -18,6 +18,7 @@ interface WidgetProps {
 
 const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, position = 'center-right' }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [previousMessages, setPreviousMessages] = useState<Message[]>([]);
   const [currentChat, setCurrentChat] = useState<CurrentChat>({ user: null, ai: null });
@@ -164,6 +165,10 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, positio
     setIsOpen(prev => !prev);
   }, []);
 
+  const toggleFullscreen = useCallback(() => {
+    setIsFullscreen(prev => !prev);
+  }, []);
+
   const handleClearChat = useCallback(async (event?: React.MouseEvent) => {
     event?.stopPropagation(); // Prevent event bubbling if called from button click
     setUploadedMedia(null); // Clear any pending upload
@@ -288,11 +293,13 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, positio
         // @ts-ignore
         chatContentRef={chatContentRef}
         primaryColor={primaryColor}
+        isFullscreen={isFullscreen}
         onClose={toggleChat}
         onClearChat={handleClearChat}
         onSendMessage={handleSendMessage}
         onFileUpload={handleFileUpload}
         onRemoveFile={handleRemoveFile}
+        onToggleFullscreen={toggleFullscreen}
       // Add onNavigateToAskAi prop if needed
       />
 

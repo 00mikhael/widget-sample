@@ -13,6 +13,7 @@ export interface Message {
   content_type?: 'text' | 'text_image';
   agent?: string;
   conversation_id?: string;
+  image_url?: string;
 }
 
 export interface CurrentChat {

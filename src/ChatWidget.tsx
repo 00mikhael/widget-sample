@@ -165,6 +165,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
       timestamp: new Date().toLocaleTimeString(),
       sender: 'user',
       content_type: uploadedMedia ? 'text_image' : 'text',
+      image_url: uploadedMedia?.url // Add image URL for preview
     };
 
     // Move previous turn to history

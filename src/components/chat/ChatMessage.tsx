@@ -60,6 +60,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
   }, [isUser, isStreaming, message.content, message.id]); // Re-run if streaming status or content changes
 
   const parsedContent = parseMessage(message.content);
+  const isImageOnly = message.content_type === 'text_image' && !message.content.trim();
 
   return (
     <div
@@ -67,39 +68,63 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
         tw-flex tw-flex-col
         ${isUser ? 'tw-items-end' : 'tw-items-start'}
         ${isCurrentMessage ? 'user-message-animate' : ''}
+        tw-w-full
       `}
     >
-      <div
-        className={`
-          tw-max-w-[80%] tw-rounded-2xl tw-px-4 tw-py-3
-          tw-text-gray-900
-          tw-transition-all tw-duration-200
-          hover:tw-shadow-md message-content
-          ${isUser ? 'tw-bg-gray-100 hover:tw-bg-gray-200 user-message' : 'ai-message'}
-        `}
-      >
-        {/* Add timestamp */}
-        <div className="message-timestamp">
-          {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-        </div>
-        {/* Use dangerouslySetInnerHTML for parsed HTML content */}
-        {/* For AI messages intended for streaming, use the ref */}
-        {!isUser && isStreaming ? (
-          <span ref={typedElementRef} />
-        ) : (
-          <div dangerouslySetInnerHTML={{ __html: parsedContent }}></div>
+      <div className={`tw-flex tw-flex-col ${isUser ? 'tw-items-end' : 'tw-items-start'} tw-w-full tw-gap-2`}>
+        {/* Show image preview for text_image type */}
+        {message.content_type === 'text_image' && message.image_url && (
+          <div className="tw-max-w-[150px] tw-rounded-lg tw-overflow-hidden tw-relative image-container">
+            <img
+              src={message.image_url}
+              alt="Attached"
+              className="tw-w-full tw-h-auto tw-rounded-lg"
+              loading="lazy"
+            />
+            <div className="message-timestamp-hover image-timestamp">
+              {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </div>
+
+            {/* Image indicator for user messages - show only when there's text */}
+            {isUser && message.content_type === 'text_image' && (
+              <div className="tw-flex tw-items-center tw-gap-1 tw-my-2 tw-text-xs tw-text-gray-500 tw-transition-opacity tw-duration-200 tw-opacity-75 hover:tw-opacity-100">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="tw-w-4 tw-h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                </svg>
+                <span>Image attached</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Show text content in bubble */}
+        {(!isImageOnly || !isUser) && (
+          <div
+            className={`
+              tw-max-w-[80%] tw-rounded-2xl tw-px-4 tw-py-3
+              tw-text-gray-900
+              tw-transition-all tw-duration-200
+              hover:tw-shadow-md message-content
+              ${isUser ? 'tw-bg-gray-100 hover:tw-bg-gray-200 user-message' : 'ai-message'}
+            `}
+          >
+
+            {/* Show content only if it's not an image-only message */}
+            {(!isImageOnly) && (
+              !isUser && isStreaming ? (
+                <span ref={typedElementRef} />
+              ) : (
+                <div dangerouslySetInnerHTML={{ __html: parsedContent }}></div>
+              )
+            )}
+
+            {/* Timestamp that shows on hover */}
+            <div className={`message-timestamp-hover ${isUser ? 'tw-right-4' : 'tw-left-4'}`}>
+              {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </div>
+          </div>
         )}
       </div>
-
-      {/* Image indicator for user messages */}
-      {isUser && message.content_type === 'text_image' && (
-        <div className="tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-text-xs tw-text-gray-500 tw-transition-opacity tw-duration-200 tw-opacity-75 hover:tw-opacity-100">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="tw-w-4 tw-h-4">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-          </svg>
-          <span>Image attached</span>
-        </div>
-      )}
     </div>
   );
 };

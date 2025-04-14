@@ -35,7 +35,6 @@ export const chatAPI = {
     const response = await fetch(`${API_BASE_URL}/chat`, {
       method: 'POST',
       headers: getHeaders(),
-      credentials: 'include',
       body: JSON.stringify(data),
     });
 

@@ -6,7 +6,6 @@ import { Message, CurrentChat, sendMessageAPI } from './components/chat/utils';
 import Overlay from './components/chat/Overlay';
 import ChatWindow from './components/chat/ChatWindow';
 import ChatToggleButton from './components/chat/ChatToggleButton';
-import AskAiPage from './components/askai';
 
 type ButtonPosition = 'top-right' | 'center-right' | 'bottom-right' | 'top-left' | 'center-left' | 'bottom-left';
 
@@ -247,8 +246,6 @@ const ChatWidget: React.FC<WidgetProps> = ({
         onToggleFullscreen={toggleFullscreen}
         welcomeMessages={welcomeMessages}
       />
-
-      {/* <AskAiPage /> */}
 
       {/* Toggle Button */}
       {!isOpen && <ChatToggleButton onClick={toggleChat} position={position} primaryColor={primaryColor} />}

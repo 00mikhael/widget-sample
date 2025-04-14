@@ -110,7 +110,7 @@ const Widget = ({ name, apiKey, primaryColor = DEFAULT_PRIMARY_COLOR, style, ...
         <button
           onClick={() => setIsExpanded(true)}
           style={{ backgroundColor: primaryColor }}
-          className="hamburger-button tw-rounded-l-full tw-rounded-r-none hover:tw-opacity-90 tw-text-white tw-flex tw-items-center tw-justify-center tw-shadow-lg tw-transition-all tw-duration-500 hover:tw-shadow-xl tw-gap-2 tw-p-4"
+          className="tw-hamburger-button tw-rounded-l-full tw-rounded-r-none hover:tw-opacity-90 tw-text-white tw-flex tw-items-center tw-justify-center tw-shadow-lg tw-transition-all tw-duration-500 hover:tw-shadow-xl tw-gap-2 tw-p-4"
         >
           <AiOutlineRobot size={24} />
           <div>Ask AI</div>

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import '../styles/widget.css';
 import 'aos/dist/aos.css';
-import AOS from 'aos';
 import { Message, CurrentChat, fetchHistoryAPI, sendMessageAPI, clearChatAPI } from './components/chat/utils';
 import Overlay from './components/chat/Overlay';
 import ChatWindow from './components/chat/ChatWindow';
@@ -261,7 +260,7 @@ const ChatWidget: React.FC = () => {
   }
 
   return (
-    <>
+    <div className='lawma-ai-widget'>
       {/* Overlay */}
       <Overlay isOpen={isOpen} onClick={toggleChat} />
 
@@ -285,7 +284,7 @@ const ChatWidget: React.FC = () => {
 
       {/* Toggle Button */}
       {!isOpen && <ChatToggleButton onClick={toggleChat} />}
-    </>
+    </div>
   );
 };
 

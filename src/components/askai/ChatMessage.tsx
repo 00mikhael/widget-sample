@@ -20,14 +20,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, parseMessage, isStre
     const isUser = message.sender === 'user';
 
     return (
-        <div className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}>
-            <div className="flex flex-col">
+        <div className={`tw-flex tw-flex-col ${isUser ? 'tw-items-end' : 'tw-items-start'}`}>
+            <div className="tw-flex tw-flex-col">
                 <div
-                    className={`max-w-3xl rounded-3xl px-4 py-2 text-base ${
-                        isUser
-                            ? 'bg-gray-100 text-gray-800' // User message style
-                            : 'bg-white text-gray-800 shadow-sm' // AI message style (added shadow for distinction)
-                    }`}
+                    className={`tw-max-w-3xl tw-rounded-3xl tw-px-4 tw-py-2 tw-text-base ${isUser
+                        ? 'tw-bg-gray-100 tw-text-gray-800' // User message style
+                        : 'tw-bg-white tw-text-gray-800 tw-shadow-sm' // AI message style (added shadow for distinction)
+                        }`}
                 >
                     {/* Use dangerouslySetInnerHTML for parsed HTML content */}
                     <span dangerouslySetInnerHTML={{ __html: parseMessage(message.content) }} />
@@ -44,8 +43,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, parseMessage, isStre
                         <span>Image attached</span>
                     </div>
                 )}
-                 {/* Optional: Display agent name for AI messages */}
-                 {/* {!isUser && message.agent && (
+                {/* Optional: Display agent name for AI messages */}
+                {/* {!isUser && message.agent && (
                     <div className="mt-1 text-xs text-gray-400">
                         Agent: {message.agent}
                     </div>

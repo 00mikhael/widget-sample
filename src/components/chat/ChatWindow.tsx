@@ -36,22 +36,22 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   // onNavigateToAskAi
 }) => {
   // We control visibility via transform based on isOpen prop
-  const transformClass = isOpen ? 'translate-x-0' : 'translate-x-full';
+  const transformClass = isOpen ? 'tw-translate-x-0' : 'tw-translate-x-full';
 
   return (
     <div
-      className={`fixed inset-y-0 right-0 w-full sm:w-[32rem] z-[9999] transform transition-transform duration-300 flex flex-col ${transformClass}`}
+      className={`tw-fixed tw-inset-y-0 tw-right-0 tw-w-[32rem] tw-z-[9999] tw-transform tw-transition-transform tw-duration-300 tw-flex tw-flex-col ${transformClass}`}
       role="dialog"
       aria-modal="true"
       aria-labelledby="chat-widget-title"
       hidden={!isOpen} // Hide from accessibility tree when closed
     >
-      <div className="h-[100dvh] bg-white shadow-xl flex flex-col">
+      <div className="tw-h-[100dvh] tw-bg-white tw-shadow-xl tw-flex tw-flex-col">
         {/* Header */}
         <ChatHeader
-            onClose={onClose}
-            onClearChat={onClearChat}
-            // onNavigateToAskAi={onNavigateToAskAi} // Pass if needed
+          onClose={onClose}
+          onClearChat={onClearChat}
+        // onNavigateToAskAi={onNavigateToAskAi} // Pass if needed
         />
 
         {/* Chat Content Area */}

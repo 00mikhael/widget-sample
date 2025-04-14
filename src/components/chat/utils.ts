@@ -34,9 +34,9 @@ export const parseMessage = (content: string | undefined | null): string => {
 
   // Handle Markdown links
   parsedContent = parsedContent.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
-      // Basic security check for URL - could be enhanced
-      const safeUrl = url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/') ? url : '#';
-      return `<a href='${safeUrl}' class='underline hover:opacity-80' target='_blank' rel='noopener noreferrer'>${text}</a>`;
+    // Basic security check for URL - could be enhanced
+    const safeUrl = url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/') ? url : '#';
+    return `<a href='${safeUrl}' class='tw-underline hover:tw-opacity-80' target='_blank' rel='noopener noreferrer'>${text}</a>`;
   });
 
   // Handle bold text

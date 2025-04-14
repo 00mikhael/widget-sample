@@ -12,7 +12,7 @@ const Overlay: React.FC<OverlayProps> = ({ isOpen, onClick }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 z-[9998] transition-opacity duration-300 ease-out"
+      className="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-z-[9998] tw-transition-opacity tw-duration-300 tw-ease-out"
       onClick={onClick}
       aria-hidden="true"
     />

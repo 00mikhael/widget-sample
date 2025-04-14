@@ -81,9 +81,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
               className="tw-w-full tw-h-auto tw-rounded-lg"
               loading="lazy"
             />
-            <div className="message-timestamp-hover image-timestamp">
-              {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            </div>
 
             {/* Image indicator for user messages - show only when there's text */}
             {isUser && message.content_type === 'text_image' && (
@@ -94,6 +91,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
                 <span>Image attached</span>
               </div>
             )}
+
+            <div className="tw-absolute tw-bottom-[-1.5rem] tw-left-1/2 tw-transform tw--translate-x-1/2 message-timestamp">
+              {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </div>
           </div>
         )}
 

@@ -210,25 +210,27 @@
 .lawma-ai-widget .image-container {
   position: relative;
   transition: all 0.3s ease;
+  z-index: 1;
 }
 
 .lawma-ai-widget .image-container:hover {
   transform: translateY(-1px);
 }
 
-.lawma-ai-widget .image-container .image-timestamp {
-  position: absolute;
-  bottom: -1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
+.lawma-ai-widget .image-container .message-timestamp {
+  font-size: 0.75rem;
+  color: #6c757d;
   background-color: rgba(255, 255, 255, 0.9);
   padding: 2px 6px;
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
 }
 
-.lawma-ai-widget .image-container:hover .image-timestamp {
+.lawma-ai-widget .image-container:hover .message-timestamp {
   opacity: 0.8;
 }
 

@@ -1,7 +1,8 @@
 :root {
-  --chat-primary-color: #29465B; /* Default blue color if none provided */
-  --chat-primary-lighter: color-mix(in srgb, var(--chat-primary-color) 95%, white);
-  --chat-primary-darker: color-mix(in srgb, var(--chat-primary-color) 80%, black);
+  /* Fallback values if JS initialization fails */
+  --chat-primary-color: #1f2937;
+  --chat-primary-lighter: #363f4c;
+  --chat-primary-darker: #0c1117;
 }
 
 /* Reset styles for widget container */

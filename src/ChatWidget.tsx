@@ -6,6 +6,7 @@ import { Message, CurrentChat, fetchHistoryAPI, sendMessageAPI, clearChatAPI } f
 import Overlay from './components/chat/Overlay';
 import ChatWindow from './components/chat/ChatWindow';
 import ChatToggleButton from './components/chat/ChatToggleButton';
+import AskAiPage from './components/askai';
 
 type ButtonPosition = 'top-right' | 'center-right' | 'bottom-right' | 'top-left' | 'center-left' | 'bottom-left';
 
@@ -283,7 +284,7 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, positio
       <Overlay isOpen={isOpen} onClick={toggleChat} />
 
       {/* Chat Window (Slide-in Panel) */}
-      <ChatWindow
+      {/* <ChatWindow
         isOpen={isOpen}
         isTyping={isTyping}
         previousMessages={previousMessages}
@@ -294,6 +295,7 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, positio
         chatContentRef={chatContentRef}
         primaryColor={primaryColor}
         isFullscreen={isFullscreen}
+        name={name}
         onClose={toggleChat}
         onClearChat={handleClearChat}
         onSendMessage={handleSendMessage}
@@ -301,7 +303,9 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, positio
         onRemoveFile={handleRemoveFile}
         onToggleFullscreen={toggleFullscreen}
       // Add onNavigateToAskAi prop if needed
-      />
+      /> */}
+
+      <AskAiPage />
 
       {/* Toggle Button */}
       {!isOpen && <ChatToggleButton onClick={toggleChat} position={position} primaryColor={primaryColor} />}
@@ -319,9 +323,17 @@ const chatWidgetExports = {
     container.id = "widget-container";
     document.body.appendChild(container);
 
-    // Apply primary color as CSS variable if provided
+    // Apply primary color and its variants
     if (options.primaryColor) {
       container.style.setProperty('--chat-primary-color', options.primaryColor);
+      container.style.setProperty(
+        '--chat-primary-lighter',
+        `color-mix(in srgb, ${options.primaryColor} 95%, white)`
+      );
+      container.style.setProperty(
+        '--chat-primary-darker',
+        `color-mix(in srgb, ${options.primaryColor} 60%, black)`
+      );
     }
 
     const root = createRoot(container);

@@ -14,6 +14,7 @@ interface ChatWindowProps {
   chatContentRef: React.RefObject<HTMLDivElement>;
   primaryColor?: string;
   isFullscreen: boolean;
+  name: string;
   onClose: () => void;
   onClearChat: (event?: React.MouseEvent) => void;
   onSendMessage: (messageText: string) => void;
@@ -33,6 +34,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   uploadedFileName,
   chatContentRef,
   isFullscreen,
+  name,
   onClose,
   onClearChat,
   onSendMessage,
@@ -60,6 +62,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           primaryColor={primaryColor}
           isFullscreen={isFullscreen}
           onToggleFullscreen={onToggleFullscreen}
+          name={name}
         />
 
         {/* Chat Content Area */}

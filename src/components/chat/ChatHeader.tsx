@@ -7,18 +7,25 @@ interface ChatHeaderProps {
   primaryColor?: string;
   isFullscreen: boolean;
   onToggleFullscreen: () => void;
+  name: string;
 }
 
-const ChatHeader: React.FC<ChatHeaderProps> = ({ onClose, onClearChat, isFullscreen, onToggleFullscreen }) => {
+const ChatHeader: React.FC<ChatHeaderProps> = ({
+  onClose,
+  onClearChat,
+  isFullscreen,
+  onToggleFullscreen,
+  name
+}) => {
 
   return (
     <div className="tw-flex tw-items-center tw-justify-between primary-bg tw-p-4 tw-text-white">
-      <h3 id="chat-widget-title" className="tw-font-semibold">Mixhers AI Assistant</h3>
+      <h3 id="chat-widget-title" className="tw-font-semibold">{name}</h3>
       <div className="tw-flex tw-gap-2">
         {/* Clear Chat Button */}
         <button
           onClick={onClearChat}
-          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl hover:tw-scale-105 tw-transition-all tw-transform"
+          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl hover:tw-scale-105 hover:primary-darken tw-transition-all tw-transform"
           aria-label="Clear chat history"
         >
           <Delete size={20} className="tw-text-red-500" />
@@ -27,7 +34,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onClose, onClearChat, isFullscr
         {/* Fullscreen Toggle Button */}
         <button
           onClick={onToggleFullscreen}
-          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl tw-text-gray-300 hover:tw-scale-105 tw-transition-all tw-transform"
+          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl tw-text-gray-300 hover:primary-darken hover:tw-scale-105 tw-transition-all tw-transform"
           aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
         >
           {isFullscreen ? (
@@ -44,7 +51,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onClose, onClearChat, isFullscr
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl tw-text-gray-300 hover:tw-scale-105 tw-transition-all tw-transform"
+          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl tw-text-gray-300 hover:primary-darken hover:tw-scale-105 tw-transition-all tw-transform"
           aria-label="Close chat widget"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="tw-w-5 tw-h-5">

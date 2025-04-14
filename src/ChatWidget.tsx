@@ -15,10 +15,16 @@ interface WidgetProps {
   apiKey: string;
   primaryColor?: string;
   position?: ButtonPosition;
-  welcomeMessage?: string;
+  welcomeMessages?: string[];
 }
 
-const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, position = 'center-right', welcomeMessage = "Ask AI about..." }) => {
+const ChatWidget: React.FC<WidgetProps> = ({
+  name,
+  apiKey,
+  primaryColor,
+  position = 'center-right',
+  welcomeMessages = ["Ask AI about..."],
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [isTyping, setIsTyping] = useState<boolean>(false);
@@ -239,7 +245,7 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, positio
         onFileUpload={handleFileUpload}
         onRemoveFile={handleRemoveFile}
         onToggleFullscreen={toggleFullscreen}
-        welcomeMessage={welcomeMessage}
+        welcomeMessages={welcomeMessages}
       />
 
       {/* <AskAiPage /> */}

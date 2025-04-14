@@ -5,9 +5,10 @@ import { Message, parseMessage } from './utils';
 interface ChatMessageProps {
   message: Message;
   isStreaming?: boolean; // Optional prop to control Typed.js initialization
+  isCurrentMessage?: boolean; // Optional prop to identify current chat message
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false, isCurrentMessage = false }) => {
   const isUser = message.sender === 'user';
   const typedElementRef = useRef<HTMLSpanElement>(null);
   const typedInstanceRef = useRef<Typed | null>(null);
@@ -61,7 +62,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false 
   const parsedContent = parseMessage(message.content);
 
   return (
-    <div className={`tw-flex tw-flex-col ${isUser ? 'tw-items-end' : 'tw-items-start'}`}>
+    <div className={`tw-flex tw-flex-col ${isUser ? `tw-items-end ${isCurrentMessage ? 'user-message-animate' : ''}` : 'tw-items-start'}`}>
       <div
         className={`tw-max-w-[80%] tw-rounded-2xl tw-px-4 tw-py-3 ${isUser ? 'tw-bg-gray-100 tw-text-gray-900' : 'tw-text-gray-800'
           }`}

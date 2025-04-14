@@ -1,16 +1,3 @@
-export interface Message {
-  id: number | string;
-  content: string;
-  sender: 'user' | 'ai';
-  timestamp?: string; // Optional timestamp
-  content_type?: 'text' | 'text_image'; // Optional content type
-}
-
-export interface CurrentChat {
-  user: Message | null;
-  ai: Message | null;
-}
-
 // Utility function to parse message content (similar to Laravel example)
 export const parseMessage = (content: string | undefined | null): string => {
   if (!content) return '';
@@ -61,6 +48,23 @@ export const initializeAPI = (key: string, name: string) => {
 
 import { API_BASE_URL } from '../../config';
 
+// Types
+export interface Message {
+  id: number | string;
+  content: string;
+  sender: 'user' | 'ai';
+  timestamp?: string;
+  content_type?: 'text' | 'text_image';
+  agent?: string;
+  conversation_id?: string;
+}
+
+export interface CurrentChat {
+  user: Message | null;
+  ai: Message | null;
+}
+
+// API Setup
 const getHeaders = () => ({
   'Content-Type': 'application/json',
   'Authorization': `Bearer ${apiKey}`,
@@ -82,7 +86,7 @@ export const fetchHistoryAPI = async (): Promise<{ history: Message[] }> => {
   }
 };
 
-export const sendMessageAPI = async (messageData: { message: string; sender: 'user'; content_type?: string; media_url?: string }): Promise<{ message: Message }> => {
+export const sendMessageAPI = async (messageData: { message: string; sender: 'user'; content_type?: string; media_url?: string; conversation_id?: string }): Promise<{ message: Message }> => {
   console.log('API CALL: sendMessageAPI', messageData);
   try {
     const response = await fetch(`${API_BASE_URL}/chat`, {

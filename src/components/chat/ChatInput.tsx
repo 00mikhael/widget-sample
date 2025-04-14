@@ -1,6 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { MdAttachFile } from "react-icons/md";
-import { LuSendHorizontal } from "react-icons/lu";
 
 interface ChatInputProps {
   error: string;

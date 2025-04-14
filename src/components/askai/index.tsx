@@ -1,22 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { API_BASE_URL } from '../../config';
+import { Message, CurrentChat, sendMessageAPI, parseMessage as utilsParseMessage } from '../chat/utils';
 import { ReactTyped } from 'react-typed';
 // Assuming ReactTyped exports its instance type, otherwise might need adjustment
 import type { Typed } from 'react-typed';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import TypingIndicator from './TypingIndicator';
-
-// Define message types
-interface Message {
-  id: string | number;
-  content: string;
-  sender: 'user' | 'ai';
-  timestamp?: string;
-  content_type?: 'text' | 'text_image';
-  agent?: string;
-}
 
 // Placeholder strings for the initial typing animation
 const placeholderStrings = [
@@ -73,21 +63,6 @@ const AskAiPage: React.FC = () => {
       }, 0);
     }
   }, []);
-
-  const parseMessage = (content: string | null | undefined): string => {
-    if (!content) return '';
-    let parsed = content;
-    // Basic replacements similar to the original Alpine function
-    parsed = parsed.replace(/\n\n###\s/g, '\n\n'); // Remove ### headers after double breaks
-    parsed = parsed.replace(/\n\n/g, '<br><br>'); // Double line breaks
-    parsed = parsed.replace(/\n(?!\n)/g, '<br>'); // Single line breaks
-    parsed = parsed.replace(/^\d+\.\s/gm, (match) => `<br>${match}`); // Numbered lists
-    parsed = parsed.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "<a href='$2' class='underline hover:opacity-80' target='_blank'>$1</a>"); // Links
-    parsed = parsed.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); // Bold
-    parsed = parsed.replace(/^<br>/, ''); // Remove leading break
-    parsed = parsed.replace(/<br><br><br>/g, '<br><br>'); // Clean up redundant breaks
-    return parsed;
-  };
 
   const showResultsView = useCallback(() => {
     setShowResults(true);
@@ -158,47 +133,21 @@ const AskAiPage: React.FC = () => {
     scrollToBottom();
 
     try {
-      const requestBody: ApiChatRequest = {
+      const { message: aiMessage } = await sendMessageAPI({
         message: messageText,
-        conversation_id: currentConvId,
+        sender: 'user',
         content_type: mediaToSend ? 'text_image' : 'text',
-      };
-
-      if (mediaToSend) {
-        requestBody.media_url = mediaToSend.url; // Assuming base64 string
-      }
-
-      const response = await fetch(`${API_BASE_URL}/chat`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // Add any necessary auth headers here if needed in the future
-        },
-        body: JSON.stringify(requestBody),
+        media_url: mediaToSend?.url,
+        conversation_id: currentConvId
       });
 
       setIsTyping(false);
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ detail: 'Failed to send message' }));
-        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+      if (aiMessage.conversation_id) {
+        setConversationId(aiMessage.conversation_id);
       }
-
-      const data: ApiChatResponse = await response.json(); // Add type annotation
-
-      const aiMessage: Message = {
-        id: Date.now() + 1, // Ensure unique ID
-        content: data.content,
-        sender: 'ai',
-        timestamp: new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }),
-        agent: data.agent,
-      };
 
       setCurrentChat(prev => ({ ...prev, ai: aiMessage }));
-      // Ensure the conversation ID from the response is stored if it changed (though unlikely with UUID)
-      if (data.conversation_id && data.conversation_id !== currentConvId) {
-        setConversationId(data.conversation_id);
-      }
 
     } catch (err: unknown) { // Use unknown for better type safety
       setIsTyping(false);
@@ -311,18 +260,18 @@ const AskAiPage: React.FC = () => {
           {/* Previous Messages */}
           <div id="previousMessages" className="flex flex-col space-y-4 w-full max-w-3xl">
             {previousMessages.map((message) => (
-              <ChatMessage key={message.id} message={message} parseMessage={parseMessage} />
+              <ChatMessage key={message.id} message={message} parseMessage={utilsParseMessage} />
             ))}
           </div>
 
           {/* Current Chat */}
           <div id="currentChat" className="flex flex-col space-y-4 w-full max-w-3xl">
             {currentChat.user && (
-              <ChatMessage message={currentChat.user} parseMessage={parseMessage} />
+              <ChatMessage message={currentChat.user} parseMessage={utilsParseMessage} />
             )}
             {isTyping && <TypingIndicator />}
             {currentChat.ai && (
-              <ChatMessage message={currentChat.ai} parseMessage={parseMessage} isStreaming={false} /> // Pass isStreaming if needed later
+              <ChatMessage message={currentChat.ai} parseMessage={utilsParseMessage} isStreaming={false} /> // Pass isStreaming if needed later
             )}
           </div>
 

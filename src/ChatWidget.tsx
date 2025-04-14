@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import '../styles/widget.css';
 import 'aos/dist/aos.css';
-import { Message, CurrentChat, fetchHistoryAPI, sendMessageAPI, clearChatAPI } from './components/chat/utils';
+import { Message, CurrentChat, sendMessageAPI } from './components/chat/utils';
 import Overlay from './components/chat/Overlay';
 import ChatWindow from './components/chat/ChatWindow';
 import ChatToggleButton from './components/chat/ChatToggleButton';
@@ -38,59 +38,15 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, positio
 
     // Check localStorage and referrer only once on mount
     const storedIsOpen = localStorage.getItem('chatIsOpen') === 'true';
-    const cameFromAskAi = document.referrer.includes('/askai'); // Check previous page
-    const shouldOpenInitially = storedIsOpen || cameFromAskAi;
+    const shouldOpenInitially = storedIsOpen;
 
     setIsOpen(shouldOpenInitially);
     if (shouldOpenInitially) {
       document.body.classList.add('overflow-hidden');
     }
 
-    // Fetch history
-    const loadHistory = async () => {
-      try {
-        const data = await fetchHistoryAPI();
-        if (data.history?.length > 0) {
-          // Process messages (e.g., parse AI messages if needed, though API might handle it)
-          const messages = data.history.map(msg => ({
-            ...msg,
-            id: msg.id || Date.now() + Math.random(), // Ensure ID exists
-          }));
-
-          // Logic to potentially set the last pair as currentChat (similar to Alpine)
-          const lastUserIndex = messages.length - 2;
-          const lastAIIndex = messages.length - 1;
-
-          if (lastAIIndex >= 0 && messages[lastAIIndex].sender === 'ai') {
-            if (lastUserIndex >= 0 && messages[lastUserIndex].sender === 'user') {
-              setCurrentChat({ user: messages[lastUserIndex], ai: messages[lastAIIndex] });
-              setPreviousMessages(messages.slice(0, lastUserIndex));
-            } else {
-              // Only AI message at the end? Unlikely but handle it.
-              setCurrentChat({ user: null, ai: messages[lastAIIndex] });
-              setPreviousMessages(messages.slice(0, lastAIIndex));
-            }
-          } else {
-            // No AI message at the end, or only user message
-            if (lastAIIndex >= 0 && messages[lastAIIndex].sender === 'user') {
-              setCurrentChat({ user: messages[lastAIIndex], ai: null });
-              setPreviousMessages(messages.slice(0, lastAIIndex));
-            } else {
-              // History might be empty or have other structures
-              setPreviousMessages(messages);
-              setCurrentChat({ user: null, ai: null });
-            }
-          }
-        }
-      } catch (err) {
-        console.error('Failed to fetch chat history:', err);
-        setError('Could not load chat history.');
-      } finally {
-        setInitialized(true); // Mark as initialized after setup
-      }
-    };
-
-    loadHistory();
+    // Initialize as ready
+    setInitialized(true);
 
     // Add event listeners for custom events (if needed from other components)
     const handleOpenChatEvent = () => {
@@ -170,18 +126,12 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, positio
     setIsFullscreen(prev => !prev);
   }, []);
 
-  const handleClearChat = useCallback(async (event?: React.MouseEvent) => {
+  const handleClearChat = useCallback((event?: React.MouseEvent) => {
     event?.stopPropagation(); // Prevent event bubbling if called from button click
     setUploadedMedia(null); // Clear any pending upload
     setError('');
-    try {
-      await clearChatAPI();
-      setPreviousMessages([]);
-      setCurrentChat({ user: null, ai: null });
-    } catch (err) {
-      console.error('Failed to clear chat:', err);
-      setError('Could not clear chat history.');
-    }
+    setPreviousMessages([]);
+    setCurrentChat({ user: null, ai: null });
   }, []);
 
   const handleSendMessage = useCallback(async (messageText: string) => {
@@ -211,6 +161,7 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, positio
     const messageData: { message: string; sender: 'user'; content_type?: string; media_url?: string } = {
       message: userMessage.content,
       sender: 'user',
+      content_type: userMessage.content_type
     };
 
     const mediaToSend = uploadedMedia; // Capture current media state
@@ -266,12 +217,6 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, positio
     setUploadedMedia(null);
     setError('');
   }, []);
-
-  // --- Render Logic ---
-  // Don't render anything on the Ask AI page
-  // if (isAskAiPage) {
-  //   return null;
-  // }
 
   // Don't render until initialization (history fetch, localStorage check) is complete
   if (!initialized) {

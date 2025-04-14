@@ -1,3 +1,25 @@
+import { chatAPI, initializeAPI } from '../../services/api/chat';
+
+// Re-export API functions
+export const { sendMessage: sendMessageAPI } = chatAPI;
+export { initializeAPI };
+
+// Types
+export interface Message {
+  id: number | string;
+  content: string;
+  sender: 'user' | 'ai';
+  timestamp?: string;
+  content_type?: 'text' | 'text_image';
+  agent?: string;
+  conversation_id?: string;
+}
+
+export interface CurrentChat {
+  user: Message | null;
+  ai: Message | null;
+}
+
 // Utility function to parse message content (similar to Laravel example)
 export const parseMessage = (content: string | undefined | null): string => {
   if (!content) return '';
@@ -37,25 +59,3 @@ export const parseMessage = (content: string | undefined | null): string => {
 
   return parsedContent;
 };
-
-import { chatAPI, initializeAPI } from '../../services/api/chat';
-
-// Re-export API functions
-export const { sendMessage: sendMessageAPI, fetchHistory: fetchHistoryAPI, clearChat: clearChatAPI } = chatAPI;
-export { initializeAPI };
-
-// Types
-export interface Message {
-  id: number | string;
-  content: string;
-  sender: 'user' | 'ai';
-  timestamp?: string;
-  content_type?: 'text' | 'text_image';
-  agent?: string;
-  conversation_id?: string;
-}
-
-export interface CurrentChat {
-  user: Message | null;
-  ai: Message | null;
-}

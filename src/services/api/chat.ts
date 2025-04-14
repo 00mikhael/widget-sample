@@ -31,7 +31,7 @@ export interface ChatResponse {
 
 export const chatAPI = {
   sendMessage: async (data: SendMessageRequest): Promise<{ message: Message }> => {
-    const response = await fetch('/api/chat', {
+    const response = await fetch('/chat', {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify(data),
@@ -54,28 +54,5 @@ export const chatAPI = {
     };
 
     return { message };
-  },
-
-  fetchHistory: async (): Promise<{ history: Message[] }> => {
-    const response = await fetch('/api/chat/history', {
-      headers: getHeaders()
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch chat history');
-    }
-
-    return response.json();
-  },
-
-  clearChat: async (): Promise<void> => {
-    const response = await fetch('/api/chat/clear', {
-      method: 'POST',
-      headers: getHeaders(),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to clear chat');
-    }
   }
 };

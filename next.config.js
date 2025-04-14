@@ -40,7 +40,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: `${API_BASE_URL}/:path*`,
+        destination: `http://localhost:8002/:path*`,
       },
     ];
   },

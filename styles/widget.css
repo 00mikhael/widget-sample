@@ -1,3 +1,7 @@
+:root {
+  --chat-primary-color: #007bff; /* Default blue color if none provided */
+}
+
 /* Reset styles for widget container */
 .lawma-ai-widget {
   all: initial;
@@ -7,6 +11,7 @@
   bottom: 1rem !important;
   right: 0 !important;
   font-family: ui-sans-serif, system-ui, sans-serif !important;
+  color: var(--chat-primary-color);
 }
 
 /* Reset styles for all widget elements */
@@ -81,8 +86,29 @@
   display: inline-block;
   width: 2px;
   height: 1em;
-  background-color: #1e2530;
+  background-color: var(--chat-primary-color);
   margin-left: 2px;
   animation: blink 1s infinite;
   vertical-align: middle;
+}
+
+/* Primary color classes */
+.lawma-ai-widget .primary-bg {
+  background-color: var(--chat-primary-color) !important;
+}
+
+.lawma-ai-widget .primary-text {
+  color: var(--chat-primary-color) !important;
+}
+
+.lawma-ai-widget .primary-border {
+  border-color: var(--chat-primary-color) !important;
+}
+
+.lawma-ai-widget .hover\:primary-bg:hover {
+  background-color: var(--chat-primary-color) !important;
+}
+
+.lawma-ai-widget .hover\:primary-text:hover {
+  color: var(--chat-primary-color) !important;
 }

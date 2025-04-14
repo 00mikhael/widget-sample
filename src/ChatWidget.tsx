@@ -7,7 +7,13 @@ import Overlay from './components/chat/Overlay';
 import ChatWindow from './components/chat/ChatWindow';
 import ChatToggleButton from './components/chat/ChatToggleButton';
 
-const ChatWidget: React.FC = () => {
+interface WidgetProps {
+  name: string;
+  apiKey: string;
+  primaryColor?: string;
+}
+
+const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [previousMessages, setPreviousMessages] = useState<Message[]>([]);
@@ -20,6 +26,11 @@ const ChatWidget: React.FC = () => {
 
   // --- Initialization ---
   useEffect(() => {
+    // Initialize API with credentials
+    import('./components/chat/utils').then(utils => {
+      utils.initializeAPI(apiKey, name);
+    });
+
     // Check localStorage and referrer only once on mount
     const storedIsOpen = localStorage.getItem('chatIsOpen') === 'true';
     const cameFromAskAi = document.referrer.includes('/askai'); // Check previous page
@@ -247,7 +258,6 @@ const ChatWidget: React.FC = () => {
     setError('');
   }, []);
 
-
   // --- Render Logic ---
   // Don't render anything on the Ask AI page
   // if (isAskAiPage) {
@@ -288,17 +298,20 @@ const ChatWidget: React.FC = () => {
   );
 };
 
-interface WidgetProps extends React.HTMLProps<HTMLDivElement> {
-  name: string;
-  apiKey: string;
-  primaryColor?: string;
-};
-
 const chatWidgetExports = {
   init: (options: WidgetProps) => {
+    if (!options.name || !options.apiKey) {
+      throw new Error('ChatWidget initialization requires name and apiKey');
+    }
+
     const container = document.createElement("div");
     container.id = "widget-container";
     document.body.appendChild(container);
+
+    // Apply primary color as CSS variable if provided
+    if (options.primaryColor) {
+      container.style.setProperty('--chat-primary-color', options.primaryColor);
+    }
 
     const root = createRoot(container);
     root.render(<ChatWidget {...options} />);

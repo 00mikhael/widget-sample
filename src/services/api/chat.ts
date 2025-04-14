@@ -11,7 +11,7 @@ export const initializeAPI = (key: string, name: string) => {
 
 const getHeaders = () => ({
   'Content-Type': 'application/json',
-  'Authorization': `Bearer ${apiKey}`,
+  'X-Api-Key': apiKey,
   'X-Widget-Name': widgetName
 });
 

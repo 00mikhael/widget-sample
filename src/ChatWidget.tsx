@@ -157,24 +157,17 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, positio
     // Set new user message, clear AI response
     setCurrentChat({ user: userMessage, ai: null });
 
-    // Prepare data for API
-    const messageData: { message: string; sender: 'user'; content_type?: string; media_url?: string } = {
-      message: userMessage.content,
-      sender: 'user',
-      content_type: userMessage.content_type
-    };
-
-    const mediaToSend = uploadedMedia; // Capture current media state
-    setUploadedMedia(null); // Clear media state immediately for UI
-
-    if (mediaToSend) {
-      messageData.content_type = 'text_image';
-      messageData.media_url = mediaToSend.url; // Send base64 URL
-    }
-
-    // Call API
     try {
-      const response = await sendMessageAPI(messageData);
+      const mediaToSend = uploadedMedia; // Capture current media state
+      setUploadedMedia(null); // Clear media state immediately for UI
+
+      const response = await sendMessageAPI({
+        message: userMessage.content,
+        sender: 'user',
+        content_type: mediaToSend ? 'text_image' : 'text',
+        media_url: mediaToSend?.url,
+        conversation_id: currentChat.ai?.conversation_id // Thread the conversation
+      });
       setIsTyping(false);
       // Update current chat with AI response
       setCurrentChat(prev => ({ ...prev, ai: { ...response.message, id: response.message.id || Date.now() + 1 } }));
@@ -247,7 +240,6 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, positio
         onFileUpload={handleFileUpload}
         onRemoveFile={handleRemoveFile}
         onToggleFullscreen={toggleFullscreen}
-      // Add onNavigateToAskAi prop if needed
       />
 
       {/* <AskAiPage /> */}

@@ -59,7 +59,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false 
     <div className={`tw-flex tw-flex-col ${isUser ? 'tw-items-end' : 'tw-items-start'}`}>
       <div className="tw-flex tw-flex-col">
         <div
-          className={`tw-max-w-[85%] tw-rounded-3xl tw-px-4 tw-py-2 ${isUser ? 'tw-bg-gray-100 tw-text-gray-900' : 'tw-bg-white tw-text-gray-800 tw-shadow-sm tw-border tw-border-gray-100'
+          className={`tw-max-w-[85%] tw-rounded-3xl tw-pl-3 tw-pr-6 tw-py-2 ${isUser ? 'tw-bg-gray-100 tw-text-gray-900' : 'tw-text-gray-800'
             }`}
         >
           {/* Use dangerouslySetInnerHTML for parsed HTML content */}

@@ -66,17 +66,6 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
   const canSend = messageInput.trim().length > 0 || !!uploadedFileName;
 
-  // Placeholder logic from Laravel example
-  const promotionalMessages = [
-    "Did you know Hertime PMS is eligible for HSA reimbursement?",
-    "Subscribe for 15% off plus a FREE Starter Kit!",
-    "Hertime PMS is available in 7 delicious flavors.",
-    "Ask AI about Mixhers' hormone support..."
-  ];
-  // Select a random placeholder - consider moving this logic up if needed globally
-  const randomPromoPlaceholder = promotionalMessages[Math.floor(Math.random() * promotionalMessages.length)];
-
-
   return (
     <div className="tw-border-t tw-border-gray-100 tw-bg-white tw-p-4 tw-sticky tw-bottom-0">
       <div className="tw-flex tw-flex-col tw-rounded-xl tw-border tw-border-gray-200 tw-bg-white">
@@ -84,7 +73,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
           value={messageInput}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          placeholder={randomPromoPlaceholder}
+          placeholder={'Type a message...'}
           className="tw-w-full tw-p-3 tw-text-gray-800 tw-placeholder-gray-400 tw-bg-transparent tw-border-none tw-resize-none focus:tw-ring-0 focus:tw-outline-none"
           rows={3}
           aria-label="Chat message input"

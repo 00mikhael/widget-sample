@@ -31,7 +31,7 @@ export interface ChatResponse {
 
 export const chatAPI = {
   sendMessage: async (data: SendMessageRequest): Promise<{ message: Message }> => {
-    const response = await fetch('/chat', {
+    const response = await fetch('/api/chat', {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify(data),

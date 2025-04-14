@@ -127,7 +127,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
           {canSend && (
             <button
               onClick={handleSend}
-              className="tw-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded-lg primary-bg tw-text-white hover:primary-darken tw-transition-colors disabled:tw-opacity-50"
+              className="tw-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded-lg primary-bg tw-text-white hover:primary-darken tw-transition-all tw-duration-200 tw-transform hover:tw-scale-110 active:tw-scale-95 disabled:tw-opacity-50"
               aria-label="Send message"
             // disabled={!canSend} // Button is conditionally rendered instead
             >
@@ -138,7 +138,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
           )}
         </div>
       </div>
-      <div className="tw-text-center tw-text-gray-500 tw-text-sm tw-mt-3">
+      <div className="tw-text-center tw-text-gray-500 tw-text-xs tw-mt-3">
         Powered by LAWMA.ai {/* Or Mixhers AI? Update as needed */}
       </div>
     </div>

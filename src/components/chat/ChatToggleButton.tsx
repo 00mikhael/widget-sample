@@ -11,10 +11,10 @@ interface ChatToggleButtonProps {
 const getPositionClasses = (position: ButtonPosition) => {
   const positions = {
     'top-right': 'tw-top-4 tw-right-0 tw-rounded-l-3xl',
-    'center-right': 'tw-top-1/2 -tw-translate-y-1/2 tw-right-0 tw-rounded-l-3xl',
+    'center-right': 'tw-top-1/2 tw-right-0 tw-rounded-l-3xl',
     'bottom-right': 'tw-bottom-4 tw-right-0 tw-rounded-l-3xl',
     'top-left': 'tw-top-4 tw-left-0 tw-rounded-r-3xl',
-    'center-left': 'tw-top-1/2 -tw-translate-y-1/2 tw-left-0 tw-rounded-r-3xl',
+    'center-left': 'tw-top-1/2 tw-left-0 tw-rounded-r-3xl',
     'bottom-left': 'tw-bottom-4 tw-left-0 tw-rounded-r-3xl'
   };
   return positions[position];

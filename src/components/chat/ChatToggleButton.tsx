@@ -5,6 +5,7 @@ type ButtonPosition = 'top-right' | 'center-right' | 'bottom-right' | 'top-left'
 interface ChatToggleButtonProps {
   onClick: () => void;
   position?: ButtonPosition;
+  primaryColor?: string;
 }
 
 const getPositionClasses = (position: ButtonPosition) => {
@@ -26,7 +27,7 @@ const ChatToggleButton: React.FC<ChatToggleButtonProps> = ({ onClick, position =
   return (
     <button
       onClick={onClick}
-      className={`tw-fixed tw-z-[9999] tw-flex tw-items-center tw-gap-2 tw-px-4 tw-py-3 tw-bg-gray-800 hover:tw-bg-gray-700 tw-text-white tw-shadow-lg tw-transition-all tw-duration-200 ${positionClasses} ${isLeftPosition ? 'tw-flex-row-reverse hover:tw-pl-6' : 'hover:tw-pr-6'}`}
+      className={`tw-fixed tw-z-[9999] tw-flex tw-items-center tw-gap-2 tw-px-4 tw-py-3 tw-text-white tw-shadow-lg tw-transition-all tw-duration-200 primary-bg hover:primary-darken ${positionClasses} ${isLeftPosition ? 'tw-flex-row-reverse hover:tw-pl-6' : 'hover:tw-pr-6'}`}
       aria-label="Open AI chat assistant"
     >
       {/* SVG Icon */}

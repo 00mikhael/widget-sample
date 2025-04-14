@@ -1,5 +1,7 @@
 :root {
   --chat-primary-color: #007bff; /* Default blue color if none provided */
+  --chat-primary-lighter: color-mix(in srgb, var(--chat-primary-color) 80%, white);
+  --chat-primary-darker: color-mix(in srgb, var(--chat-primary-color) 80%, black);
 }
 
 /* Reset styles for widget container */
@@ -70,6 +72,27 @@
   animation-delay: 0s;
 }
 
+/* Primary color utility classes */
+.lawma-ai-widget .primary-bg {
+  background-color: var(--chat-primary-color) !important;
+}
+
+.lawma-ai-widget .primary-text {
+  color: var(--chat-primary-color) !important;
+}
+
+.lawma-ai-widget .primary-border {
+  border-color: var(--chat-primary-color) !important;
+}
+
+.lawma-ai-widget .hover\:primary-lighten:hover {
+  background-color: var(--chat-primary-lighter) !important;
+}
+
+.lawma-ai-widget .hover\:primary-darken:hover {
+  background-color: var(--chat-primary-darker) !important;
+}
+
 /* AI message styles */
 .lawma-ai-widget .ai-message {
   margin-bottom: 1.5rem;
@@ -90,25 +113,4 @@
   margin-left: 2px;
   animation: blink 1s infinite;
   vertical-align: middle;
-}
-
-/* Primary color classes */
-.lawma-ai-widget .primary-bg {
-  background-color: var(--chat-primary-color) !important;
-}
-
-.lawma-ai-widget .primary-text {
-  color: var(--chat-primary-color) !important;
-}
-
-.lawma-ai-widget .primary-border {
-  border-color: var(--chat-primary-color) !important;
-}
-
-.lawma-ai-widget .hover\:primary-bg:hover {
-  background-color: var(--chat-primary-color) !important;
-}
-
-.lawma-ai-widget .hover\:primary-text:hover {
-  color: var(--chat-primary-color) !important;
 }

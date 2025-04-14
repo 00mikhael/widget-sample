@@ -12,6 +12,7 @@ interface ChatWindowProps {
   error: string;
   uploadedFileName?: string;
   chatContentRef: React.RefObject<HTMLDivElement>;
+  primaryColor?: string;
   onClose: () => void;
   onClearChat: (event?: React.MouseEvent) => void;
   onSendMessage: (messageText: string) => void;
@@ -21,6 +22,7 @@ interface ChatWindowProps {
 }
 
 const ChatWindow: React.FC<ChatWindowProps> = ({
+  primaryColor,
   isOpen,
   isTyping,
   previousMessages,
@@ -51,6 +53,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         <ChatHeader
           onClose={onClose}
           onClearChat={onClearChat}
+          primaryColor={primaryColor}
         // onNavigateToAskAi={onNavigateToAskAi} // Pass if needed
         />
 
@@ -66,6 +69,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         <ChatInput
           error={error}
           uploadedFileName={uploadedFileName}
+          primaryColor={primaryColor}
           onSendMessage={onSendMessage}
           onFileUpload={onFileUpload}
           onRemoveFile={onRemoveFile}

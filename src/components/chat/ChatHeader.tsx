@@ -4,6 +4,7 @@ import { AiOutlineDelete as Delete } from "react-icons/ai";
 interface ChatHeaderProps {
   onClose: () => void;
   onClearChat: (event: React.MouseEvent) => void;
+  primaryColor?: string;
   // onNavigateToAskAi?: () => void; // Or handle navigation directly here
 }
 
@@ -17,13 +18,13 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onClose, onClearChat }) => {
   };
 
   return (
-    <div className="tw-flex tw-items-center tw-justify-between tw-bg-gray-800 tw-p-4 tw-text-white">
+    <div className="tw-flex tw-items-center tw-justify-between primary-bg tw-p-4 tw-text-white">
       <h3 id="chat-widget-title" className="tw-font-semibold">Mixhers AI Assistant</h3>
       <div className="tw-flex tw-gap-2">
         {/* Clear Chat Button */}
         <button
           onClick={onClearChat}
-          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl  hover:tw-bg-red-50 hover:tw-scale-105 tw-transition-all tw-transform"
+          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl hover:tw-bg-red-50 hover:tw-scale-105 tw-transition-all tw-transform"
           aria-label="Clear chat history"
         >
           <Delete size={20} className="tw-text-red-500" />
@@ -32,7 +33,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onClose, onClearChat }) => {
         {/* Navigate to Ask AI Button */}
         <button
           onClick={handleNavigateToAskAi}
-          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl tw-text-gray-300 hover:tw-bg-gray-700 hover:tw-scale-105 tw-transition-all tw-transform"
+          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl tw-text-gray-300 hover:primary-lighten hover:tw-scale-105 tw-transition-all tw-transform"
           aria-label="Open full Ask AI page"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="tw-w-5 tw-h-5">
@@ -43,7 +44,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onClose, onClearChat }) => {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl tw-text-gray-300 hover:tw-bg-gray-700 hover:tw-scale-105 tw-transition-all tw-transform"
+          className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl tw-text-gray-300 hover:primary-lighten hover:tw-scale-105 tw-transition-all tw-transform"
           aria-label="Close chat widget"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="tw-w-5 tw-h-5">

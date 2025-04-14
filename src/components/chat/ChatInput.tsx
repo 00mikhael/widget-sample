@@ -1,9 +1,11 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { MdAttachFile } from "react-icons/md";
+import { LuSendHorizontal } from "react-icons/lu";
 
 interface ChatInputProps {
   error: string;
   uploadedFileName?: string;
+  primaryColor?: string;
   onSendMessage: (messageText: string) => void;
   onFileUpload: (file: File) => void;
   onRemoveFile: () => void;
@@ -117,7 +119,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
             />
             <button
               onClick={handleAttachClick}
-              className="tw-p-2 tw-text-gray-500 hover:tw-text-gray-600 tw-transition-colors"
+              className="tw-p-2 tw-text-gray-500 hover:primary-text tw-transition-colors"
               aria-label="Attach image file"
             >
               <MdAttachFile className='tw-transform tw-rotate-45' size={20} />
@@ -133,7 +135,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
           {canSend && (
             <button
               onClick={handleSend}
-              className="tw-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded-lg tw-bg-gray-800 tw-text-white hover:tw-bg-gray-700 tw-transition-colors disabled:tw-opacity-50"
+              className="tw-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded-lg primary-bg tw-text-white hover:primary-darken tw-transition-colors disabled:tw-opacity-50"
               aria-label="Send message"
             // disabled={!canSend} // Button is conditionally rendered instead
             >

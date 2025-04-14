@@ -287,6 +287,7 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, positio
         uploadedFileName={uploadedMedia?.file.name}
         // @ts-ignore
         chatContentRef={chatContentRef}
+        primaryColor={primaryColor}
         onClose={toggleChat}
         onClearChat={handleClearChat}
         onSendMessage={handleSendMessage}
@@ -296,7 +297,7 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, positio
       />
 
       {/* Toggle Button */}
-      {!isOpen && <ChatToggleButton onClick={toggleChat} position={position} />}
+      {!isOpen && <ChatToggleButton onClick={toggleChat} position={position} primaryColor={primaryColor} />}
     </div>
   );
 };

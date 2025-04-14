@@ -22,7 +22,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
   apiKey,
   primaryColor,
   position = 'center-right',
-  welcomeMessages = ["Ask AI about..."],
+  welcomeMessages = ["Ask me anything..."],
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
@@ -42,12 +42,14 @@ const ChatWidget: React.FC<WidgetProps> = ({
       utils.initializeAPI(apiKey, name);
     });
 
-    // Check localStorage and referrer only once on mount
+    // Check localStorage for chat state
     const storedIsOpen = localStorage.getItem('chatIsOpen') === 'true';
-    const shouldOpenInitially = storedIsOpen;
+    const storedIsFullscreen = localStorage.getItem('chatIsFullscreen') === 'true';
 
-    setIsOpen(shouldOpenInitially);
-    if (shouldOpenInitially) {
+    setIsOpen(storedIsOpen);
+    setIsFullscreen(storedIsFullscreen);
+
+    if (storedIsOpen) {
       document.body.classList.add('overflow-hidden');
     }
 
@@ -86,7 +88,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty dependency array ensures this runs only once on mount
 
-  // --- LocalStorage Sync & Body Class ---
+  // --- LocalStorage Sync ---
   useEffect(() => {
     // Don't run this effect on initial mount before initialization is complete
     if (!initialized) return;
@@ -100,6 +102,17 @@ const ChatWidget: React.FC<WidgetProps> = ({
       document.body.classList.remove('overflow-hidden');
     }
   }, [isOpen, initialized]);
+
+  // Sync fullscreen state with localStorage
+  useEffect(() => {
+    if (!initialized) return;
+
+    if (isFullscreen) {
+      localStorage.setItem('chatIsFullscreen', 'true');
+    } else {
+      localStorage.removeItem('chatIsFullscreen');
+    }
+  }, [isFullscreen, initialized]);
 
   // --- Scrolling ---
   const scrollToBottom = useCallback(() => {

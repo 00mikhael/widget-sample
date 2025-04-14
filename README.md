@@ -8,8 +8,6 @@ A customizable React chat widget that can be easily integrated into any web appl
 - [Configuration](#configuration)
 - [API Reference](#api-reference)
 - [Features](#features)
-- [Events](#events)
-- [Styling](#styling)
 
 ## Installation
 

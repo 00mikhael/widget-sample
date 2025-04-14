@@ -57,30 +57,28 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false 
 
   return (
     <div className={`tw-flex tw-flex-col ${isUser ? 'tw-items-end' : 'tw-items-start'}`}>
-      <div className="tw-flex tw-flex-col">
-        <div
-          className={`tw-max-w-[85%] tw-rounded-3xl tw-pl-3 tw-pr-6 tw-py-2 ${isUser ? 'tw-bg-gray-100 tw-text-gray-900' : 'tw-text-gray-800'
-            }`}
-        >
-          {/* Use dangerouslySetInnerHTML for parsed HTML content */}
-          {/* For AI messages intended for streaming, use the ref */}
-          {!isUser && isStreaming ? (
-            <span ref={typedElementRef} />
-          ) : (
-            <span dangerouslySetInnerHTML={{ __html: parsedContent }} />
-          )}
-        </div>
-
-        {/* Image indicator for user messages */}
-        {isUser && message.content_type === 'text_image' && (
-          <div className="tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-text-xs tw-text-gray-500">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="tw-w-4 tw-h-4">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-            </svg>
-            <span>Image attached</span>
-          </div>
+      <div
+        className={`tw-max-w-[80%] tw-rounded-2xl tw-px-4 tw-py-3 ${isUser ? 'tw-bg-gray-100 tw-text-gray-900' : 'tw-text-gray-800'
+          }`}
+      >
+        {/* Use dangerouslySetInnerHTML for parsed HTML content */}
+        {/* For AI messages intended for streaming, use the ref */}
+        {!isUser && isStreaming ? (
+          <span ref={typedElementRef} />
+        ) : (
+          <div dangerouslySetInnerHTML={{ __html: parsedContent }}></div>
         )}
       </div>
+
+      {/* Image indicator for user messages */}
+      {isUser && message.content_type === 'text_image' && (
+        <div className="tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-text-xs tw-text-gray-500">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="tw-w-4 tw-h-4">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+          </svg>
+          <span>Image attached</span>
+        </div>
+      )}
     </div>
   );
 };

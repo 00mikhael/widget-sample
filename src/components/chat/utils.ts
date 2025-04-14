@@ -38,15 +38,11 @@ export const parseMessage = (content: string | undefined | null): string => {
   return parsedContent;
 };
 
-let apiKey: string;
-let widgetName: string;
+import { chatAPI, initializeAPI } from '../../services/api/chat';
 
-export const initializeAPI = (key: string, name: string) => {
-  apiKey = key;
-  widgetName = name;
-};
-
-import { API_BASE_URL } from '../../config';
+// Re-export API functions
+export const { sendMessage: sendMessageAPI, fetchHistory: fetchHistoryAPI, clearChat: clearChatAPI } = chatAPI;
+export { initializeAPI };
 
 // Types
 export interface Message {
@@ -63,62 +59,3 @@ export interface CurrentChat {
   user: Message | null;
   ai: Message | null;
 }
-
-// API Setup
-const getHeaders = () => ({
-  'Content-Type': 'application/json',
-  'Authorization': `Bearer ${apiKey}`,
-  'X-Widget-Name': widgetName
-});
-
-export const fetchHistoryAPI = async (): Promise<{ history: Message[] }> => {
-  console.log('API CALL: fetchHistoryAPI');
-  try {
-    const response = await fetch(`${API_BASE_URL}/chat/history`, {
-      headers: getHeaders()
-    });
-    if (!response.ok) throw new Error('Failed to fetch chat history');
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching history:', error);
-    return { history: [] };
-  }
-};
-
-export const sendMessageAPI = async (messageData: { message: string; sender: 'user'; content_type?: string; media_url?: string; conversation_id?: string }): Promise<{ message: Message }> => {
-  console.log('API CALL: sendMessageAPI', messageData);
-  try {
-    const response = await fetch(`${API_BASE_URL}/chat`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify(messageData)
-    });
-    if (!response.ok) throw new Error('Failed to send message');
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error sending message:', error);
-    // Return simulated response for now
-    const aiResponse: Message = {
-      id: Date.now() + 1,
-      sender: 'ai',
-      content: `This is a simulated AI response to: "${messageData.message}". The actual API needs to be implemented.`,
-      timestamp: new Date().toLocaleTimeString(),
-    };
-    return { message: aiResponse };
-  }
-};
-
-export const clearChatAPI = async (): Promise<void> => {
-  console.log('API CALL: clearChatAPI');
-  try {
-    const response = await fetch(`${API_BASE_URL}/chat/clear`, {
-      method: 'POST',
-      headers: getHeaders()
-    });
-    if (!response.ok) throw new Error('Failed to clear chat');
-  } catch (error) {
-    console.error('Error clearing chat:', error);
-  }
-};

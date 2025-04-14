@@ -284,7 +284,7 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, positio
       <Overlay isOpen={isOpen} onClick={toggleChat} />
 
       {/* Chat Window (Slide-in Panel) */}
-      {/* <ChatWindow
+      <ChatWindow
         isOpen={isOpen}
         isTyping={isTyping}
         previousMessages={previousMessages}
@@ -303,9 +303,9 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, positio
         onRemoveFile={handleRemoveFile}
         onToggleFullscreen={toggleFullscreen}
       // Add onNavigateToAskAi prop if needed
-      /> */}
+      />
 
-      <AskAiPage />
+      {/* <AskAiPage /> */}
 
       {/* Toggle Button */}
       {!isOpen && <ChatToggleButton onClick={toggleChat} position={position} primaryColor={primaryColor} />}

@@ -167,17 +167,15 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, positio
         sender: 'user',
         content_type: mediaToSend ? 'text_image' : 'text',
         media_url: mediaToSend?.url,
-        conversation_id: currentChat.ai?.conversation_id // Thread the conversation
+        conversation_id: currentChat.ai?.conversation_id
       });
+
       setIsTyping(false);
-      // Update current chat with AI response
       setCurrentChat(prev => ({ ...prev, ai: { ...response.message, id: response.message.id || Date.now() + 1 } }));
     } catch (err) {
       console.error('Failed to send message:', err);
-      setError('Failed to send message. Please try again.');
       setIsTyping(false);
-      // Optionally revert state or keep user message displayed with error
-      // For simplicity, we'll leave the user message in currentChat
+      setError('Failed to send message. Please try again.');
     }
   }, [previousMessages, currentChat, uploadedMedia]); // Dependencies
 

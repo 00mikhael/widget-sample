@@ -2,16 +2,10 @@ import React from 'react';
 
 const TypingIndicator: React.FC = () => {
   return (
-    <div className="flex items-center space-x-2 h-8 pl-4">
-      <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
-      <div
-        className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
-        style={{ animationDelay: '0.2s' }}
-      ></div>
-      <div
-        className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
-        style={{ animationDelay: '0.4s' }}
-      ></div>
+    <div className="tw-flex tw-items-center tw-space-x-2 tw-h-8 tw-pl-4">
+      <div className="tw-w-2 tw-h-2 tw-bg-gray-500 tw-rounded-full typing-dot"></div>
+      <div className="tw-w-2 tw-h-2 tw-bg-gray-500 tw-rounded-full typing-dot"></div>
+      <div className="tw-w-2 tw-h-2 tw-bg-gray-500 tw-rounded-full typing-dot"></div>
     </div>
   );
 };

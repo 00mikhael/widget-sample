@@ -21,7 +21,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false 
 
       const options = {
         strings: [parseMessage(message.content)], // Parse content before typing
-        typeSpeed: 10,
+        typeSpeed: 50,
         showCursor: true,
         cursorChar: '|',
         contentType: 'html', // Typed.js expects a string, 'html' is valid

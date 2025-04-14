@@ -59,6 +59,8 @@ export const initializeAPI = (key: string, name: string) => {
   widgetName = name;
 };
 
+import { API_BASE_URL } from '../../config';
+
 const getHeaders = () => ({
   'Content-Type': 'application/json',
   'Authorization': `Bearer ${apiKey}`,
@@ -68,7 +70,7 @@ const getHeaders = () => ({
 export const fetchHistoryAPI = async (): Promise<{ history: Message[] }> => {
   console.log('API CALL: fetchHistoryAPI');
   try {
-    const response = await fetch('/api/chat/history', {
+    const response = await fetch(`${API_BASE_URL}/chat/history`, {
       headers: getHeaders()
     });
     if (!response.ok) throw new Error('Failed to fetch chat history');
@@ -83,7 +85,7 @@ export const fetchHistoryAPI = async (): Promise<{ history: Message[] }> => {
 export const sendMessageAPI = async (messageData: { message: string; sender: 'user'; content_type?: string; media_url?: string }): Promise<{ message: Message }> => {
   console.log('API CALL: sendMessageAPI', messageData);
   try {
-    const response = await fetch('/api/chat/send', {
+    const response = await fetch(`${API_BASE_URL}/chat`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify(messageData)
@@ -107,7 +109,7 @@ export const sendMessageAPI = async (messageData: { message: string; sender: 'us
 export const clearChatAPI = async (): Promise<void> => {
   console.log('API CALL: clearChatAPI');
   try {
-    const response = await fetch('/api/chat/clear', {
+    const response = await fetch(`${API_BASE_URL}/chat/clear`, {
       method: 'POST',
       headers: getHeaders()
     });

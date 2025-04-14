@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { API_BASE_URL } from '../../config';
 import { ReactTyped } from 'react-typed';
 // Assuming ReactTyped exports its instance type, otherwise might need adjustment
 import type { Typed } from 'react-typed';
@@ -43,8 +44,6 @@ const AskAiPage: React.FC = () => {
   const chatContentRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const typedInstanceRef = useRef<Typed | null>(null); // Ref to store Typed instance
-
-  const apiBaseUrl = 'http://localhost:8002'; // Fallback for safety
 
   // Define the structure for the API request body
   interface ApiChatRequest {
@@ -169,7 +168,7 @@ const AskAiPage: React.FC = () => {
         requestBody.media_url = mediaToSend.url; // Assuming base64 string
       }
 
-      const response = await fetch(`${apiBaseUrl}/chat`, {
+      const response = await fetch(`${API_BASE_URL}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

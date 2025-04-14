@@ -1,70 +1,113 @@
-# LAWMA AI Widget Documentation
+# Chat Widget Documentation
 
-A customizable AI chat widget that can be easily integrated into any web application.
+A customizable React chat widget that can be easily integrated into any web application. The widget provides a modern, responsive interface with support for text messages, image uploads, and AI interactions.
+
+## Table of Contents
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+- [API Reference](#api-reference)
+- [Features](#features)
+- [Events](#events)
+- [Styling](#styling)
+
+## Installation
+
+```bash
+npm install lawma-ai-widget
+```
+
+## Quick Start
+
+Add the widget to your application:
+
+```javascript
+import ChatWidget from 'lawma-ai-widget';
+
+ChatWidget.init({
+  name: "Your Widget Name",
+  apiKey: "your-api-key",
+  primaryColor: "#007bff",
+  position: "bottom-right"
+});
+```
+
+## Configuration
+
+### Required Options
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `name` | string | The name of your widget instance |
+| `apiKey` | string | API key for authentication |
+
+### Optional Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `primaryColor` | string | #1f2937 | Primary color for the widget theme |
+| `position` | ButtonPosition | 'center-right' | Position of the chat button |
+| `welcomeMessages` | string[] | ["Ask AI about..."] | Array of welcome messages to display |
+
+### Button Positions
+
+Available positions for the chat button:
+- `top-right`
+- `center-right`
+- `bottom-right`
+- `top-left`
+- `center-left`
+- `bottom-left`
+
+## API Reference
+
+### Widget Initialization
+
+```typescript
+interface WidgetProps {
+  name: string;
+  apiKey: string;
+  primaryColor?: string;
+  position?: ButtonPosition;
+  welcomeMessages?: string[];
+}
+
+ChatWidget.init(options: WidgetProps)
+```
+
 
 ## Features
-- Easy integration with any web application
-- Customizable chat interface
 
-## Installation & Setup
+### Chat Window
+- Slide-in panel interface
+- Fullscreen mode support
+- Responsive design (auto-fullscreen on mobile)
+- Message history preservation
+- Auto-scrolling to latest messages
 
-### Vanilla JavaScript
-```html
-<script src="https://cdn.jsdelivr.net/gh/00mikhael/widget-sample@latest/dist/widget.js"></script>
-<script>
-    LAWMAai.init({
-        name: 'Custom.ai',
-        apiKey: 'your-api-key'
-    });
-</script>
-```
+### Message Types
+- Text messages
+- Image uploads (with preview)
+- Typing indicators
+- Timestamp display
 
-### Vue.js
-```vue
-<script src="https://cdn.jsdelivr.net/gh/00mikhael/widget-sample@latest/dist/widget.js"></script>
-<script>
-    LAWMAai.init({
-        name: 'Custom.ai',
-        apiKey: 'your-api-key'
-    });
-</script>
-```
+### Welcome Messages
+- Configurable welcome message array
+- Typing animation effect
+- Automatic cycling through messages
 
-### React (Next.js)
-```typescript
-'use client';
-import Script from 'next/script';
+### File Upload Support
+- Image file uploads
+- File preview
+- Remove uploaded files
+- Error handling for invalid files
 
-export default function LoadWidget() {
-  return (
-    <div>
-      <Script
-        src="https://cdn.jsdelivr.net/gh/00mikhael/widget-sample@latest/dist/widget.js"
-        strategy="lazyOnload"
-        onLoad={() => {
-          if (typeof window !== 'undefined' && window.LAWMAai) {
-            window.LAWMAai.init({
-              name: 'Custom.ai',
-              apiKey: 'your-api-key'
-            });
-          }
-        }}
-        onError={(e) => console.error('Script failed to load', e)}
-      />
-    </div>
-  );
-}
-```
 
-## Configuration Options
+## Mobile Responsiveness
 
-| Option | Type | Description | Required |
-|--------|------|-------------|----------|
-| name | string | Custom name for the chat widget | Yes |
-| apiKey | string | Your API key for authentication | Yes |
+The widget automatically switches to full-width mode when:
+- Screen width is less than 512px (32rem)
+- Fullscreen mode is enabled
+- Manual fullscreen toggle is clicked
 
-## Browser Support
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
+This ensures optimal usability on mobile devices while maintaining a contained experience on larger screens.

@@ -1,14 +1,32 @@
 import React from 'react';
 
+type ButtonPosition = 'top-right' | 'center-right' | 'bottom-right' | 'top-left' | 'center-left' | 'bottom-left';
+
 interface ChatToggleButtonProps {
   onClick: () => void;
+  position?: ButtonPosition;
 }
 
-const ChatToggleButton: React.FC<ChatToggleButtonProps> = ({ onClick }) => {
+const getPositionClasses = (position: ButtonPosition) => {
+  const positions = {
+    'top-right': 'tw-top-4 tw-right-0 tw-rounded-l-3xl',
+    'center-right': 'tw-top-1/2 -tw-translate-y-1/2 tw-right-0 tw-rounded-l-3xl',
+    'bottom-right': 'tw-bottom-4 tw-right-0 tw-rounded-l-3xl',
+    'top-left': 'tw-top-4 tw-left-0 tw-rounded-r-3xl',
+    'center-left': 'tw-top-1/2 -tw-translate-y-1/2 tw-left-0 tw-rounded-r-3xl',
+    'bottom-left': 'tw-bottom-4 tw-left-0 tw-rounded-r-3xl'
+  };
+  return positions[position];
+};
+
+const ChatToggleButton: React.FC<ChatToggleButtonProps> = ({ onClick, position = 'center-right' }) => {
+  const isLeftPosition = position.endsWith('-left');
+  const positionClasses = getPositionClasses(position);
+
   return (
     <button
       onClick={onClick}
-      className="tw-fixed tw-z-[9999] tw-top-1/2 -tw-translate-y-1/2 tw-right-0 tw-flex tw-items-center tw-gap-2 tw-rounded-l-3xl tw-px-4 tw-py-3 tw-bg-gray-800 hover:tw-bg-gray-700 tw-text-white tw-shadow-lg tw-transition-all tw-duration-200 hover:tw-pr-6"
+      className={`tw-fixed tw-z-[9999] tw-flex tw-items-center tw-gap-2 tw-px-4 tw-py-3 tw-bg-gray-800 hover:tw-bg-gray-700 tw-text-white tw-shadow-lg tw-transition-all tw-duration-200 ${positionClasses} ${isLeftPosition ? 'tw-flex-row-reverse hover:tw-pl-6' : 'hover:tw-pr-6'}`}
       aria-label="Open AI chat assistant"
     >
       {/* SVG Icon */}

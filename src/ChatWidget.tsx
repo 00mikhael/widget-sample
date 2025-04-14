@@ -7,13 +7,16 @@ import Overlay from './components/chat/Overlay';
 import ChatWindow from './components/chat/ChatWindow';
 import ChatToggleButton from './components/chat/ChatToggleButton';
 
+type ButtonPosition = 'top-right' | 'center-right' | 'bottom-right' | 'top-left' | 'center-left' | 'bottom-left';
+
 interface WidgetProps {
   name: string;
   apiKey: string;
   primaryColor?: string;
+  position?: ButtonPosition;
 }
 
-const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor }) => {
+const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor, position = 'center-right' }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [previousMessages, setPreviousMessages] = useState<Message[]>([]);
@@ -293,7 +296,7 @@ const ChatWidget: React.FC<WidgetProps> = ({ name, apiKey, primaryColor }) => {
       />
 
       {/* Toggle Button */}
-      {!isOpen && <ChatToggleButton onClick={toggleChat} />}
+      {!isOpen && <ChatToggleButton onClick={toggleChat} position={position} />}
     </div>
   );
 };

@@ -5,6 +5,35 @@
   --chat-primary-darker: #0c1117;
 }
 
+/* Welcome message gradient animation */
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.lawma-ai-widget .welcome-gradient {
+  background: linear-gradient(
+    -45deg,
+    var(--chat-primary-color),
+    var(--chat-primary-lighter),
+    var(--chat-primary-darker),
+    var(--chat-primary-color)
+  );
+  background-size: 200% 200%;
+  animation: gradientFlow 10s ease infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 /* Reset styles for widget container */
 .lawma-ai-widget {
   all: initial;

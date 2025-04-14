@@ -73,7 +73,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   const canSend = messageInput.trim().length > 0 || !!uploadedFileName;
 
   return (
-    <div className={`${isFullscreen && showWelcome ? 'tw-transition-transform tw-duration-500 tw-transform -tw-translate-y-40' : 'tw-border-t tw-border-gray-100'} tw-bg-white tw-p-4 tw-sticky tw-bottom-0`}>
+    <div className={`${isFullscreen && showWelcome ? 'tw-transition-transform tw-duration-500 tw-transform -tw-translate-y-40' : 'tw-border-t tw-border-gray-100'} tw-bg-white tw-p-4 tw-sticky tw-bottom-0 tw-mt-4`}>
       <div className="tw-flex tw-flex-col tw-rounded-xl tw-border tw-border-gray-200 tw-bg-white focus-within:tw-shadow-md">
         <div className="tw-relative">
           <textarea

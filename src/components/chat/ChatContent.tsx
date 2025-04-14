@@ -80,7 +80,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
     >
 
       {showWelcome && (
-        <div className={`tw-text-center tw-px-6 ${isFullscreen ? 'tw-text-3xl tw-pt-48 tw-text-gray-700' : 'tw-text-gray-500'}`}>
+        <div className={`tw-text-center tw-px-6 welcome-gradient ${isFullscreen ? 'tw-text-3xl tw-pt-48 tw-font-bold' : ''}`}>
           <ReactTyped
             strings={welcomeMessages}
             typeSpeed={20}

@@ -75,7 +75,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
           tw-text-gray-900
           tw-transition-all tw-duration-200
           hover:tw-shadow-md message-content
-          ${isUser ? 'user-message' : 'ai-message'}
+          ${isUser ? 'tw-bg-gray-100 hover:tw-bg-gray-200 user-message' : 'ai-message'}
         `}
       >
         {/* Add timestamp */}

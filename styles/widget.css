@@ -138,10 +138,6 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.lawma-ai-widget input[type="text"]:focus,
-.lawma-ai-widget textarea:focus {
-  box-shadow: 0 0 0 2px rgba(var(--chat-primary-color-rgb, 31, 41, 55), 0.2);
-}
 
 .lawma-ai-widget button {
   transition: transform 0.2s ease, background-color 0.2s ease;

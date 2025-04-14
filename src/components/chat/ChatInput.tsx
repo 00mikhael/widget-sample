@@ -72,13 +72,13 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
   return (
     <div className={`${isFullscreen && showWelcome ? 'tw-transition-transform tw-duration-500 tw-transform -tw-translate-y-40' : 'tw-border-t tw-border-gray-100'} tw-bg-white tw-p-4 tw-sticky tw-bottom-0`}>
-      <div className="tw-flex tw-flex-col tw-rounded-xl tw-border tw-border-gray-200 tw-bg-white">
+      <div className="tw-flex tw-flex-col tw-rounded-xl tw-border tw-border-gray-200 tw-bg-white focus-within:tw-shadow-md">
         <textarea
           value={messageInput}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder={'Ask me anything...'}
-          className="tw-w-full tw-p-3 tw-text-gray-800 tw-placeholder-gray-400 tw-bg-transparent tw-border-none tw-resize-none focus:tw-ring-0 focus:tw-outline-none"
+          className="tw-w-full tw-p-3 tw-text-gray-800 tw-placeholder-gray-400 tw-bg-transparent tw-border-none tw-resize-none focus:tw-ring-0 focus:tw-outline-none focus:tw-shadow-none"
           rows={3}
           aria-label="Chat message input"
         />

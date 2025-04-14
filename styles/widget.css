@@ -109,7 +109,7 @@
   line-height: 1.6;
 }
 
-/* Message animation */
+/* Message animations */
 @keyframes slideUpMessage {
   from {
     opacity: 0;
@@ -119,6 +119,18 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes messagePop {
+  0% { transform: scale(0.95); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 0 rgba(0, 0, 0, 0.1); }
+  50% { box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); }
+  100% { box-shadow: 0 0 0 rgba(0, 0, 0, 0.1); }
 }
 
 @keyframes fadeScale {
@@ -168,15 +180,101 @@
 
 /* Message hover effects */
 .lawma-ai-widget .message-content {
-  transition: transform 0.2s ease;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
 .lawma-ai-widget .message-content:hover {
-  transform: translateX(2px);
+  transform: translateX(2px) translateY(-1px);
+  animation: glowPulse 1.5s infinite;
+}
+
+.lawma-ai-widget .ai-message .message-content {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.lawma-ai-widget .user-message .message-content {
+  background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+}
+
+.lawma-ai-widget .message-timestamp {
+  position: absolute;
+  bottom: -20px;
+  font-size: 0.75rem;
+  color: #6c757d;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.lawma-ai-widget .message-content:hover .message-timestamp {
+  opacity: 1;
 }
 
 .lawma-ai-widget .user-message-animate {
-  animation: slideUpMessage 0.3s ease-out forwards;
+  animation: slideUpMessage 0.3s ease-out forwards, messagePop 0.5s ease-out forwards;
+}
+
+/* Chat window enhancements */
+.lawma-ai-widget .chat-window {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.lawma-ai-widget .chat-window::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+  pointer-events: none;
+}
+
+/* Custom scrollbar */
+.lawma-ai-widget .chat-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lawma-ai-widget .chat-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.lawma-ai-widget .chat-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+.lawma-ai-widget .chat-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Scroll to bottom button */
+.lawma-ai-widget .scroll-to-bottom {
+  position: absolute;
+  bottom: 80px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.lawma-ai-widget .scroll-to-bottom.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.lawma-ai-widget .scroll-to-bottom:hover {
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
 }
 
 @keyframes fadeInTranslate {

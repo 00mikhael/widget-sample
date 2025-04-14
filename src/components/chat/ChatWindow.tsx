@@ -65,7 +65,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         ${isFullscreen || isSmallScreen ? 'tw-w-full' : 'tw-w-[32rem]'}
         tw-z-[9999] tw-transform
         tw-transition-all tw-duration-300 tw-ease-out
-        tw-flex tw-flex-col
+        tw-flex tw-flex-col chat-window
         ${transformClass}
         ${isOpen ? 'tw-opacity-100 tw-scale-100' : 'tw-opacity-0 tw-scale-95'}
       `}
@@ -74,7 +74,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
       aria-labelledby="chat-widget-title"
       hidden={!isOpen}
     >
-      <div className="tw-h-[100vh] tw-bg-white tw-shadow-xl tw-flex tw-flex-col tw-will-change-transform">
+      <div className="tw-h-screen tw-bg-white tw-shadow-xl tw-flex tw-flex-col tw-will-change-transform tw-overflow-hidden">
         <ChatHeader
           onClose={onClose}
           onClearChat={onClearChat}
@@ -84,15 +84,27 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           name={name}
         />
 
-        <div className={`tw-h-full tw-w-full tw-mx-auto tw-flex tw-flex-col ${isFullscreen ? 'tw-max-w-[1000px]' : ''}`}>
-          <ChatContent
-            previousMessages={previousMessages}
-            currentChat={currentChat}
-            isTyping={isTyping}
-            isFullscreen={isFullscreen}
-            chatContentRef={chatContentRef}
-            welcomeMessages={welcomeMessages}
-          />
+        <div className={`tw-flex-1 tw-w-full tw-mx-auto tw-flex tw-flex-col tw-overflow-hidden ${isFullscreen ? 'tw-max-w-[1000px]' : ''}`}>
+          <div className="tw-relative tw-flex-1 tw-min-h-0">
+            <ChatContent
+              previousMessages={previousMessages}
+              currentChat={currentChat}
+              isTyping={isTyping}
+              isFullscreen={isFullscreen}
+              chatContentRef={chatContentRef}
+              welcomeMessages={welcomeMessages}
+            />
+            {/* Scroll to bottom button */}
+            <button
+              className="scroll-to-bottom"
+              onClick={() => chatContentRef.current?.scrollTo({ top: chatContentRef.current.scrollHeight, behavior: 'smooth' })}
+              aria-label="Scroll to bottom"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="tw-h-5 tw-w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L10 15.586l3.293-3.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </div>
           <ChatInput
             error={error}
             uploadedFileName={uploadedFileName}

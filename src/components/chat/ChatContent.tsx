@@ -12,6 +12,7 @@ interface ChatContentProps {
   isFullscreen: boolean;
   chatContentRef: React.RefObject<HTMLDivElement>;
   welcomeMessages?: string[];
+  onScroll?: () => void;
 }
 
 const ChatContent: React.FC<ChatContentProps> = ({
@@ -25,17 +26,52 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const showWelcome = previousMessages.length === 0 && !currentChat.user && !currentChat.ai && !isTyping;
   const typedInstanceRef = useRef<Typed | null>(null);
 
-  // Auto-scroll effect
+  // Enhanced auto-scroll effect with smooth scrolling
+  useEffect(() => {
+    const scrollToBottom = (smooth = true) => {
+      if (chatContentRef.current) {
+        chatContentRef.current.scrollTo({
+          top: chatContentRef.current.scrollHeight,
+          behavior: smooth ? 'smooth' : 'auto'
+        });
+      }
+    };
+
+    // Initial scroll without smooth behavior
+    scrollToBottom(false);
+
+    // Set up an observer to watch for content changes
+    const observer = new MutationObserver(() => {
+      scrollToBottom(true);
+    });
+
+    if (chatContentRef.current) {
+      observer.observe(chatContentRef.current, {
+        childList: true,
+        subtree: true,
+        characterData: true
+      });
+    }
+
+    // Clean up
+    return () => observer.disconnect();
+  }, [previousMessages, currentChat, isTyping]);
+
+  // Additional scroll trigger when new content is added
   useEffect(() => {
     if (chatContentRef.current) {
-      chatContentRef.current.scrollTop = chatContentRef.current.scrollHeight;
+      chatContentRef.current.scrollTo({
+        top: chatContentRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
     }
-  }, [previousMessages, currentChat, isTyping]);
+  }, [currentChat.ai?.content]);
 
   return (
     <div
       ref={chatContentRef}
-      className="tw-flex-1 tw-min-h-0 tw-overflow-y-auto tw-p-4 tw-relative tw-flex tw-flex-col tw-space-y-4"
+      className="tw-absolute tw-inset-0 tw-overflow-y-auto tw-overscroll-none tw-p-4 tw-space-y-4"
+      style={{ WebkitOverflowScrolling: 'touch' }}
     >
 
       {showWelcome && (
@@ -54,20 +90,36 @@ const ChatContent: React.FC<ChatContentProps> = ({
         </div>
       )}
 
-      <div className="tw-flex tw-flex-col tw-space-y-4">
+      <div className="tw-flex tw-flex-col tw-space-y-4 tw-min-h-full">
         {previousMessages.map((message) => (
-          <ChatMessage key={message.id} message={message} isStreaming={false} isCurrentMessage={false} />
+          <ChatMessage
+            key={message.id}
+            message={message}
+            isStreaming={false}
+            isCurrentMessage={false}
+            chatContentRef={chatContentRef}
+          />
         ))}
 
         {currentChat.user && (
           <>
-            <ChatMessage message={currentChat.user} isStreaming={false} isCurrentMessage={true} />
+            <ChatMessage
+              message={currentChat.user}
+              isStreaming={false}
+              isCurrentMessage={true}
+              chatContentRef={chatContentRef}
+            />
             {isTyping && <TypingIndicator />}
           </>
         )}
 
         {!isTyping && currentChat.ai && (
-          <ChatMessage message={currentChat.ai} isStreaming={true} isCurrentMessage={true} />
+          <ChatMessage
+            message={currentChat.ai}
+            isStreaming={true}
+            isCurrentMessage={true}
+            chatContentRef={chatContentRef}
+          />
         )}
       </div>
     </div>

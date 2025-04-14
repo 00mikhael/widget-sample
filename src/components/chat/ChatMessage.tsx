@@ -6,9 +6,10 @@ interface ChatMessageProps {
   message: Message;
   isStreaming?: boolean; // Optional prop to control Typed.js initialization
   isCurrentMessage?: boolean; // Optional prop to identify current chat message
+  chatContentRef: React.RefObject<HTMLDivElement>; // Reference to chat content for scrolling
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false, isCurrentMessage = false }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false, isCurrentMessage = false, chatContentRef }) => {
   const isUser = message.sender === 'user';
   const typedElementRef = useRef<HTMLSpanElement>(null);
   const typedInstanceRef = useRef<Typed | null>(null);
@@ -33,10 +34,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
           }
         },
         onStringTyped: () => {
-          // Scroll into view as text is being typed
-          const chatContent = document.querySelector('.tw-overflow-y-auto');
-          if (chatContent) {
-            chatContent.scrollTop = chatContent.scrollHeight;
+          // Scroll into view as text is being typed using the ref
+          if (chatContentRef.current) {
+            chatContentRef.current.scrollTop = chatContentRef.current.scrollHeight;
           }
         }
       };
@@ -72,12 +72,16 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
       <div
         className={`
           tw-max-w-[80%] tw-rounded-2xl tw-px-4 tw-py-3
-          ${isUser ? 'tw-bg-gray-100 tw-text-gray-900' : 'tw-text-gray-800'}
+          tw-text-gray-900
           tw-transition-all tw-duration-200
           hover:tw-shadow-md message-content
-          ${isUser ? 'hover:tw-bg-gray-200' : 'hover:tw-bg-gray-50'}
+          ${isUser ? 'user-message' : 'ai-message'}
         `}
       >
+        {/* Add timestamp */}
+        <div className="message-timestamp">
+          {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        </div>
         {/* Use dangerouslySetInnerHTML for parsed HTML content */}
         {/* For AI messages intended for streaming, use the ref */}
         {!isUser && isStreaming ? (

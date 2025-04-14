@@ -19,8 +19,13 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 }) => {
 
   return (
-    <div className="tw-flex tw-items-center tw-justify-between primary-bg tw-p-4 tw-text-white tw-shadow-md tw-relative tw-z-10">
-      <h3 id="chat-widget-title" className="tw-font-semibold">{name}</h3>
+    <div className="tw-flex tw-items-center tw-justify-between tw-bg-gradient-to-r tw-from-[var(--chat-primary-color)] tw-to-[var(--chat-primary-darker)] tw-p-4 tw-text-white tw-shadow-md tw-relative tw-z-10">
+      <div className="tw-flex tw-items-center tw-gap-2">
+        <div className="tw-flex tw-items-center">
+          <div className="tw-w-2 tw-h-2 tw-rounded-full tw-bg-green-400 tw-animate-pulse tw-mr-2"></div>
+          <h3 id="chat-widget-title" className="tw-font-semibold">{name}</h3>
+        </div>
+      </div>
       <div className="tw-flex tw-gap-2">
         {/* Clear Chat Button */}
         <button

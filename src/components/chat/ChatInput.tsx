@@ -22,6 +22,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
   showWelcome,
 }) => {
   const [messageInput, setMessageInput] = useState('');
+  const [isExpanded, setIsExpanded] = useState(false);
+  const maxLength = 2000;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -73,15 +75,28 @@ const ChatInput: React.FC<ChatInputProps> = ({
   return (
     <div className={`${isFullscreen && showWelcome ? 'tw-transition-transform tw-duration-500 tw-transform -tw-translate-y-40' : 'tw-border-t tw-border-gray-100'} tw-bg-white tw-p-4 tw-sticky tw-bottom-0`}>
       <div className="tw-flex tw-flex-col tw-rounded-xl tw-border tw-border-gray-200 tw-bg-white focus-within:tw-shadow-md">
-        <textarea
-          value={messageInput}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          placeholder={'Ask me anything...'}
-          className="tw-w-full tw-p-3 tw-text-gray-800 tw-placeholder-gray-400 tw-bg-transparent tw-border-none tw-resize-none focus:tw-ring-0 focus:tw-outline-none focus:tw-shadow-none"
-          rows={3}
-          aria-label="Chat message input"
-        />
+        <div className="tw-relative">
+          <textarea
+            value={messageInput}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            onFocus={() => setIsExpanded(true)}
+            onBlur={() => !messageInput && setIsExpanded(false)}
+            placeholder={'Ask me anything...'}
+            className={`
+              tw-w-full tw-p-3 tw-text-gray-800 tw-placeholder-gray-400
+              tw-bg-transparent tw-border-none tw-resize-none
+              focus:tw-ring-0 focus:tw-outline-none focus:tw-shadow-none
+              tw-transition-all tw-duration-200
+              ${isExpanded ? 'tw-min-h-[120px]' : 'tw-min-h-[60px]'}
+            `}
+            maxLength={maxLength}
+            aria-label="Chat message input"
+          />
+          <div className="tw-absolute tw-bottom-1 tw-right-2 tw-text-xs tw-text-gray-400">
+            {messageInput.length}/{maxLength}
+          </div>
+        </div>
 
         {/* File name display */}
         {uploadedFileName && (

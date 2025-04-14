@@ -1,4 +1,5 @@
 import { Message } from '../../components/chat/utils';
+import { API_BASE_URL } from '../../config';
 
 let apiKey: string;
 let widgetName: string;
@@ -31,14 +32,16 @@ export interface ChatResponse {
 
 export const chatAPI = {
   sendMessage: async (data: SendMessageRequest): Promise<{ message: Message }> => {
-    const response = await fetch('/api/chat', {
+    const response = await fetch(`${API_BASE_URL}/chat`, {
       method: 'POST',
       headers: getHeaders(),
+      credentials: 'include',
       body: JSON.stringify(data),
     });
 
     if (!response.ok) {
-      throw new Error('Failed to send message');
+      const errorData = await response.json().catch(() => ({ error: 'Failed to send message' }));
+      throw new Error(errorData.error || 'Failed to send message');
     }
 
     const chatResponse: ChatResponse = await response.json();

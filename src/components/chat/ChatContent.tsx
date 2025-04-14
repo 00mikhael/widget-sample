@@ -8,6 +8,7 @@ interface ChatContentProps {
   currentChat: CurrentChat;
   isTyping: boolean;
   chatContentRef: React.RefObject<HTMLDivElement>;
+  welcomeMessage?: string;
 }
 
 const ChatContent: React.FC<ChatContentProps> = ({
@@ -15,8 +16,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
   currentChat,
   isTyping,
   chatContentRef,
+  welcomeMessage = "Ask AI about..."
 }) => {
-  const welcomeMessage = "Ask AI about Mixhers' hormone support..."; // Default welcome
 
   // Determine if we should show the welcome message
   const showWelcome = previousMessages.length === 0 && !currentChat.user && !currentChat.ai && !isTyping;

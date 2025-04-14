@@ -15,6 +15,7 @@ interface ChatWindowProps {
   primaryColor?: string;
   isFullscreen: boolean;
   name: string;
+  welcomeMessage?: string;
   onClose: () => void;
   onClearChat: (event?: React.MouseEvent) => void;
   onSendMessage: (messageText: string) => void;
@@ -40,7 +41,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   onSendMessage,
   onFileUpload,
   onRemoveFile,
-  onToggleFullscreen
+  onToggleFullscreen,
+  welcomeMessage
   // onNavigateToAskAi
 }) => {
   // We control visibility via transform based on isOpen prop
@@ -71,6 +73,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           currentChat={currentChat}
           isTyping={isTyping}
           chatContentRef={chatContentRef}
+          welcomeMessage={welcomeMessage}
         />
 
         {/* Input Area */}

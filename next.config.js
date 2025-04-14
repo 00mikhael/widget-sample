@@ -1,4 +1,3 @@
-import { API_BASE_URL } from './src/config';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   webpack: (config, { isServer }) => {
@@ -33,17 +32,7 @@ const nextConfig = {
     unoptimized: true,
   },
   // Disable unnecessary features
-  reactStrictMode: true,
-
-  // Proxy API requests to avoid CORS
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: `http://localhost:8002/:path*`,
-      },
-    ];
-  },
+  reactStrictMode: true
 }
 
 module.exports = nextConfig;

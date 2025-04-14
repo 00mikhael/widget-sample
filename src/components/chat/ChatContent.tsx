@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Message, CurrentChat } from './utils';
 import ChatMessage from './ChatMessage';
 import TypingIndicator from './TypingIndicator';
@@ -19,6 +19,13 @@ const ChatContent: React.FC<ChatContentProps> = ({
   welcomeMessage = "Ask AI about..."
 }) => {
   const showWelcome = previousMessages.length === 0 && !currentChat.user && !currentChat.ai && !isTyping;
+
+  // Auto-scroll effect
+  useEffect(() => {
+    if (chatContentRef.current) {
+      chatContentRef.current.scrollTop = chatContentRef.current.scrollHeight;
+    }
+  }, [previousMessages, currentChat, isTyping]);
 
   return (
     <div

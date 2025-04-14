@@ -30,9 +30,14 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false 
           if (self.cursor) {
             self.cursor.remove();
           }
-          // Optionally call a callback here if needed by parent
         },
-        // Consider adding onStringTyped if scroll adjustment is needed during typing
+        onStringTyped: () => {
+          // Scroll into view as text is being typed
+          const chatContent = document.querySelector('.tw-overflow-y-auto');
+          if (chatContent) {
+            chatContent.scrollTop = chatContent.scrollHeight;
+          }
+        }
       };
 
       typedInstanceRef.current = new Typed(typedElementRef.current, options);

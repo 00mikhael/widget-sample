@@ -42,12 +42,24 @@ const ChatWidget: React.FC<WidgetProps> = ({
       utils.initializeAPI(apiKey, name);
     });
 
-    // Check localStorage for chat state
+    // Check localStorage for chat state and messages
     const storedIsOpen = localStorage.getItem('chatIsOpen') === 'true';
     const storedIsFullscreen = localStorage.getItem('chatIsFullscreen') === 'true';
+    const storedChat = localStorage.getItem('chatMessages');
 
     setIsOpen(storedIsOpen);
     setIsFullscreen(storedIsFullscreen);
+
+    // Restore chat messages if they exist
+    if (storedChat) {
+      try {
+        const { previousMessages: savedMessages, currentChat: savedChat } = JSON.parse(storedChat);
+        setPreviousMessages(savedMessages);
+        setCurrentChat(savedChat);
+      } catch (error) {
+        console.error('Failed to parse stored chat messages:', error);
+      }
+    }
 
     if (storedIsOpen) {
       document.body.classList.add('overflow-hidden');
@@ -114,6 +126,18 @@ const ChatWidget: React.FC<WidgetProps> = ({
     }
   }, [isFullscreen, initialized]);
 
+  // Sync chat messages with localStorage
+  useEffect(() => {
+    if (!initialized) return;
+
+    if (previousMessages.length > 0 || currentChat.user || currentChat.ai) {
+      localStorage.setItem('chatMessages', JSON.stringify({
+        previousMessages,
+        currentChat
+      }));
+    }
+  }, [previousMessages, currentChat, initialized]);
+
   // --- Scrolling ---
   const scrollToBottom = useCallback(() => {
     if (chatContentRef.current) {
@@ -147,6 +171,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
 
   const handleClearChat = useCallback((event?: React.MouseEvent) => {
     event?.stopPropagation(); // Prevent event bubbling if called from button click
+    localStorage.removeItem('chatMessages'); // Clear persisted messages
     setUploadedMedia(null); // Clear any pending upload
     setError('');
     setPreviousMessages([]);

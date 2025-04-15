@@ -11,24 +11,60 @@ A customizable React chat widget that can be easily integrated into any web appl
 
 ## Installation
 
-```bash
-npm install lawma-ai-widget
+### Vanilla JavaScript
+```html
+<script src="https://cdn.jsdelivr.net/gh/00mikhael/widget-sample@main/dist/widget.js"></script>
+<script>
+    LAWMAai.init({
+        name: "Your Widget Name",
+        apiKey: "your-api-key",
+        primaryColor: "#007bff",
+        position: "bottom-right"
+    });
+</script>
 ```
 
-## Quick Start
-
-Add the widget to your application:
-
-```javascript
-import ChatWidget from 'lawma-ai-widget';
-
-ChatWidget.init({
-  name: "Your Widget Name",
-  apiKey: "your-api-key",
-  primaryColor: "#007bff",
-  position: "bottom-right"
-});
+### Vue.js
+```vue
+<script src="https://cdn.jsdelivr.net/gh/00mikhael/widget-sample@main/dist/widget.js"></script>
+<script>
+    LAWMAai.init({
+        name: "Your Widget Name",
+        apiKey: "your-api-key",
+        primaryColor: "#007bff",
+        position: "bottom-right"
+    });
+</script>
 ```
+
+### React (Next.js)
+```typescript
+'use client';
+import Script from 'next/script';
+
+export default function LoadWidget() {
+  return (
+    <div>
+      <Script
+        src="https://cdn.jsdelivr.net/gh/00mikhael/widget-sample@main/dist/widget.js"
+        strategy="lazyOnload"
+        onLoad={() => {
+          if (typeof window !== 'undefined' && window.LAWMAai) {
+            window.LAWMAai.init({
+              name: "Your Widget Name",
+              apiKey: "your-api-key",
+              primaryColor: "#007bff",
+              position: "bottom-right"
+            });
+          }
+        }}
+        onError={(e) => console.error('Script failed to load', e)}
+      />
+    </div>
+  );
+}
+```
+
 
 ## Configuration
 

@@ -120,8 +120,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
         {!isTyping && currentChat.ai && (
           <ChatMessage
+            key={`ai-${currentChat.ai.id}`}
             message={currentChat.ai}
-            isStreaming={true}
+            isStreaming={currentChat.ai.isStreaming}
             isCurrentMessage={true}
             chatContentRef={chatContentRef}
           />

@@ -14,6 +14,8 @@ export interface Message {
   agent?: string;
   conversation_id?: string;
   image_url?: string;
+  hasTyped?: boolean; // For tracking typed state of AI messages
+  isStreaming?: boolean; // For future streaming implementation
 }
 
 export interface CurrentChat {

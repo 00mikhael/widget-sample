@@ -54,8 +54,14 @@ const ChatWidget: React.FC<WidgetProps> = ({
     if (storedChat) {
       try {
         const { previousMessages: savedMessages, currentChat: savedChat } = JSON.parse(storedChat);
-        setPreviousMessages(savedMessages);
-        setCurrentChat(savedChat);
+        // Ensure loaded messages have isStreaming set to false
+        const restoredMessages = savedMessages.map((msg: Message) => ({ ...msg, isStreaming: false }));
+        const restoredChat = {
+          user: savedChat.user,
+          ai: savedChat.ai ? { ...savedChat.ai, isStreaming: false } : null
+        };
+        setPreviousMessages(restoredMessages);
+        setCurrentChat(restoredChat);
       } catch (error) {
         console.error('Failed to parse stored chat messages:', error);
       }
@@ -174,8 +180,12 @@ const ChatWidget: React.FC<WidgetProps> = ({
     localStorage.removeItem('chatMessages'); // Clear persisted messages
     setUploadedMedia(null); // Clear any pending upload
     setError('');
-    setPreviousMessages([]);
-    setCurrentChat({ user: null, ai: null });
+    setPreviousMessages([]); // Previous messages are cleared
+    setCurrentChat({
+      user: null,
+      ai: null
+    }); // Reset currentChat with clean state
+    setIsTyping(false); // Ensure typing state is reset
   }, []);
 
   const handleSendMessage = useCallback(async (messageText: string) => {
@@ -215,7 +225,13 @@ const ChatWidget: React.FC<WidgetProps> = ({
       });
 
       setIsTyping(false);
-      setCurrentChat(prev => ({ ...prev, ai: { ...response.message, id: response.message.id || Date.now() + 1 } }));
+      const aiMessage = {
+        ...response.message,
+        id: response.message.id || Date.now() + 1,
+        isStreaming: true, // Mark new AI messages for streaming
+        hasTyped: false // Initialize as not typed
+      };
+      setCurrentChat(prev => ({ ...prev, ai: aiMessage }));
     } catch (err) {
       console.error('Failed to send message:', err);
       setIsTyping(false);

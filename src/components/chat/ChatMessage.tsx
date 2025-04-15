@@ -16,8 +16,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
 
   // Effect for Typed.js animation on AI messages
   useEffect(() => {
-    // Only run for AI messages marked for streaming AND if the element exists
-    if (!isUser && isStreaming && typedElementRef.current) {
+    // Only run for AI messages that are marked for streaming, haven't been typed yet, and if the element exists
+    if (!isUser && isStreaming && !message.hasTyped && typedElementRef.current) {
       // Destroy previous instance if it exists
       typedInstanceRef.current?.destroy();
 
@@ -32,6 +32,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
           if (self.cursor) {
             self.cursor.remove();
           }
+          // Mark message as typed
+          message.hasTyped = true;
         },
         onStringTyped: () => {
           // Scroll into view as text is being typed using the ref
@@ -42,11 +44,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
       };
 
       typedInstanceRef.current = new Typed(typedElementRef.current, options);
-    } else if (!isStreaming && typedInstanceRef.current) {
-      // If streaming stops (e.g., message fully loaded elsewhere), destroy Typed instance
+    } else if ((!isStreaming || message.hasTyped) && typedInstanceRef.current) {
+      // If streaming stops or message was already typed, destroy Typed instance
       typedInstanceRef.current.destroy();
       typedInstanceRef.current = null;
-      // Ensure final content is displayed correctly if Typed was interrupted
+      // Ensure final content is displayed correctly
       if (typedElementRef.current) {
         typedElementRef.current.innerHTML = parseMessage(message.content);
       }
@@ -57,7 +59,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
       typedInstanceRef.current?.destroy();
       typedInstanceRef.current = null;
     };
-  }, [isUser, isStreaming, message.content, message.id]); // Re-run if streaming status or content changes
+  }, [isUser, isStreaming, message.content, message.hasTyped]); // Remove message.id from deps since we use hasTyped now
 
   const parsedContent = parseMessage(message.content);
   const isImageOnly = message.content_type === 'text_image' && !message.content.trim();
@@ -130,4 +132,4 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
   );
 };
 
-export default ChatMessage;
+export default React.memo(ChatMessage);

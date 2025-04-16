@@ -15,6 +15,8 @@ interface ChatContentProps {
   onScroll?: () => void;
 }
 
+const MAX_MESSAGE_LENGTH = 100
+
 const ChatContent: React.FC<ChatContentProps> = ({
   previousMessages,
   currentChat,
@@ -80,9 +82,14 @@ const ChatContent: React.FC<ChatContentProps> = ({
     >
 
       {showWelcome && (
-        <div className={`tw-text-center tw-px-6 welcome-gradient ${isFullscreen ? 'tw-text-3xl tw-pt-48 tw-font-bold' : ''}`}>
+        <div className={`tw-text-center tw-px-6 welcome-gradient ${isFullscreen ? 'tw-text-3xl tw-pt-40 tw-font-bold' : ''}`}>
           <ReactTyped
-            strings={welcomeMessages}
+            strings={welcomeMessages?.map((msg) => {
+              if (msg?.length > MAX_MESSAGE_LENGTH) {
+                return msg.slice(0, MAX_MESSAGE_LENGTH) + '...';
+              }
+              return msg;
+            })}
             typeSpeed={20}
             backSpeed={30}
             backDelay={3000}

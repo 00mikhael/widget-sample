@@ -62,7 +62,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     <div
       className={`
         tw-fixed tw-inset-y-0 tw-right-0
-        ${isFullscreen || isSmallScreen ? 'tw-w-full' : 'tw-w-[32rem]'}
+        ${isFullscreen || isSmallScreen ? 'tw-w-full' : 'tw-w-[24rem]'}
         tw-z-[9999] tw-transform
         tw-transition-all tw-duration-300 tw-ease-out
         tw-flex tw-flex-col chat-window

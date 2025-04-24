@@ -90,25 +90,36 @@
 }
 
 /* Typing animation */
-@keyframes typingBounce {
-  0%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-6px); }
+@keyframes typingCircular {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
 }
 
-.lawma-ai-widget .typing-dot {
-  animation: typingBounce 1.4s infinite ease-in-out both;
+.lawma-ai-widget .tw-typing-dot-new {
+  animation: typingCircular 1.8s infinite ease-in-out;
 }
 
-.lawma-ai-widget .typing-dot:nth-child(1) {
-  animation-delay: -0.32s;
+/* Animation delays to create circular motion */
+.lawma-ai-widget .tw-typing-dot-new:nth-child(1) {
+  animation-delay: 0s; /* Top-left */
 }
 
-.lawma-ai-widget .typing-dot:nth-child(2) {
-  animation-delay: -0.16s;
+.lawma-ai-widget .tw-typing-dot-new:nth-child(2) {
+  animation-delay: 0.45s; /* Top-right */
 }
 
-.lawma-ai-widget .typing-dot:nth-child(3) {
-  animation-delay: 0s;
+.lawma-ai-widget .tw-typing-dot-new:nth-child(4) {
+  animation-delay: 0.9s; /* Bottom-right */
+}
+
+.lawma-ai-widget .tw-typing-dot-new:nth-child(3) {
+  animation-delay: 1.35s; /* Bottom-left */
 }
 
 /* Primary color utility classes */

@@ -16,6 +16,7 @@ interface ChatWindowProps {
   isFullscreen: boolean;
   name: string;
   welcomeMessages?: string[];
+  statusMessage?: string;
   onClose: () => void;
   onClearChat: (event?: React.MouseEvent) => void;
   onSendMessage: (messageText: string) => void;
@@ -41,7 +42,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   onFileUpload,
   onRemoveFile,
   onToggleFullscreen,
-  welcomeMessages
+  welcomeMessages,
+  statusMessage
 }) => {
   const showWelcome = previousMessages.length === 0 && !currentChat.user && !currentChat.ai && !isTyping;
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -94,6 +96,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
               chatContentRef={chatContentRef}
               welcomeMessages={welcomeMessages}
               onSendMessage={onSendMessage}
+              statusMessage={statusMessage}
             />
           </div>
           <ChatInput

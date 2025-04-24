@@ -3,6 +3,9 @@ import { createRoot } from 'react-dom/client';
 import '../styles/widget.css';
 import 'aos/dist/aos.css';
 import { Message, CurrentChat, sendMessageAPI } from './components/chat/utils';
+import { WS_BASE_URL } from './config';
+import { initWebSocket, ProcessingStatus } from './services/api/websocket';
+import { getClientId } from './services/api/chat';
 import Overlay from './components/chat/Overlay';
 import ChatWindow from './components/chat/ChatWindow';
 import ChatToggleButton from './components/chat/ChatToggleButton';
@@ -32,29 +35,50 @@ const ChatWidget: React.FC<WidgetProps> = ({
   const [error, setError] = useState<string>('');
   const [initialized, setInitialized] = useState<boolean>(false);
   const [uploadedMedia, setUploadedMedia] = useState<{ url: string; type: 'image'; file: File } | null>(null); // Store file object too
+  const [statusMessage, setStatusMessage] = useState<string>("Gathering your information");
 
   const chatContentRef = useRef<HTMLDivElement>(null); // Ref for scrolling
 
+  // Helper function to capitalize first letter
+  const capitalizeFirstLetter = (str: string) => {
+    if (!str) return str;
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
+  // --- WebSocket Connection ---
+  useEffect(() => {
+    if (!initialized) return;
+
+    const wsService = initWebSocket(getClientId(), WS_BASE_URL);
+    const handleMessage = (data: ProcessingStatus) => {
+      setStatusMessage(capitalizeFirstLetter(data.status));
+    };
+    wsService.onMessage(handleMessage);
+
+    return () => {
+      wsService.onMessage(() => { }); // Remove our handler
+    };
+  }, [initialized, isTyping]); // Re-establish when typing status changes
+
   // --- Initialization ---
   useEffect(() => {
-    // Initialize API with credentials
+    // Initialize API
     import('./components/chat/utils').then(utils => {
       utils.initializeAPI(apiKey, name);
     });
 
-    // Check localStorage for chat state and messages
-    const storedIsOpen = localStorage.getItem('chatIsOpen') === 'true';
-    const storedIsFullscreen = localStorage.getItem('chatIsFullscreen') === 'true';
+    // Initialize state from localStorage
+    const storedIsOpen = localStorage.getItem('chatIsOpen');
+    const storedIsFullscreen = localStorage.getItem('chatIsFullscreen');
     const storedChat = localStorage.getItem('chatMessages');
 
-    setIsOpen(storedIsOpen);
-    setIsFullscreen(storedIsFullscreen);
+    setIsOpen(storedIsOpen === 'true');
+    setIsFullscreen(storedIsFullscreen === 'true');
 
     // Restore chat messages if they exist
     if (storedChat) {
       try {
         const { previousMessages: savedMessages, currentChat: savedChat } = JSON.parse(storedChat);
-        // Ensure loaded messages have isStreaming set to false
         const restoredMessages = savedMessages.map((msg: Message) => ({ ...msg, isStreaming: false }));
         const restoredChat = {
           user: savedChat.user,
@@ -67,27 +91,19 @@ const ChatWidget: React.FC<WidgetProps> = ({
       }
     }
 
-    if (storedIsOpen) {
+    if (storedIsOpen === 'true') {
       document.body.classList.add('overflow-hidden');
     }
 
-    // Initialize as ready
-    setInitialized(true);
-
-    // Add event listeners for custom events (if needed from other components)
+    // Set up event listeners
     const handleOpenChatEvent = () => {
       if (!isOpen) toggleChat();
     };
+
     const handleOpenWithMessageEvent = (event: CustomEvent) => {
       if (event.detail && event.detail.message) {
-        // We need a way to set the input value in ChatInput from here
-        // Option 1: Pass a setter down (complex prop drilling)
-        // Option 2: Use a ref on ChatInput (better)
-        // Option 3: Use a state management library (like Zustand or Context)
-        // For now, we'll just open the chat. The message sending needs ChatInput ref.
         console.warn("Received 'open-chat-widget-with-message', input setting needs implementation via ref or state management.");
         if (!isOpen) toggleChat();
-        // TODO: Set input value and trigger send after a delay
       } else {
         if (!isOpen) toggleChat();
       }
@@ -96,11 +112,13 @@ const ChatWidget: React.FC<WidgetProps> = ({
     document.addEventListener('open-chat-widget', handleOpenChatEvent);
     document.addEventListener('open-chat-widget-with-message', handleOpenWithMessageEvent as EventListener);
 
-    // Cleanup listeners on unmount
+    // Mark as initialized
+    setInitialized(true);
+
+    // Cleanup function
     return () => {
       document.removeEventListener('open-chat-widget', handleOpenChatEvent);
       document.removeEventListener('open-chat-widget-with-message', handleOpenWithMessageEvent as EventListener);
-      // Ensure body class is removed if component unmounts while open
       document.body.classList.remove('overflow-hidden');
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -193,6 +211,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
 
     setError('');
     setIsTyping(true);
+    // setStatusMessage("Gathering your information"); // Reset to default status
 
     const userMessage: Message = {
       id: Date.now(),
@@ -300,6 +319,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
         onRemoveFile={handleRemoveFile}
         onToggleFullscreen={toggleFullscreen}
         welcomeMessages={welcomeMessages}
+        statusMessage={statusMessage}
       />
 
       {/* Toggle Button */}

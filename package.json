@@ -16,8 +16,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^5.5.0",
     "react-typed": "^2.0.12",
-    "typed.js": "^2.1.0",
-    "uuid": "^11.1.0"
+    "typed.js": "^2.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.10",
@@ -30,6 +29,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/uuid": "^10.0.0",
     "autoprefixer": "^10.0.0",
     "babel-loader": "^10.0.0",
     "css-loader": "^7.1.2",
@@ -43,6 +43,7 @@
     "terser-webpack-plugin": "^5.3.14",
     "ts-loader": "^9.5.2",
     "typescript": "^5",
+    "uuid": "^11.1.0",
     "webpack": "^5.99.2",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.1"

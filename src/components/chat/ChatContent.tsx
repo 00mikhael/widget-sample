@@ -14,6 +14,7 @@ interface ChatContentProps {
   welcomeMessages?: string[];
   onScroll?: () => void;
   onSendMessage: (messageText: string) => void;
+  statusMessage?: string;
 }
 
 const MAX_MESSAGE_LENGTH = 100
@@ -25,7 +26,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
   isFullscreen,
   chatContentRef,
   welcomeMessages,
-  onSendMessage
+  onSendMessage,
+  statusMessage
 }) => {
   const showWelcome = previousMessages.length === 0 && !currentChat.user && !currentChat.ai && !isTyping;
   const typedInstanceRef = useRef<Typed | null>(null);
@@ -84,7 +86,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
     >
 
       {showWelcome && (
-        <div className={`tw-text-center tw-px-6 welcome-gradient ${isFullscreen ? 'tw-text-3xl tw-pt-40 tw-font-bold' : ''}`}>
+        <div className={`tw-text-center tw-px-6 welcome-gradient ${isFullscreen ? 'tw-text-3xl tw-pt-40 tw-font-bold' : 'tw-pt-4'}`}>
           <ReactTyped
             strings={welcomeMessages?.map((msg) => {
               if (msg?.length > MAX_MESSAGE_LENGTH) {
@@ -125,7 +127,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
               chatContentRef={chatContentRef}
               onSendMessage={onSendMessage}
             />
-            {isTyping && <TypingIndicator />}
+            {isTyping && <TypingIndicator statusMessage={statusMessage} />}
           </>
         )}
 

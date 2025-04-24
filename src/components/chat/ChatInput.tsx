@@ -75,7 +75,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   return (
     <div className={`
       tw-transition-transform tw-duration-500 tw-bg-white tw-p-4 tw-sticky tw-bottom-0 tw-mt-4
-      ${isFullscreen && showWelcome ? 'tw-transform -tw-translate-y-40' : 'tw-transform tw-translate-y-0 tw-border-t tw-border-gray-100'}
+      ${isFullscreen && showWelcome ? 'tw-transform -tw-translate-y-32' : 'tw-transform tw-translate-y-0 tw-border-t tw-border-gray-100'}
     `}>
       <div className="tw-flex tw-flex-col tw-rounded-xl tw-border tw-border-gray-200 tw-bg-white focus-within:tw-shadow-md">
         <div className="tw-relative">

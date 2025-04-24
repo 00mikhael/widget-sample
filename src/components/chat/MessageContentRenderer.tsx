@@ -223,11 +223,24 @@ interface TextImageContentProps {
 
 const TextImageContent: React.FC<TextImageContentProps> = ({ content, imageUrl }) => {
   return (
-    <div className="tw-flex tw-flex-col tw-gap-2">
-      {content && <div dangerouslySetInnerHTML={{ __html: parseMessage(content) }}></div>}
+    <div className="tw-flex tw-flex-col tw-gap-3">
+      {/* Text content */}
+      {content && (
+        <div
+          className="tw-text-gray-800 tw-font-medium"
+          dangerouslySetInnerHTML={{ __html: parseMessage(content) }}
+        />
+      )}
+
+      {/* Image with shadow and rounded corners */}
       {imageUrl && (
-        <div className="tw-max-w-[150px] tw-rounded-lg tw-overflow-hidden tw-relative">
-          <img src={imageUrl} alt="Attached" className="tw-w-full tw-h-auto tw-rounded-lg" loading="lazy" />
+        <div className="tw-rounded-lg tw-overflow-hidden tw-shadow-lg">
+          <img
+            src={imageUrl}
+            alt="Attached"
+            className="tw-w-full tw-h-auto tw-rounded-lg"
+            loading="lazy"
+          />
         </div>
       )}
     </div>

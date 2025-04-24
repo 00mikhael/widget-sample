@@ -21,6 +21,7 @@ export interface SendMessageRequest {
   content_type?: string;
   media_url?: string;
   conversation_id?: string;
+  client_id?: string;  // Optional since we handle it in the API service
 }
 
 export interface ChatResponseItem {
@@ -44,12 +45,31 @@ export interface ChatResponse {
   additional_responses?: ChatResponseItem[];
 }
 
+// Helper function to get or create client ID
+export const getClientId = (): string => {
+  const storedClientId = localStorage.getItem('chatClientId');
+  if (!storedClientId) {
+    // Import uuid dynamically since it's only needed here
+    const { v4: uuidv4 } = require('uuid');
+    const newClientId = uuidv4();
+    localStorage.setItem('chatClientId', newClientId);
+    return newClientId;
+  }
+  return storedClientId;
+};
+
 export const chatAPI = {
   sendMessage: async (data: SendMessageRequest): Promise<{ message: Message }> => {
+    // Ensure client_id is present
+    const messageData = {
+      ...data,
+      client_id: data.client_id || getClientId() // Use the helper function
+    };
+
     const response = await fetch(`${API_BASE_URL}/chat`, {
       method: 'POST',
       headers: getHeaders(),
-      body: JSON.stringify(data),
+      body: JSON.stringify(messageData),
     });
 
     if (!response.ok) {

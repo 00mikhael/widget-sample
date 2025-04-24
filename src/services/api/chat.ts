@@ -99,3 +99,13 @@ export const chatAPI = {
     return { message };
   }
 };
+
+const a = {
+  "token": {
+    "access_token": "your_access_token",
+    "token_type": "bearer"
+  },
+  "authorized_urls": [
+    "https://api.example.com",
+  ],
+}

@@ -9,6 +9,7 @@ import { getClientId } from './services/api/chat';
 import Overlay from './components/chat/Overlay';
 import ChatWindow from './components/chat/ChatWindow';
 import ChatToggleButton from './components/chat/ChatToggleButton';
+import InitializingLoader from './components/chat/InitializingLoader';
 
 type ButtonPosition = 'top-right' | 'center-right' | 'bottom-right' | 'top-left' | 'center-left' | 'bottom-left';
 
@@ -39,7 +40,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
   const [error, setError] = useState<string>('');
   const [initialized, setInitialized] = useState<boolean>(false);
   const [uploadedMedia, setUploadedMedia] = useState<{ url: string; type: 'image'; file: File } | null>(null); // Store file object too
-  const [statusMessage, setStatusMessage] = useState<string>("Gathering your information");
+  const [statusMessage, setStatusMessage] = useState<string>("Gathering your information...");
 
   const chatContentRef = useRef<HTMLDivElement>(null); // Ref for scrolling
 
@@ -215,7 +216,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
 
     setError('');
     setIsTyping(true);
-    // setStatusMessage("Gathering your information"); // Reset to default status
+    // setStatusMessage("Gathering your information..."); // Reset to default status
 
     const userMessage: Message = {
       id: Date.now(),
@@ -295,7 +296,12 @@ const ChatWidget: React.FC<WidgetProps> = ({
 
   // Don't render until initialization (history fetch, localStorage check) is complete
   if (!initialized) {
-    return null; // Or a loading indicator if preferred
+    // return (
+    //   <div className='lawma-ai-widget'>
+    //     <InitializingLoader />
+    //   </div>
+    // )
+    return null
   }
 
   return (

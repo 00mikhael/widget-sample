@@ -5,7 +5,7 @@ interface TypingIndicatorProps {
 }
 
 const TypingIndicator: React.FC<TypingIndicatorProps> = ({
-  statusMessage = "Gathering your information"
+  statusMessage = "Gathering your information..."
 }) => {
   return (
     <div className="tw-flex tw-items-center tw-bg-[rgb(224,232,232)] tw-border tw-border-[#486966] tw-rounded-xl tw-p-4 tw-mb-2 tw-max-w-[24rem]">

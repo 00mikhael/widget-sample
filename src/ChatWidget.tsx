@@ -18,6 +18,8 @@ interface WidgetProps {
   primaryColor?: string;
   position?: ButtonPosition;
   welcomeMessages?: string[];
+  popularQuestions?: string[];
+  popularQuestionsTitle?: string;
 }
 
 const ChatWidget: React.FC<WidgetProps> = ({
@@ -26,6 +28,8 @@ const ChatWidget: React.FC<WidgetProps> = ({
   primaryColor,
   position = 'center-right',
   welcomeMessages = ["Ask me anything..."],
+  popularQuestions = [],
+  popularQuestionsTitle = "Popular Questions",
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
@@ -319,6 +323,8 @@ const ChatWidget: React.FC<WidgetProps> = ({
         onRemoveFile={handleRemoveFile}
         onToggleFullscreen={toggleFullscreen}
         welcomeMessages={welcomeMessages}
+        popularQuestions={popularQuestions}
+        popularQuestionsTitle={popularQuestionsTitle}
         statusMessage={statusMessage}
       />
 

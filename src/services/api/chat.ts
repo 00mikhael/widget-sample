@@ -25,10 +25,11 @@ export interface SendMessageRequest {
 }
 
 export interface ChatResponseItem {
-  content_type: 'text' | 'text_image' | 'question' | 'document' | 'image' | 'video';
+  content_type: 'text' | 'text_image' | 'question' | 'document' | 'image' | 'video' | 'follow_up_questions';
   content: string;
   media_url?: string;  // For document, image, video content types
   options?: string[];  // For question content type
+  follow_up_questions?: string[];  // For follow-up questions content type
 }
 
 export interface ChatResponse {
@@ -37,9 +38,10 @@ export interface ChatResponse {
   conversation_id: string;
   agent: string;
   sender: 'ai';
-  content_type?: 'text' | 'text_image' | 'question' | 'document' | 'image' | 'video';
+  content_type?: 'text' | 'text_image' | 'question' | 'document' | 'image' | 'video' | 'follow_up_questions';
   media_url?: string;
   options?: string[];
+  follow_up_questions?: string[];
 
   // Additional responses
   additional_responses?: ChatResponseItem[];
@@ -89,6 +91,7 @@ export const chatAPI = {
       content_type: chatResponse.content_type,
       media_url: chatResponse.media_url,
       options: chatResponse.options,
+      follow_up_questions: chatResponse.follow_up_questions,
       additional_responses: chatResponse.additional_responses,
       timestamp: new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
     };

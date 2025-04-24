@@ -16,6 +16,8 @@ interface ChatWindowProps {
   isFullscreen: boolean;
   name: string;
   welcomeMessages?: string[];
+  popularQuestions?: string[];
+  popularQuestionsTitle?: string;
   statusMessage?: string;
   onClose: () => void;
   onClearChat: (event?: React.MouseEvent) => void;
@@ -43,6 +45,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   onRemoveFile,
   onToggleFullscreen,
   welcomeMessages,
+  popularQuestions,
+  popularQuestionsTitle,
   statusMessage
 }) => {
   const showWelcome = previousMessages.length === 0 && !currentChat.user && !currentChat.ai && !isTyping;
@@ -86,7 +90,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           name={name}
         />
 
-        <div className={`tw-flex-1 tw-w-full tw-mx-auto tw-flex tw-flex-col tw-overflow-hidden ${isFullscreen ? 'tw-max-w-[1000px]' : ''}`}>
+        <div className={`tw-flex-1 tw-w-full tw-mx-auto tw-flex tw-flex-col tw-overflow-hidden ${isFullscreen ? 'tw-max-w-[1100px]' : ''}`}>
           <div className="tw-relative tw-flex-1 tw-min-h-0">
             <ChatContent
               previousMessages={previousMessages}
@@ -96,6 +100,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
               chatContentRef={chatContentRef}
               welcomeMessages={welcomeMessages}
               onSendMessage={onSendMessage}
+              popularQuestions={popularQuestions}
+              popularQuestionsTitle={popularQuestionsTitle}
               statusMessage={statusMessage}
             />
           </div>

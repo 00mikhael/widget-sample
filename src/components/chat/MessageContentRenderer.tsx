@@ -1,5 +1,6 @@
 import React from 'react';
 import { parseMessage } from './utils';
+import PopularQuestions from './PopularQuestions';
 
 interface MessageContentRendererProps {
   contentType?: string;
@@ -7,6 +8,7 @@ interface MessageContentRendererProps {
   mediaUrl?: string;
   options?: string[];
   imageUrl?: string;
+  follow_up_questions?: string[];
   onSendMessage: (message: string) => void;
   isStreaming?: boolean;
   isUser?: boolean;
@@ -22,7 +24,8 @@ const MessageContentRenderer: React.FC<MessageContentRendererProps> = ({
   onSendMessage,
   isStreaming = false,
   isUser = false,
-  typedElementRef
+  typedElementRef,
+  follow_up_questions
 }) => {
   const handleOptionSelect = (option: string) => {
     onSendMessage(option);
@@ -30,6 +33,17 @@ const MessageContentRenderer: React.FC<MessageContentRendererProps> = ({
 
   // Render the appropriate content based on type
   switch (contentType) {
+    case 'follow_up_questions':
+      return (
+        <PopularQuestions
+          questions={follow_up_questions || []}
+          handleSendMessage={async (text) => {
+            await Promise.resolve(onSendMessage(text));
+          }}
+          title={content || "Follow up questions"}
+          variant="follow-up"
+        />
+      );
     case 'question':
       return <QuestionContent content={content} options={options} onSelect={handleOptionSelect} />;
     case 'image':

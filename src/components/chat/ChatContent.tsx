@@ -4,6 +4,7 @@ import type { Typed } from 'react-typed';
 import { Message, CurrentChat } from './utils';
 import ChatMessage from './ChatMessage';
 import TypingIndicator from './TypingIndicator';
+import PopularQuestions from './PopularQuestions';
 
 interface ChatContentProps {
   previousMessages: Message[];
@@ -12,12 +13,14 @@ interface ChatContentProps {
   isFullscreen: boolean;
   chatContentRef: React.RefObject<HTMLDivElement>;
   welcomeMessages?: string[];
+  popularQuestions?: string[];
+  popularQuestionsTitle?: string;
   onScroll?: () => void;
   onSendMessage: (messageText: string) => void;
   statusMessage?: string;
 }
 
-const MAX_MESSAGE_LENGTH = 100
+const MAX_MESSAGE_LENGTH = 60
 
 const ChatContent: React.FC<ChatContentProps> = ({
   previousMessages,
@@ -26,6 +29,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
   isFullscreen,
   chatContentRef,
   welcomeMessages,
+  popularQuestions,
+  popularQuestionsTitle,
   onSendMessage,
   statusMessage
 }) => {
@@ -35,7 +40,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
   // Enhanced auto-scroll effect with smooth scrolling
   useEffect(() => {
     const scrollToBottom = (smooth = true) => {
-      if (chatContentRef.current) {
+      if (chatContentRef.current && !showWelcome) {
         chatContentRef.current.scrollTo({
           top: chatContentRef.current.scrollHeight,
           behavior: smooth ? 'smooth' : 'auto'
@@ -44,14 +49,18 @@ const ChatContent: React.FC<ChatContentProps> = ({
     };
 
     // Initial scroll without smooth behavior
-    scrollToBottom(false);
+    if (!showWelcome) {
+      scrollToBottom(false);
+    }
 
     // Set up an observer to watch for content changes
     const observer = new MutationObserver(() => {
-      scrollToBottom(true);
+      if (!showWelcome) {
+        scrollToBottom(true);
+      }
     });
 
-    if (chatContentRef.current) {
+    if (chatContentRef.current && !showWelcome) {
       observer.observe(chatContentRef.current, {
         childList: true,
         subtree: true,
@@ -61,17 +70,17 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
     // Clean up
     return () => observer.disconnect();
-  }, [previousMessages, currentChat, isTyping]);
+  }, [previousMessages, currentChat, isTyping, showWelcome]);
 
   // Additional scroll trigger when new content is added
   useEffect(() => {
-    if (chatContentRef.current) {
+    if (chatContentRef.current && !showWelcome) {
       chatContentRef.current.scrollTo({
         top: chatContentRef.current.scrollHeight,
         behavior: 'smooth'
       });
     }
-  }, [currentChat.ai?.content]);
+  }, [currentChat.ai?.content, showWelcome]);
 
   return (
     <div
@@ -84,26 +93,39 @@ const ChatContent: React.FC<ChatContentProps> = ({
       `}
       style={{ WebkitOverflowScrolling: 'touch' }}
     >
-
       {showWelcome && (
-        <div className={`tw-text-center tw-px-6 welcome-gradient ${isFullscreen ? 'tw-text-3xl tw-pt-40 tw-font-bold' : 'tw-pt-4'}`}>
-          <ReactTyped
-            strings={welcomeMessages?.map((msg) => {
-              if (msg?.length > MAX_MESSAGE_LENGTH) {
-                return msg.slice(0, MAX_MESSAGE_LENGTH) + '...';
-              }
-              return msg;
-            })}
-            typeSpeed={20}
-            backSpeed={30}
-            backDelay={3000}
-            loop
-            smartBackspace
-            shuffle={false}
-            // Store instance for potential destruction
-            typedRef={(typed) => { typedInstanceRef.current = typed; }}
-          />
-        </div>
+        <>
+          <div className={`tw-text-center tw-px-6 welcome-gradient ${isFullscreen ? 'tw-text-3xl tw-pt-20 tw-font-bold' : 'tw-pt-4 tw-h-14'}`}>
+            <ReactTyped
+              key={showWelcome ? 'active' : 'inactive'}
+              strings={welcomeMessages?.map((msg) => {
+                if (msg?.length > MAX_MESSAGE_LENGTH) {
+                  return msg.slice(0, MAX_MESSAGE_LENGTH) + '...';
+                }
+                return msg;
+              })}
+              typeSpeed={20}
+              backSpeed={30}
+              backDelay={3000}
+              loop
+              smartBackspace
+              shuffle={false}
+              typedRef={(typed) => { typedInstanceRef.current = typed; }}
+            />
+          </div>
+
+          {popularQuestions && popularQuestions.length > 0 && (
+            <div className={`${isFullscreen ? `tw-pt-2` : `tw-pt-6`}`}>
+              <PopularQuestions
+                questions={popularQuestions}
+                handleSendMessage={async (text) => {
+                  await onSendMessage(text);
+                }}
+                title={popularQuestionsTitle}
+              />
+            </div>
+          )}
+        </>
       )}
 
       <div className={`tw-flex tw-flex-col tw-space-y-4 ${!showWelcome ? 'tw-min-h-full' : ''}`}>

@@ -6,7 +6,8 @@ export { initializeAPI };
 
 // Types
 export interface MessageItem {
-  content_type: 'text' | 'text_image' | 'question' | 'document' | 'image' | 'video';
+  content_type: 'text' | 'text_image' | 'question' | 'document' | 'image' | 'video' | 'follow_up_questions';
+  follow_up_questions?: string[];
   content: string;
   media_url?: string;
   options?: string[];
@@ -17,7 +18,8 @@ export interface Message {
   content: string;
   sender: 'user' | 'ai';
   timestamp?: string;
-  content_type?: 'text' | 'text_image' | 'question' | 'document' | 'image' | 'video';
+  content_type?: 'text' | 'text_image' | 'question' | 'document' | 'image' | 'video' | 'follow_up_questions';
+  follow_up_questions?: string[];
   agent?: string;
   conversation_id?: string;
   image_url?: string;

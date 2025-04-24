@@ -1,17 +1,19 @@
 import React, { useEffect, useRef } from 'react';
 import Typed from 'typed.js';
 import { Message, parseMessage } from './utils';
+import MessageContentRenderer from './MessageContentRenderer';
 
 interface ChatMessageProps {
   message: Message;
   isStreaming?: boolean; // Optional prop to control Typed.js initialization
   isCurrentMessage?: boolean; // Optional prop to identify current chat message
   chatContentRef: React.RefObject<HTMLDivElement>; // Reference to chat content for scrolling
+  onSendMessage: (messageText: string) => void; // Handler for sending messages (for question options)
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false, isCurrentMessage = false, chatContentRef }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false, isCurrentMessage = false, chatContentRef, onSendMessage }) => {
   const isUser = message.sender === 'user';
-  const typedElementRef = useRef<HTMLSpanElement>(null);
+  const typedElementRef = useRef<HTMLSpanElement | null>(null);
   const typedInstanceRef = useRef<Typed | null>(null);
 
   // Effect for Typed.js animation on AI messages
@@ -61,7 +63,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
     };
   }, [isUser, isStreaming, message.content, message.hasTyped]); // Remove message.id from deps since we use hasTyped now
 
-  const parsedContent = parseMessage(message.content);
   const isImageOnly = message.content_type === 'text_image' && !message.content.trim();
 
   return (
@@ -112,13 +113,35 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
             `}
           >
 
-            {/* Show content only if it's not an image-only message */}
-            {(!isImageOnly) && (
-              !isUser && isStreaming ? (
-                <span ref={typedElementRef} />
-              ) : (
-                <div dangerouslySetInnerHTML={{ __html: parsedContent }}></div>
-              )
+            {/* Show content based on type */}
+            {!isImageOnly && (
+              <MessageContentRenderer
+                contentType={message.content_type}
+                content={message.content}
+                mediaUrl={message.media_url}
+                imageUrl={message.image_url}
+                options={message.options}
+                onSendMessage={onSendMessage}
+                isStreaming={isStreaming}
+                isUser={isUser}
+                typedElementRef={typedElementRef}
+              />
+            )}
+
+            {/* Show additional responses */}
+            {!isUser && message.additional_responses && message.additional_responses.length > 0 && (
+              <div className="tw-flex tw-flex-col tw-gap-4 tw-mt-4 tw-border-t tw-border-gray-100 tw-pt-4">
+                {message.additional_responses.map((response, index) => (
+                  <MessageContentRenderer
+                    key={index}
+                    contentType={response.content_type}
+                    content={response.content}
+                    mediaUrl={response.media_url}
+                    options={response.options}
+                    onSendMessage={onSendMessage}
+                  />
+                ))}
+              </div>
             )}
 
             {/* Timestamp that shows on hover */}

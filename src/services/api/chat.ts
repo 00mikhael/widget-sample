@@ -23,11 +23,25 @@ export interface SendMessageRequest {
   conversation_id?: string;
 }
 
+export interface ChatResponseItem {
+  content_type: 'text' | 'text_image' | 'question' | 'document' | 'image' | 'video';
+  content: string;
+  media_url?: string;  // For document, image, video content types
+  options?: string[];  // For question content type
+}
+
 export interface ChatResponse {
+  // Primary response
   content: string;
   conversation_id: string;
   agent: string;
   sender: 'ai';
+  content_type?: 'text' | 'text_image' | 'question' | 'document' | 'image' | 'video';
+  media_url?: string;
+  options?: string[];
+
+  // Additional responses
+  additional_responses?: ChatResponseItem[];
 }
 
 export const chatAPI = {
@@ -52,6 +66,10 @@ export const chatAPI = {
       sender: chatResponse.sender,
       agent: chatResponse.agent,
       conversation_id: chatResponse.conversation_id,
+      content_type: chatResponse.content_type,
+      media_url: chatResponse.media_url,
+      options: chatResponse.options,
+      additional_responses: chatResponse.additional_responses,
       timestamp: new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
     };
 

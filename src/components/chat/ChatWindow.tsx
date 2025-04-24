@@ -93,6 +93,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
               isFullscreen={isFullscreen}
               chatContentRef={chatContentRef}
               welcomeMessages={welcomeMessages}
+              onSendMessage={onSendMessage}
             />
           </div>
           <ChatInput

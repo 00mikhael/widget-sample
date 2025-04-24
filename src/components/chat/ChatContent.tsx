@@ -13,6 +13,7 @@ interface ChatContentProps {
   chatContentRef: React.RefObject<HTMLDivElement>;
   welcomeMessages?: string[];
   onScroll?: () => void;
+  onSendMessage: (messageText: string) => void;
 }
 
 const MAX_MESSAGE_LENGTH = 100
@@ -23,7 +24,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
   isTyping,
   isFullscreen,
   chatContentRef,
-  welcomeMessages
+  welcomeMessages,
+  onSendMessage
 }) => {
   const showWelcome = previousMessages.length === 0 && !currentChat.user && !currentChat.ai && !isTyping;
   const typedInstanceRef = useRef<Typed | null>(null);
@@ -110,6 +112,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
             isStreaming={false}
             isCurrentMessage={false}
             chatContentRef={chatContentRef}
+            onSendMessage={onSendMessage}
           />
         ))}
 
@@ -120,6 +123,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
               isStreaming={false}
               isCurrentMessage={true}
               chatContentRef={chatContentRef}
+              onSendMessage={onSendMessage}
             />
             {isTyping && <TypingIndicator />}
           </>
@@ -132,6 +136,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
             isStreaming={currentChat.ai.isStreaming}
             isCurrentMessage={true}
             chatContentRef={chatContentRef}
+            onSendMessage={onSendMessage}
           />
         )}
       </div>

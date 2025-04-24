@@ -5,15 +5,25 @@ export const { sendMessage: sendMessageAPI } = chatAPI;
 export { initializeAPI };
 
 // Types
+export interface MessageItem {
+  content_type: 'text' | 'text_image' | 'question' | 'document' | 'image' | 'video';
+  content: string;
+  media_url?: string;
+  options?: string[];
+}
+
 export interface Message {
   id: number | string;
   content: string;
   sender: 'user' | 'ai';
   timestamp?: string;
-  content_type?: 'text' | 'text_image';
+  content_type?: 'text' | 'text_image' | 'question' | 'document' | 'image' | 'video';
   agent?: string;
   conversation_id?: string;
   image_url?: string;
+  media_url?: string;
+  options?: string[];
+  additional_responses?: MessageItem[];
   hasTyped?: boolean; // For tracking typed state of AI messages
   isStreaming?: boolean; // For future streaming implementation
 }

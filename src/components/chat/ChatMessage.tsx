@@ -109,7 +109,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
               tw-text-gray-900
               tw-transition-all tw-duration-200
               hover:tw-shadow-md message-content
-              ${isUser ? 'tw-bg-gray-50 hover:tw-bg-gray-100 user-message tw-text-sm tw-px-4 tw-py-2' : 'tw-px-4 tw-py-3 ai-message'}
+              tw-text-sm tw-px-4 tw-py-2
+              ${isUser ? 'tw-bg-gray-50 hover:tw-bg-gray-100 user-message' : 'ai-message'}
             `}
           >
 

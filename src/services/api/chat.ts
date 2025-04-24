@@ -1,19 +1,38 @@
 import { Message } from '../../components/chat/utils';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL, ACCESS_TOKEN } from '../../config';
 
 let apiKey: string;
 let widgetName: string;
 
-export const initializeAPI = (key: string, name: string) => {
+export interface InitializeResponse {
+  token: {
+    access_token: string;
+    token_type: string;
+  };
+  authorized_urls: string[];
+}
+
+export const initializeAPI = async (key: string, name: string): Promise<InitializeResponse> => {
   apiKey = key;
   widgetName = name;
+
+  const response = await chatAPI.initialize();
+  return response;
 };
 
-const getHeaders = () => ({
-  'Content-Type': 'application/json',
-  'X-Api-Key': apiKey,
-  'X-Widget-Name': widgetName
-});
+const getHeaders = () => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'X-Api-Key': apiKey,
+    'X-Widget-Name': widgetName
+  };
+
+  if (ACCESS_TOKEN) {
+    headers['Authorization'] = `Bearer ${ACCESS_TOKEN}`;
+  }
+
+  return headers;
+};
 
 export interface SendMessageRequest {
   message: string;
@@ -61,6 +80,20 @@ export const getClientId = (): string => {
 };
 
 export const chatAPI = {
+  initialize: async (): Promise<InitializeResponse> => {
+    const response = await fetch(`${API_BASE_URL}/initialize`, {
+      method: 'GET',
+      headers: getHeaders(),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Failed to initialize' }));
+      throw new Error(errorData.error || 'Failed to initialize');
+    }
+
+    return response.json();
+  },
+
   sendMessage: async (data: SendMessageRequest): Promise<{ message: Message }> => {
     // Ensure client_id is present
     const messageData = {
@@ -99,13 +132,3 @@ export const chatAPI = {
     return { message };
   }
 };
-
-const a = {
-  "token": {
-    "access_token": "your_access_token",
-    "token_type": "bearer"
-  },
-  "authorized_urls": [
-    "https://api.example.com",
-  ],
-}

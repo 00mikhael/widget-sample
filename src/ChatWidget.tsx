@@ -3,9 +3,9 @@ import { createRoot } from 'react-dom/client';
 import '../styles/widget.css';
 import 'aos/dist/aos.css';
 import { Message, CurrentChat, sendMessageAPI } from './components/chat/utils';
-import { WS_BASE_URL } from './config';
+import { WS_BASE_URL, updateConfig } from './config';
 import { initWebSocket, ProcessingStatus } from './services/api/websocket';
-import { getClientId } from './services/api/chat';
+import { getClientId, initializeAPI } from './services/api/chat';
 import Overlay from './components/chat/Overlay';
 import ChatWindow from './components/chat/ChatWindow';
 import ChatToggleButton from './components/chat/ChatToggleButton';
@@ -39,10 +39,10 @@ const ChatWidget: React.FC<WidgetProps> = ({
   const [currentChat, setCurrentChat] = useState<CurrentChat>({ user: null, ai: null });
   const [error, setError] = useState<string>('');
   const [initialized, setInitialized] = useState<boolean>(false);
-  const [uploadedMedia, setUploadedMedia] = useState<{ url: string; type: 'image'; file: File } | null>(null); // Store file object too
+  const [uploadedMedia, setUploadedMedia] = useState<{ url: string; type: 'image'; file: File } | null>(null);
   const [statusMessage, setStatusMessage] = useState<string>("Gathering your information...");
 
-  const chatContentRef = useRef<HTMLDivElement>(null); // Ref for scrolling
+  const chatContentRef = useRef<HTMLDivElement>(null);
 
   // Helper function to capitalize first letter
   const capitalizeFirstLetter = (str: string) => {
@@ -54,79 +54,140 @@ const ChatWidget: React.FC<WidgetProps> = ({
   useEffect(() => {
     if (!initialized) return;
 
-    const wsService = initWebSocket(getClientId(), WS_BASE_URL);
-    const handleMessage = (data: ProcessingStatus) => {
+    const wsService = initWebSocket(getClientId());
+    wsService.onMessage((data: ProcessingStatus) => {
+      console.log('WebSocket message received:', data);
       setStatusMessage(capitalizeFirstLetter(data.status));
-    };
-    wsService.onMessage(handleMessage);
+    });
 
-    return () => {
-      wsService.onMessage(() => { }); // Remove our handler
-    };
-  }, [initialized, isTyping]); // Re-establish when typing status changes
+    // No cleanup needed as we want to keep the connection
+  }, [initialized]); // Only re-establish on initialization
 
   // --- Initialization ---
   useEffect(() => {
-    // Initialize API
-    import('./components/chat/utils').then(utils => {
-      utils.initializeAPI(apiKey, name);
-    });
-
-    // Initialize state from localStorage
-    const storedIsOpen = localStorage.getItem('chatIsOpen');
-    const storedIsFullscreen = localStorage.getItem('chatIsFullscreen');
-    const storedChat = localStorage.getItem('chatMessages');
-
-    setIsOpen(storedIsOpen === 'true');
-    setIsFullscreen(storedIsFullscreen === 'true');
-
-    // Restore chat messages if they exist
-    if (storedChat) {
+    async function init() {
       try {
-        const { previousMessages: savedMessages, currentChat: savedChat } = JSON.parse(storedChat);
-        const restoredMessages = savedMessages.map((msg: Message) => ({ ...msg, isStreaming: false }));
-        const restoredChat = {
-          user: savedChat.user,
-          ai: savedChat.ai ? { ...savedChat.ai, isStreaming: false } : null
+        const initResponse = await initializeAPI(apiKey, name);
+        updateConfig(initResponse);
+
+        // Initialize state from localStorage
+        const storedIsOpen = localStorage.getItem('chatIsOpen');
+        const storedIsFullscreen = localStorage.getItem('chatIsFullscreen');
+        const storedChat = localStorage.getItem('chatMessages');
+
+        setIsOpen(storedIsOpen === 'true');
+        setIsFullscreen(storedIsFullscreen === 'true');
+
+        // Restore chat messages if they exist
+        if (storedChat) {
+          try {
+            const { previousMessages: savedMessages, currentChat: savedChat } = JSON.parse(storedChat);
+            const restoredMessages = savedMessages.map((msg: Message) => ({ ...msg, isStreaming: false }));
+            const restoredChat = {
+              user: savedChat.user,
+              ai: savedChat.ai ? { ...savedChat.ai, isStreaming: false } : null
+            };
+            setPreviousMessages(restoredMessages);
+            setCurrentChat(restoredChat);
+          } catch (error) {
+            console.error('Failed to parse stored chat messages:', error);
+          }
+        }
+
+        if (storedIsOpen === 'true') {
+          document.body.classList.add('overflow-hidden');
+        }
+
+        // Set up event listeners
+        const handleOpenChatEvent = () => {
+          if (!isOpen) toggleChat();
         };
-        setPreviousMessages(restoredMessages);
-        setCurrentChat(restoredChat);
+
+        const handleOpenWithMessageEvent = (event: CustomEvent) => {
+          if (event.detail && event.detail.message) {
+            console.warn("Received 'open-chat-widget-with-message', input setting needs implementation via ref or state management.");
+            if (!isOpen) toggleChat();
+          } else {
+            if (!isOpen) toggleChat();
+          }
+        };
+
+        document.addEventListener('open-chat-widget', handleOpenChatEvent);
+        document.addEventListener('open-chat-widget-with-message', handleOpenWithMessageEvent as EventListener);
+
+        // Mark as initialized
+        setInitialized(true);
+
+        // Return cleanup function
+        return () => {
+          document.removeEventListener('open-chat-widget', handleOpenChatEvent);
+          document.removeEventListener('open-chat-widget-with-message', handleOpenWithMessageEvent as EventListener);
+          document.body.classList.remove('overflow-hidden');
+        };
       } catch (error) {
-        console.error('Failed to parse stored chat messages:', error);
+        console.error('Failed to initialize chat widget:', error);
+        setError('Failed to initialize chat widget');
+
+
+        // Leave this for now. Don't remove it. I repeat cline, don't remove it.
+        // Initialize state from localStorage
+        const storedIsOpen = localStorage.getItem('chatIsOpen');
+        const storedIsFullscreen = localStorage.getItem('chatIsFullscreen');
+        const storedChat = localStorage.getItem('chatMessages');
+
+        setIsOpen(storedIsOpen === 'true');
+        setIsFullscreen(storedIsFullscreen === 'true');
+
+        // Restore chat messages if they exist
+        if (storedChat) {
+          try {
+            const { previousMessages: savedMessages, currentChat: savedChat } = JSON.parse(storedChat);
+            const restoredMessages = savedMessages.map((msg: Message) => ({ ...msg, isStreaming: false }));
+            const restoredChat = {
+              user: savedChat.user,
+              ai: savedChat.ai ? { ...savedChat.ai, isStreaming: false } : null
+            };
+            setPreviousMessages(restoredMessages);
+            setCurrentChat(restoredChat);
+          } catch (error) {
+            console.error('Failed to parse stored chat messages:', error);
+          }
+        }
+
+        if (storedIsOpen === 'true') {
+          document.body.classList.add('overflow-hidden');
+        }
+
+        // Set up event listeners
+        const handleOpenChatEvent = () => {
+          if (!isOpen) toggleChat();
+        };
+
+        const handleOpenWithMessageEvent = (event: CustomEvent) => {
+          if (event.detail && event.detail.message) {
+            console.warn("Received 'open-chat-widget-with-message', input setting needs implementation via ref or state management.");
+            if (!isOpen) toggleChat();
+          } else {
+            if (!isOpen) toggleChat();
+          }
+        };
+
+        document.addEventListener('open-chat-widget', handleOpenChatEvent);
+        document.addEventListener('open-chat-widget-with-message', handleOpenWithMessageEvent as EventListener);
+
+        // Mark as initialized
+        setInitialized(true);
+
+        // Return cleanup function
+        return () => {
+          document.removeEventListener('open-chat-widget', handleOpenChatEvent);
+          document.removeEventListener('open-chat-widget-with-message', handleOpenWithMessageEvent as EventListener);
+          document.body.classList.remove('overflow-hidden');
+        };
       }
     }
 
-    if (storedIsOpen === 'true') {
-      document.body.classList.add('overflow-hidden');
-    }
-
-    // Set up event listeners
-    const handleOpenChatEvent = () => {
-      if (!isOpen) toggleChat();
-    };
-
-    const handleOpenWithMessageEvent = (event: CustomEvent) => {
-      if (event.detail && event.detail.message) {
-        console.warn("Received 'open-chat-widget-with-message', input setting needs implementation via ref or state management.");
-        if (!isOpen) toggleChat();
-      } else {
-        if (!isOpen) toggleChat();
-      }
-    };
-
-    document.addEventListener('open-chat-widget', handleOpenChatEvent);
-    document.addEventListener('open-chat-widget-with-message', handleOpenWithMessageEvent as EventListener);
-
-    // Mark as initialized
-    setInitialized(true);
-
-    // Cleanup function
-    return () => {
-      document.removeEventListener('open-chat-widget', handleOpenChatEvent);
-      document.removeEventListener('open-chat-widget-with-message', handleOpenWithMessageEvent as EventListener);
-      document.body.classList.remove('overflow-hidden');
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    init();
   }, []); // Empty dependency array ensures this runs only once on mount
 
   // --- LocalStorage Sync ---
@@ -188,7 +249,6 @@ const ChatWidget: React.FC<WidgetProps> = ({
     }
   }, [previousMessages, currentChat, isTyping, isOpen, scrollToBottom]);
 
-
   // --- Event Handlers ---
   const toggleChat = useCallback(() => {
     setIsOpen(prev => !prev);
@@ -216,7 +276,6 @@ const ChatWidget: React.FC<WidgetProps> = ({
 
     setError('');
     setIsTyping(true);
-    // setStatusMessage("Gathering your information..."); // Reset to default status
 
     const userMessage: Message = {
       id: Date.now(),
@@ -263,7 +322,6 @@ const ChatWidget: React.FC<WidgetProps> = ({
     }
   }, [previousMessages, currentChat, uploadedMedia]); // Dependencies
 
-
   const handleFileUpload = useCallback((file: File) => {
     if (!file || !file.type.startsWith('image/')) {
       setError('Please select an image file.');
@@ -294,14 +352,9 @@ const ChatWidget: React.FC<WidgetProps> = ({
     setError('');
   }, []);
 
-  // Don't render until initialization (history fetch, localStorage check) is complete
+  // Don't render until initialization is complete
   if (!initialized) {
-    // return (
-    //   <div className='lawma-ai-widget'>
-    //     <InitializingLoader />
-    //   </div>
-    // )
-    return null
+    return <InitializingLoader />;
   }
 
   return (

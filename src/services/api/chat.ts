@@ -23,8 +23,8 @@ export const initializeAPI = async (key: string, name: string): Promise<Initiali
 const getHeaders = () => {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    'X-Api-Key': apiKey,
-    'X-Widget-Name': widgetName
+    'x-api-key': apiKey,
+    'x-widget-name': widgetName
   };
 
   if (ACCESS_TOKEN) {

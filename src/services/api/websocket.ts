@@ -2,7 +2,6 @@ import { WS_BASE_URL, ACCESS_TOKEN } from '../../config';
 
 export interface ProcessingStatus {
   status: string;
-  message_id?: string;
 }
 
 let ws: WebSocket | null = null;

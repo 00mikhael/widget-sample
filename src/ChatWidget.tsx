@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import '../styles/widget.css';
 import 'aos/dist/aos.css';
 import { Message, CurrentChat, sendMessageAPI } from './components/chat/utils';
-import { WS_BASE_URL, updateConfig } from './config';
+import { updateConfig } from './config';
 import { initWebSocket, ProcessingStatus } from './services/api/websocket';
 import { getClientId, initializeAPI } from './services/api/chat';
 import Overlay from './components/chat/Overlay';
@@ -67,8 +67,8 @@ const ChatWidget: React.FC<WidgetProps> = ({
   useEffect(() => {
     async function init() {
       try {
-        const initResponse = await initializeAPI(apiKey, name);
-        updateConfig(initResponse);
+        // const initResponse = await initializeAPI(apiKey, name);
+        // updateConfig(initResponse);
 
         // Initialize state from localStorage
         const storedIsOpen = localStorage.getItem('chatIsOpen');
@@ -127,63 +127,6 @@ const ChatWidget: React.FC<WidgetProps> = ({
       } catch (error) {
         console.error('Failed to initialize chat widget:', error);
         setError('Failed to initialize chat widget');
-
-
-        // Leave this for now. Don't remove it. I repeat cline, don't remove it.
-        // Initialize state from localStorage
-        const storedIsOpen = localStorage.getItem('chatIsOpen');
-        const storedIsFullscreen = localStorage.getItem('chatIsFullscreen');
-        const storedChat = localStorage.getItem('chatMessages');
-
-        setIsOpen(storedIsOpen === 'true');
-        setIsFullscreen(storedIsFullscreen === 'true');
-
-        // Restore chat messages if they exist
-        if (storedChat) {
-          try {
-            const { previousMessages: savedMessages, currentChat: savedChat } = JSON.parse(storedChat);
-            const restoredMessages = savedMessages.map((msg: Message) => ({ ...msg, isStreaming: false }));
-            const restoredChat = {
-              user: savedChat.user,
-              ai: savedChat.ai ? { ...savedChat.ai, isStreaming: false } : null
-            };
-            setPreviousMessages(restoredMessages);
-            setCurrentChat(restoredChat);
-          } catch (error) {
-            console.error('Failed to parse stored chat messages:', error);
-          }
-        }
-
-        if (storedIsOpen === 'true') {
-          document.body.classList.add('overflow-hidden');
-        }
-
-        // Set up event listeners
-        const handleOpenChatEvent = () => {
-          if (!isOpen) toggleChat();
-        };
-
-        const handleOpenWithMessageEvent = (event: CustomEvent) => {
-          if (event.detail && event.detail.message) {
-            console.warn("Received 'open-chat-widget-with-message', input setting needs implementation via ref or state management.");
-            if (!isOpen) toggleChat();
-          } else {
-            if (!isOpen) toggleChat();
-          }
-        };
-
-        document.addEventListener('open-chat-widget', handleOpenChatEvent);
-        document.addEventListener('open-chat-widget-with-message', handleOpenWithMessageEvent as EventListener);
-
-        // Mark as initialized
-        setInitialized(true);
-
-        // Return cleanup function
-        return () => {
-          document.removeEventListener('open-chat-widget', handleOpenChatEvent);
-          document.removeEventListener('open-chat-widget-with-message', handleOpenWithMessageEvent as EventListener);
-          document.body.classList.remove('overflow-hidden');
-        };
       }
     }
 
@@ -354,7 +297,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
 
   // Don't render until initialization is complete
   if (!initialized) {
-    return <InitializingLoader />;
+    return null
   }
 
   return (

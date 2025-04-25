@@ -48,7 +48,7 @@ const PopularQuestions: React.FC<PopularQuestionsProps> = ({
             <img
               width={20}
               height={20}
-              src={isFollowUp ? '/public/arrow-follow-up.svg' : '/public/arrow.svg'}
+              src={'/public/arrow.svg'}
               alt=''
             />
           </button>

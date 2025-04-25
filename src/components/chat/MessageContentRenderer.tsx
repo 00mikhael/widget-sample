@@ -73,32 +73,33 @@ interface TextContentProps {
 }
 
 const TextContent: React.FC<TextContentProps> = ({ content, isStreaming, isUser, typedElementRef }) => {
-  if (!isUser && isStreaming && typedElementRef) {
-    return <span ref={typedElementRef} />;
-  }
   const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   return (
     <div className={`tw-flex tw-flex-col tw-w-full ${isUser ? 'tw-items-end' : ''}`}>
-      {content && (
-        <div className={`
-          tw-max-w-[80%] tw-relative
-          tw-rounded-2xl
-          tw-text-gray-900
-          tw-transition-all tw-duration-200
-          hover:tw-shadow-md message-content
-          tw-text-sm tw-px-4 tw-py-2
-          tw-flex tw-flex-col tw-gap-3
-          ${isUser ? 'tw-bg-gray-50 hover:tw-bg-gray-100 user-message' : 'ai-message'}
-        `}>
+      <div className={`
+        tw-max-w-[80%] tw-relative
+        tw-rounded-2xl
+        tw-text-gray-900
+        tw-transition-all tw-duration-200
+        hover:tw-shadow-md message-content
+        tw-text-sm tw-px-4 tw-py-2
+        tw-flex tw-flex-col tw-gap-3
+        ${isUser ? 'tw-bg-gray-50 hover:tw-bg-gray-100 user-message' : 'ai-message'}
+      `}>
+        {(!isUser && isStreaming && typedElementRef) ? (
+          <div className="tw-text-gray-800 typing-container">
+            <span ref={typedElementRef} className="typed-text" />
+          </div>
+        ) : (
           <div
             className="tw-text-gray-800"
             dangerouslySetInnerHTML={{ __html: parseMessage(content) }}
           />
-          <div className={`message-timestamp-hover ${isUser ? 'tw-right-4' : 'tw-left-4'}`}>
-            {timestamp}
-          </div>
+        )}
+        <div className={`message-timestamp-hover ${isUser ? 'tw-right-4' : 'tw-left-4'}`}>
+          {timestamp}
         </div>
-      )}
+      </div>
     </div>
   );
 };

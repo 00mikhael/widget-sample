@@ -388,3 +388,43 @@
   animation: blink 1s infinite;
   vertical-align: middle;
 }
+
+/* Typing animation container */
+.lawma-ai-widget .typing-container {
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Ensure background consistency during typing */
+.lawma-ai-widget .ai-message .message-content {
+  animation: messageFadeIn 0.3s ease-out;
+}
+
+@keyframes messageFadeIn {
+  from {
+    opacity: 0.8;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Typed.js cursor style */
+.typed-cursor {
+  color: var(--chat-primary-color);
+  opacity: 1;
+  animation: typed-blink 0.7s infinite;
+}
+
+@keyframes typed-blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}

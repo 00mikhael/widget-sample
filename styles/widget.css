@@ -396,8 +396,22 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Additional responses animation */
+.lawma-ai-widget .additional-responses {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeIn 0.3s ease forwards;
+  animation-delay: 0.2s; /* Small delay after primary content finishes */
 }
 
 /* Ensure background consistency during typing */

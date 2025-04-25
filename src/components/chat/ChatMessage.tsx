@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Typed from 'typed.js';
 import { Message, parseMessage } from './utils';
 import MessageContentRenderer from './MessageContentRenderer';
@@ -15,6 +15,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
   const isUser = message.sender === 'user';
   const typedElementRef = useRef<HTMLSpanElement | null>(null);
   const typedInstanceRef = useRef<Typed | null>(null);
+  const [isPrimaryContentTyped, setIsPrimaryContentTyped] = useState(false);
 
   // Effect for Typed.js animation on AI messages
   useEffect(() => {
@@ -34,8 +35,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
           if (self.cursor) {
             self.cursor.remove();
           }
-          // Mark message as typed
+          // Mark message as typed and allow additional responses
           message.hasTyped = true;
+          setIsPrimaryContentTyped(true);
         },
         onStringTyped: () => {
           // Scroll into view as text is being typed using the ref
@@ -46,13 +48,19 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
       };
 
       typedInstanceRef.current = new Typed(typedElementRef.current, options);
-    } else if ((!isStreaming || message.hasTyped) && typedInstanceRef.current) {
-      // If streaming stops or message was already typed, destroy Typed instance
-      typedInstanceRef.current.destroy();
-      typedInstanceRef.current = null;
-      // Ensure final content is displayed correctly
+    } else if (!isStreaming || message.hasTyped) {
+      // If streaming stops or message was already typed
+      if (typedInstanceRef.current) {
+        typedInstanceRef.current.destroy();
+        typedInstanceRef.current = null;
+      }
+      // Always ensure final content is displayed correctly, even if typing was interrupted
       if (typedElementRef.current) {
         typedElementRef.current.innerHTML = parseMessage(message.content);
+      }
+      // Set primary content as typed to allow additional responses
+      if (!isPrimaryContentTyped) {
+        setIsPrimaryContentTyped(true);
       }
     }
 
@@ -89,8 +97,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
           />
 
           {/* Show additional responses */}
-          {!isUser && message.additional_responses && message.additional_responses.length > 0 && (
-            <div className="tw-flex tw-flex-col tw-gap-4 tw-mt-4 tw-pt-4">
+          {!isUser && isPrimaryContentTyped && message.additional_responses && message.additional_responses.length > 0 && (
+            <div className="tw-flex tw-flex-col tw-gap-4 tw-mt-4 tw-pt-4 additional-responses">
               {message.additional_responses.map((response, index) => (
                 <MessageContentRenderer
                   key={index}

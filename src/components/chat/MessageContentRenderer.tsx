@@ -280,12 +280,42 @@ const VideoContent: React.FC<MediaContentProps> = ({ content, mediaUrl, isUser =
   );
 };
 
+// Utility function to format file size
+const formatFileSize = (bytes: number) => {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+};
+
+// Utility function to get document size
+const getDocumentSize = async (url: string) => {
+  try {
+    const response = await fetch(url, { method: 'HEAD' });
+    const contentLength = response.headers.get('content-length');
+    if (!contentLength) return null;
+
+    const bytes = parseInt(contentLength);
+    return formatFileSize(bytes);
+  } catch {
+    return null;
+  }
+};
+
 const DocumentContent: React.FC<MediaContentProps> = ({ content, mediaUrl, isUser = false }) => {
   const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   // Extract filename from URL or use generic name
   const fileName = mediaUrl ? mediaUrl.split('/').pop() || "Document" : "";
-  // We'll assume fileSize isn't available through the mediaUrl alone
-  const fileSize = "200 KB";
+  const [fileSize, setFileSize] = React.useState<string>("Calculating...");
+
+  React.useEffect(() => {
+    if (mediaUrl) {
+      getDocumentSize(mediaUrl).then(size => {
+        setFileSize(size || "Size unknown");
+      });
+    }
+  }, [mediaUrl]);
 
   return (
     <div className={`tw-flex tw-flex-col tw-w-full ${isUser ? 'tw-items-end' : ''}`}>

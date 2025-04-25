@@ -81,9 +81,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false,
       `}
     >
       <div className={`tw-flex tw-flex-col ${isUser ? 'tw-items-end' : 'tw-items-start'} tw-w-full tw-gap-2`}>
-
         <div className="tw-w-full">
-
           <MessageContentRenderer
             contentType={message.content_type}
             content={message.content}

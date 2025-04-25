@@ -88,7 +88,7 @@ const TextContent: React.FC<TextContentProps> = ({ content, isStreaming, isUser,
           hover:tw-shadow-md message-content
           tw-text-sm tw-px-4 tw-py-2
           tw-flex tw-flex-col tw-gap-3
-          ${isUser ? 'tw-bg-gray-50 hover:tw-bg-gray-100 user-message' : 'ai-message '}
+          ${isUser ? 'tw-bg-gray-50 hover:tw-bg-gray-100 user-message' : 'ai-message'}
         `}>
           <div
             className="tw-text-gray-800"
@@ -186,7 +186,7 @@ const ImageContent: React.FC<MediaContentProps> = ({ content, mediaUrl, isUser =
           tw-text-sm tw-px-4 tw-py-2
           tw-flex tw-flex-col tw-gap-3
           tw-mb-1
-          ${isUser ? 'tw-bg-gray-50 hover:tw-bg-gray-100 user-message' : 'ai-message '}
+          ${isUser ? 'tw-bg-gray-50 hover:tw-bg-gray-100 user-message' : 'ai-message'}
         `}>
           <div
             className="tw-text-gray-800 "
@@ -238,7 +238,7 @@ const VideoContent: React.FC<MediaContentProps> = ({ content, mediaUrl, isUser =
           tw-text-sm tw-px-4 tw-py-2
           tw-flex tw-flex-col tw-gap-3
           tw-mb-1
-          ${isUser ? 'tw-bg-gray-50 hover:tw-bg-gray-100 user-message' : 'ai-message '}
+          ${isUser ? 'tw-bg-gray-50 hover:tw-bg-gray-100 user-message' : 'ai-message'}
         `}>
           <div
             className="tw-text-gray-800 "
@@ -299,7 +299,7 @@ const DocumentContent: React.FC<MediaContentProps> = ({ content, mediaUrl, isUse
           tw-text-sm tw-px-4 tw-py-2
           tw-flex tw-flex-col tw-gap-3
           tw-mb-1
-          ${isUser ? 'tw-bg-gray-50 hover:tw-bg-gray-100 user-message' : 'ai-message '}
+          ${isUser ? 'tw-bg-gray-50 hover:tw-bg-gray-100 user-message' : 'ai-message'}
         `}>
           <div
             className="tw-text-gray-800 "
@@ -385,7 +385,7 @@ const TextImageContent: React.FC<TextImageContentProps> = ({ content, imageUrl, 
             tw-text-sm tw-px-4 tw-py-2
             tw-flex tw-flex-col tw-gap-3
             tw-mb-1
-            ${isUser ? 'tw-bg-gray-50 hover:tw-bg-gray-100 user-message' : 'ai-message '}
+            ${isUser ? 'tw-bg-gray-50 hover:tw-bg-gray-100 user-message' : 'ai-message'}
           `}>
           <div
             className="tw-text-gray-800 "

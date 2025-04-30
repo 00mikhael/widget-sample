@@ -1,49 +1,13 @@
 import { Message } from '../../components/chat/utils';
-import { API_BASE_URL, AUTH_BASE_URL, ACCESS_TOKEN, setApiKey, getApiKey } from '../../config';
+import { API_BASE_URL, AUTH_BASE_URL, ACCESS_TOKEN, setApiKey, getApiKey, updateConfig } from '../../config';
 
 let widgetName: string;
-let tokenRefreshRetryCount = 0;
+export let tokenRefreshTimeout: NodeJS.Timeout | null = null;
 const MAX_TOKEN_REFRESH_RETRIES = 1;  // One retry after initial attempt = 2 total attempts
+const TOKEN_REFRESH_INTERVAL = 1800000;  // 30 minutes in milliseconds
 
-export interface AuthResponse {
-  token: {
-    access_token: string;
-    token_type: string;
-  };
-  authorized_urls: string[];
-}
-
-export const authAPI = {
-  initialize: async (apiKey: string, name: string): Promise<AuthResponse> => {
-    tokenRefreshRetryCount = 0;  // Reset retry count on initialization
-    setApiKey(apiKey);
-    widgetName = name;
-
-    const response = await fetch(`${AUTH_BASE_URL}/initialize`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'x-widget-name': name
-      }
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Failed to initialize' }));
-      throw new Error(errorData.error || 'Failed to initialize');
-    }
-
-    const authResponse = await response.json();
-    return authResponse;
-  },
-
-  refreshToken: async (): Promise<void> => {
-    if (tokenRefreshRetryCount >= MAX_TOKEN_REFRESH_RETRIES) {
-      throw new Error('Token refresh retry limit exceeded');
-    }
-
-    tokenRefreshRetryCount++;
-
+const performTokenRefresh = async (retryCount = 0): Promise<void> => {
+  try {
     const apiKey = getApiKey();
     if (!apiKey) {
       throw new Error('API key not found');
@@ -63,7 +27,81 @@ export const authAPI = {
     }
 
     const authResponse = await response.json();
+    updateConfig(authResponse);
+  } catch (error) {
+    console.error(`Token refresh attempt ${retryCount + 1} failed:`, error);
+
+    if (retryCount < MAX_TOKEN_REFRESH_RETRIES) {
+      await performTokenRefresh(retryCount + 1);
+    } else {
+      throw new Error('Token refresh retry limit exceeded');
+    }
+  }
+};
+
+const scheduleNextTokenRefresh = () => {
+  if (tokenRefreshTimeout) {
+    clearTimeout(tokenRefreshTimeout);
+  }
+
+  tokenRefreshTimeout = setTimeout(async () => {
+    try {
+      await performTokenRefresh();
+    } finally {
+      // Always schedule next refresh, even after failure
+      scheduleNextTokenRefresh();
+    }
+  }, TOKEN_REFRESH_INTERVAL);
+};
+
+const startTokenRefresh = () => {
+  scheduleNextTokenRefresh();
+  return () => {
+    if (tokenRefreshTimeout) {
+      clearTimeout(tokenRefreshTimeout);
+      tokenRefreshTimeout = null;
+    }
+  };
+};
+
+export interface AuthResponse {
+  token: {
+    access_token: string;
+    token_type: string;
+  };
+  authorized_urls: string[];
+}
+
+export const authAPI = {
+  initialize: async (apiKey: string, name: string): Promise<AuthResponse> => {
+    setApiKey(apiKey);
+    widgetName = name;
+
+    const response = await fetch(`${AUTH_BASE_URL}/initialize`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'x-widget-name': name
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Failed to initialize' }));
+      throw new Error(errorData.error || 'Failed to initialize');
+    }
+
+    const authResponse = await response.json();
+    updateConfig(authResponse);
+
+    // Start token refresh in background
+    startTokenRefresh();
+
     return authResponse;
+  },
+
+  refreshToken: async (): Promise<void> => {
+    return performTokenRefresh();
   }
 };
 
@@ -91,9 +129,9 @@ const makeAPICall = async <T>(
   try {
     const response = await fetch(url, options);
 
-    if (response.status === 401 && tokenRefreshRetryCount === 0) {
-      // Try refresh token
-      await authAPI.refreshToken();
+    if (response.status === 401) {
+      // Try refresh token with its own retry mechanism
+      await performTokenRefresh();
 
       // Retry the call with new token
       const headers = await getHeaders();

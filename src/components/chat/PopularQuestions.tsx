@@ -1,4 +1,7 @@
 import React from 'react';
+import ArrowFollowUp from './icons/arrow-follow-up.svg';
+import Suggestions from './icons/suggestions.svg';
+import Arrow from './icons/arrow.svg';
 
 interface PopularQuestionsProps {
   questions: string[];
@@ -21,12 +24,13 @@ const PopularQuestions: React.FC<PopularQuestionsProps> = ({
       ${isFollowUp ? 'tw-mt-2' : ''}
     `}>
       <div className='tw-flex tw-items-center tw-gap-2'>
-        <img
-          width={20}
-          height={20}
-          src={isFollowUp ? '/public/arrow-follow-up.svg' : '/public/suggestions.svg'}
-          alt=''
-        />
+        <div className='tw-flex tw-justify-center tw-items-center'>
+          {isFollowUp ? (
+            <ArrowFollowUp />
+          ) : (
+            <Suggestions />
+          )}
+        </div>
         <div className={`
           tw-w-full tw-text-gray-900
           ${isFollowUp ? 'tw-text-base' : 'tw-text-lg'}
@@ -45,12 +49,9 @@ const PopularQuestions: React.FC<PopularQuestionsProps> = ({
             `}
           >
             <span>{question}</span>
-            <img
-              width={20}
-              height={20}
-              src={'/public/arrow.svg'}
-              alt=''
-            />
+            <div className='tw-flex tw-justify-center tw-items-center'>
+              <Arrow />
+            </div>
           </button>
         ))}
       </div>

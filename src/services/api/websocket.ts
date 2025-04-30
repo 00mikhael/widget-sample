@@ -6,8 +6,8 @@ export interface ProcessingStatus {
 
 let ws: WebSocket | null = null;
 let messageHandler: ((data: ProcessingStatus) => void) | null = null;
-let retryCount = 0;  // Add retry counter
-const MAX_RETRIES = 2;  // Maximum number of retries
+let retryCount = 0;
+const MAX_RETRIES = 1;  // One retry after initial attempt = 2 total attempts
 
 export const initWebSocket = (clientId: string) => {
   // Reset retry count on fresh initialization
@@ -45,9 +45,9 @@ export const initWebSocket = (clientId: string) => {
     }
   };
 
-  // Add reconnection logic with retry limit
+  // Reconnection logic with exactly one retry
   ws.onclose = () => {
-    if (retryCount < MAX_RETRIES) {
+    if (retryCount === 0) {
       retryCount++;
       setTimeout(() => {
         if (messageHandler) {
@@ -55,7 +55,7 @@ export const initWebSocket = (clientId: string) => {
         }
       }, 1000);
     } else {
-      console.log('WebSocket reconnection attempts exceeded');
+      console.log('WebSocket reconnection attempt failed');
     }
   };
 

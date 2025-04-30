@@ -17,7 +17,12 @@ export interface InitResponse {
 
 // Update config with initial auth response
 export const updateConfig = (initResponse: InitResponse) => {
-  API_BASE_URL = initResponse.authorized_urls[0];
+  let baseUrl = initResponse.authorized_urls[0];
+  // Replace 0.0.0.0:8002 with localhost:8002 for better browser compatibility
+  if (baseUrl.includes('0.0.0.0:8002')) {
+    baseUrl = baseUrl.replace('0.0.0.0:8002', 'localhost:8002');
+  }
+  API_BASE_URL = baseUrl;
   WS_BASE_URL = API_BASE_URL.replace('http', 'ws');
   ACCESS_TOKEN = initResponse.token.access_token;
 };

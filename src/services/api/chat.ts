@@ -3,7 +3,7 @@ import { API_BASE_URL, AUTH_BASE_URL, ACCESS_TOKEN, setApiKey, getApiKey } from 
 
 let widgetName: string;
 let tokenRefreshRetryCount = 0;
-const MAX_TOKEN_REFRESH_RETRIES = 2;
+const MAX_TOKEN_REFRESH_RETRIES = 1;  // One retry after initial attempt = 2 total attempts
 
 export interface AuthResponse {
   token: {
@@ -11,10 +11,6 @@ export interface AuthResponse {
     token_type: string;
   };
   authorized_urls: string[];
-}
-
-interface APICallOptions {
-  retryAttempt?: boolean;
 }
 
 export const authAPI = {
@@ -86,8 +82,7 @@ const getHeaders = () => {
 // Helper function to make API calls with token refresh logic
 const makeAPICall = async <T>(
   url: string,
-  options: RequestInit,
-  retryConfig: APICallOptions = {}
+  options: RequestInit
 ): Promise<T> => {
   if (!API_BASE_URL) {
     throw new Error('API URL not initialized');
@@ -96,14 +91,14 @@ const makeAPICall = async <T>(
   try {
     const response = await fetch(url, options);
 
-    if (response.status === 401 && tokenRefreshRetryCount < MAX_TOKEN_REFRESH_RETRIES) {
+    if (response.status === 401 && tokenRefreshRetryCount === 0) {
       // Try refresh token
       await authAPI.refreshToken();
 
       // Retry the call with new token
       const headers = await getHeaders();
       const retryOptions = { ...options, headers };
-      return makeAPICall(url, retryOptions, { retryAttempt: true });
+      return makeAPICall(url, retryOptions);
     }
 
     if (!response.ok) {

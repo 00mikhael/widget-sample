@@ -1,9 +1,11 @@
-// Default URLs used only until initialization
-export const DEFAULT_API_URL = 'http://localhost:8002';
-// https://auth-lawma-api-dev-hxezgrckc9hrfcaj.westus2-01.azurewebsites.net
-export let API_BASE_URL = DEFAULT_API_URL;
-export let WS_BASE_URL = DEFAULT_API_URL.replace('http', 'ws');
+// Constants
+export const AUTH_BASE_URL = 'https://auth-lawma-api-dev-hxezgrckc9hrfcaj.westus2-01.azurewebsites.net/api/v1';
+export let API_BASE_URL: string | null = null;
+export let WS_BASE_URL: string | null = null;
+
+// Token management
 export let ACCESS_TOKEN: string | null = null;
+let API_KEY: string | null = null;
 
 export interface InitResponse {
   token: {
@@ -13,8 +15,17 @@ export interface InitResponse {
   authorized_urls: string[];
 }
 
+// Update config with initial auth response
 export const updateConfig = (initResponse: InitResponse) => {
-  API_BASE_URL = initResponse.authorized_urls[0]; // Use first authorized URL
+  API_BASE_URL = initResponse.authorized_urls[0];
   WS_BASE_URL = API_BASE_URL.replace('http', 'ws');
   ACCESS_TOKEN = initResponse.token.access_token;
 };
+
+// Store API key for token refresh
+export const setApiKey = (apiKey: string) => {
+  API_KEY = apiKey;
+};
+
+// Get stored API key
+export const getApiKey = () => API_KEY;

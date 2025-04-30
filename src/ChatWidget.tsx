@@ -5,7 +5,7 @@ import 'aos/dist/aos.css';
 import { Message, CurrentChat, sendMessageAPI } from './components/chat/utils';
 import { updateConfig } from './config';
 import { initWebSocket, ProcessingStatus } from './services/api/websocket';
-import { getClientId, initializeAPI } from './services/api/chat';
+import { getClientId, authAPI } from './services/api/chat';
 import Overlay from './components/chat/Overlay';
 import ChatWindow from './components/chat/ChatWindow';
 import ChatToggleButton from './components/chat/ChatToggleButton';
@@ -67,8 +67,8 @@ const ChatWidget: React.FC<WidgetProps> = ({
   useEffect(() => {
     async function init() {
       try {
-        // const initResponse = await initializeAPI(apiKey, name);
-        // updateConfig(initResponse);
+        const initResponse = await authAPI.initialize(apiKey, name);
+        updateConfig(initResponse);
 
         // Initialize state from localStorage
         const storedIsOpen = localStorage.getItem('chatIsOpen');

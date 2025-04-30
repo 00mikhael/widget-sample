@@ -6,8 +6,15 @@ export interface ProcessingStatus {
 
 let ws: WebSocket | null = null;
 let messageHandler: ((data: ProcessingStatus) => void) | null = null;
+let retryCount = 0;  // Add retry counter
+const MAX_RETRIES = 2;  // Maximum number of retries
 
 export const initWebSocket = (clientId: string) => {
+  // Reset retry count on fresh initialization
+  if (!ws) {
+    retryCount = 0;
+  }
+
   // Return existing connection if it's open
   if (ws?.readyState === WebSocket.OPEN) {
     return {
@@ -22,6 +29,10 @@ export const initWebSocket = (clientId: string) => {
     ws.close();
   }
 
+  if (!WS_BASE_URL) {
+    throw new Error('WebSocket URL not initialized');
+  }
+
   const accessTokenParam = ACCESS_TOKEN ? `?access_token=${ACCESS_TOKEN}` : '';
   ws = new WebSocket(`${WS_BASE_URL}/ws/${clientId}${accessTokenParam}`);
 
@@ -34,13 +45,18 @@ export const initWebSocket = (clientId: string) => {
     }
   };
 
-  // Add reconnection logic
+  // Add reconnection logic with retry limit
   ws.onclose = () => {
-    setTimeout(() => {
-      if (messageHandler) {
-        initWebSocket(clientId);
-      }
-    }, 1000);
+    if (retryCount < MAX_RETRIES) {
+      retryCount++;
+      setTimeout(() => {
+        if (messageHandler) {
+          initWebSocket(clientId);
+        }
+      }, 1000);
+    } else {
+      console.log('WebSocket reconnection attempts exceeded');
+    }
   };
 
   // Add error handler

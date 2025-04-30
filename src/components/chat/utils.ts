@@ -1,8 +1,8 @@
-import { chatAPI, initializeAPI } from '../../services/api/chat';
+import { chatAPI, authAPI } from '../../services/api/chat';
 
 // Re-export API functions
 export const { sendMessage: sendMessageAPI } = chatAPI;
-export { initializeAPI };
+export { authAPI };
 
 // Types
 export interface MessageItem {

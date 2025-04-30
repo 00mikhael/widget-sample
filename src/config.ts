@@ -1,6 +1,6 @@
 // Default URLs used only until initialization
 export const DEFAULT_API_URL = 'http://localhost:8002';
-
+// https://auth-lawma-api-dev-hxezgrckc9hrfcaj.westus2-01.azurewebsites.net
 export let API_BASE_URL = DEFAULT_API_URL;
 export let WS_BASE_URL = DEFAULT_API_URL.replace('http', 'ws');
 export let ACCESS_TOKEN: string | null = null;

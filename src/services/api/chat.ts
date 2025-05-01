@@ -180,10 +180,10 @@ export interface ChatResponse {
 }
 
 // Helper function to get or create client ID
-export const getClientId = (): string => {
+export const getClientId = async (): Promise<string> => {
   const storedClientId = localStorage.getItem('chatClientId');
   if (!storedClientId) {
-    const { v4: uuidv4 } = require('uuid');
+    const { v4: uuidv4 } = await import('uuid');
     const newClientId = uuidv4();
     localStorage.setItem('chatClientId', newClientId);
     return newClientId;

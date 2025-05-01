@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import '../styles/widget.css';
-import 'aos/dist/aos.css';
-import { Message, CurrentChat, sendMessageAPI } from './components/chat/utils';
+import { Message, CurrentChat, sendMessageAPI, authAPI } from './components/chat/utils';
 import { monitoring } from './services/monitoring';
 import { updateConfig } from './config';
 import { initWebSocket, ProcessingStatus } from './services/api/websocket';
-import { getClientId, authAPI, tokenRefreshTimeout } from './services/api/chat';
+import { getClientId, tokenRefreshTimeout } from './services/api/chat';
 const Overlay = React.lazy(() => import('./components/chat/Overlay'));
 const ChatWindow = React.lazy(() => import('./components/chat/ChatWindow'));
 const ChatToggleButton = React.lazy(() => import('./components/chat/ChatToggleButton'));
@@ -54,12 +53,16 @@ const ChatWidget: React.FC<WidgetProps> = ({
   useEffect(() => {
     if (!initialized) return;
 
-    const wsService = initWebSocket(getClientId());
-    wsService.onMessage((data: ProcessingStatus) => {
-      console.log('WebSocket message received:', data);
-      setStatusMessage(capitalizeFirstLetter(data.status));
-    });
+    const initWS = async () => {
+      const clientId = await getClientId();
+      const wsService = initWebSocket(clientId);
+      wsService.onMessage((data: ProcessingStatus) => {
+        console.log('WebSocket message received:', data);
+        setStatusMessage(capitalizeFirstLetter(data.status));
+      });
+    };
 
+    initWS();
     // No cleanup needed as we want to keep the connection
   }, [initialized]); // Only re-establish on initialization
 
@@ -71,14 +74,14 @@ const ChatWidget: React.FC<WidgetProps> = ({
         const initResponse = await authAPI.initialize(name, apiKey);
         updateConfig(initResponse);
         monitoring.finishTransaction();
-        monitoring.identifyUser(apiKey)
+        monitoring.identifyUser(apiKey);
+        const clientId = await getClientId();
         monitoring.setUserProperties({
           name,
           apiKey,
-          clientId: getClientId(),
+          clientId,
         });
         monitoring.trackEvent('widget_initialized', { name, apiKey });
-
 
 
         // Initialize state from localStorage
@@ -263,12 +266,14 @@ const ChatWidget: React.FC<WidgetProps> = ({
       const mediaToSend = uploadedMedia; // Capture current media state
       setUploadedMedia(null); // Clear media state immediately for UI
 
+      const clientId = await getClientId();
       const response = await sendMessageAPI({
         message: userMessage.content,
         sender: 'user',
         content_type: mediaToSend ? 'text_image' : 'text',
         media_url: mediaToSend?.url,
-        conversation_id: currentChat.ai?.conversation_id
+        conversation_id: currentChat.ai?.conversation_id,
+        client_id: clientId
       });
 
       setIsTyping(false);

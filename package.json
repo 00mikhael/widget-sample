@@ -7,9 +7,10 @@
   ],
   "scripts": {
     "dev": "webpack serve",
-    "build": "webpack --config webpack.config.js && npm run sentry:sourcemaps",
+    "build": "webpack --config webpack.config.js",
     "analyze": "ANALYZE=true webpack --config webpack.config.js",
-    "sentry:sourcemaps": "sentry-cli sourcemaps inject ./dist && sentry-cli sourcemaps upload ./dist",
+    "sourcemaps": "sentry-cli sourcemaps inject ./dist && sentry-cli sourcemaps upload ./dist",
+    "build:prod": "npm run build && npm run sourcemaps",
     "start": "next start",
     "lint": "next lint"
   },

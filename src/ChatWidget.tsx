@@ -366,6 +366,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
             <ChatToggleButton onClick={toggleChat} position={position} primaryColor={primaryColor} />
           </React.Suspense>
         )}
+      </React.Suspense>
     </div>
   );
 };

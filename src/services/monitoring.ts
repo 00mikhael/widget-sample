@@ -1,6 +1,4 @@
 import * as Sentry from '@sentry/react';
-import { browserTracingIntegration } from '@sentry/browser';
-
 import { SENTRY_DSN, IS_PRODUCTION, APP_VERSION, APP_ENV } from '../config';
 
 class MonitoringService {
@@ -10,9 +8,6 @@ class MonitoringService {
     // Initialize Sentry
     Sentry.init({
       dsn: SENTRY_DSN,
-      integrations: [
-        browserTracingIntegration(),
-      ],
       tracesSampleRate: 1.0,
       // Adjust this value in production
       environment: APP_ENV,

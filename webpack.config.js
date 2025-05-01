@@ -106,26 +106,18 @@ module.exports = {
     usedExports: true,
     concatenateModules: true,
     splitChunks: {
-      chunks: 'async',
-      minSize: 20000,
-      minRemainingSize: 0,
-      minChunks: 1,
-      maxAsyncRequests: 30,
-      maxInitialRequests: 30,
-      enforceSizeThreshold: 50000,
       cacheGroups: {
-        defaultVendors: {
+        default: false,
+        vendors: false,
+        vendor: {
+          name: 'widget',
+          chunks: 'all',
           test: /[\\/]node_modules[\\/]/,
-          priority: -10,
-          reuseExistingChunk: true,
-        },
-        default: {
-          minChunks: 2,
-          priority: -20,
-          reuseExistingChunk: true,
-        },
-      },
+          priority: 20
+        }
+      }
     },
+    runtimeChunk: false,
     minimizer: [
       new TerserPlugin({
         terserOptions: {

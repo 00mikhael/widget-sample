@@ -1,8 +1,7 @@
 import * as Sentry from '@sentry/react';
 import { browserTracingIntegration } from '@sentry/browser';
-import mixpanel from 'mixpanel-browser';
 
-import { SENTRY_DSN, MIXPANEL_TOKEN, IS_PRODUCTION, APP_VERSION, APP_ENV } from '../config';
+import { SENTRY_DSN, IS_PRODUCTION, APP_VERSION, APP_ENV } from '../config';
 
 class MonitoringService {
   private static instance: MonitoringService;
@@ -23,12 +22,6 @@ class MonitoringService {
       release: `lawma-ai-widget@${APP_VERSION}`,
     });
 
-    // Initialize Mixpanel
-    mixpanel.init(MIXPANEL_TOKEN, {
-      debug: !IS_PRODUCTION,
-      track_pageview: true,
-      persistence: 'localStorage',
-    });
   }
 
   public static getInstance(): MonitoringService {
@@ -63,18 +56,22 @@ class MonitoringService {
     }
   }
 
-  // User behavior tracking
+  // User tracking
   public trackEvent(eventName: string, properties?: Record<string, any>) {
-    mixpanel.track(eventName, properties);
+    Sentry.addBreadcrumb({
+      type: 'user',
+      category: 'tracking',
+      message: eventName,
+      data: properties
+    });
   }
 
   public setUserProperties(properties: Record<string, any>) {
-    mixpanel.people.set(properties);
+    Sentry.setContext('user_properties', properties);
   }
 
   public identifyUser(userId: string) {
     Sentry.setUser({ id: userId });
-    mixpanel.identify(userId);
   }
 }
 

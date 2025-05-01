@@ -1,5 +1,6 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const version = require('./package.json').version;
 
 module.exports = {
@@ -98,9 +99,14 @@ module.exports = {
       "fs": false
     }
   },
-  plugins: [],
+  plugins: [
+    process.env.ANALYZE && new BundleAnalyzerPlugin()
+  ].filter(Boolean),
   optimization: {
+    moduleIds: 'deterministic',
     minimize: true,
+    usedExports: true,
+    concatenateModules: true,
     minimizer: [
       new TerserPlugin({
         terserOptions: {
@@ -110,7 +116,19 @@ module.exports = {
           compress: {
             drop_console: true,
             drop_debugger: true,
-            pure_funcs: ['console.log']
+            pure_funcs: ['console.log', 'console.info', 'console.debug'],
+            passes: 3,
+            dead_code: true,
+            unused: true,
+            conditionals: true,
+            if_return: true,
+            join_vars: true,
+            reduce_vars: true
+          },
+          mangle: {
+            properties: {
+              regex: /^_/
+            }
           }
         },
         extractComments: false

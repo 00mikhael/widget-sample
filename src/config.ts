@@ -14,7 +14,6 @@ let API_KEY: string | null = null;
 
 // Monitoring configuration
 export const SENTRY_DSN = 'https://5dd6d94215e099545cd9452d754be448@o4509246826151936.ingest.us.sentry.io/4509246857347072';
-export const MIXPANEL_TOKEN = '94405fc3e3651e3c571356024d2ff2f4';
 
 export interface InitResponse {
   token: {

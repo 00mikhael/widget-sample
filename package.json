@@ -2,22 +2,21 @@
   "name": "lawma-ai-widget",
   "version": "0.1.0",
   "private": true,
+  "sideEffects": [
+    "*.css"
+  ],
   "scripts": {
     "dev": "webpack serve",
     "build": "webpack --config webpack.config.js && npm run sentry:sourcemaps",
+    "analyze": "ANALYZE=true webpack --config webpack.config.js",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject ./dist && sentry-cli sourcemaps upload ./dist",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@sentry/browser": "^9.15.0",
-    "@sentry/hub": "^7.120.3",
     "@sentry/react": "^9.15.0",
-    "@sentry/tracing": "^7.120.3",
-    "@types/mixpanel-browser": "^2.54.0",
     "aos": "^2.3.4",
     "core-js": "^3.41.0",
-    "mixpanel-browser": "^2.64.0",
     "next": "^15.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -54,6 +53,7 @@
     "typescript": "^5",
     "uuid": "^11.1.0",
     "webpack": "^5.99.2",
+    "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.1"
   }

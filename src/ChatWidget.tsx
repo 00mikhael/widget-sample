@@ -7,9 +7,9 @@ import { monitoring } from './services/monitoring';
 import { updateConfig } from './config';
 import { initWebSocket, ProcessingStatus } from './services/api/websocket';
 import { getClientId, authAPI, tokenRefreshTimeout } from './services/api/chat';
-import Overlay from './components/chat/Overlay';
-import ChatWindow from './components/chat/ChatWindow';
-import ChatToggleButton from './components/chat/ChatToggleButton';
+const Overlay = React.lazy(() => import('./components/chat/Overlay'));
+const ChatWindow = React.lazy(() => import('./components/chat/ChatWindow'));
+const ChatToggleButton = React.lazy(() => import('./components/chat/ChatToggleButton'));
 
 type ButtonPosition = 'top-right' | 'center-right' | 'bottom-right' | 'top-left' | 'center-left' | 'bottom-left';
 
@@ -331,36 +331,41 @@ const ChatWidget: React.FC<WidgetProps> = ({
 
   return (
     <div className='lawma-ai-widget'>
-      {/* Overlay */}
-      <Overlay isOpen={isOpen} onClick={toggleChat} />
+      <React.Suspense fallback={null}>
+        {/* Overlay */}
+        <Overlay isOpen={isOpen} onClick={toggleChat} />
 
-      {/* Chat Window (Slide-in Panel) */}
-      <ChatWindow
-        isOpen={isOpen}
-        isTyping={isTyping}
-        previousMessages={previousMessages}
-        currentChat={currentChat}
-        error={error}
-        uploadedFileName={uploadedMedia?.file.name}
-        // @ts-ignore
-        chatContentRef={chatContentRef}
-        primaryColor={primaryColor}
-        isFullscreen={isFullscreen}
-        name={name}
-        onClose={toggleChat}
-        onClearChat={handleClearChat}
-        onSendMessage={handleSendMessage}
-        onFileUpload={handleFileUpload}
-        onRemoveFile={handleRemoveFile}
-        onToggleFullscreen={toggleFullscreen}
-        welcomeMessages={welcomeMessages}
-        popularQuestions={popularQuestions}
-        popularQuestionsTitle={popularQuestionsTitle}
-        statusMessage={statusMessage}
-      />
+        {/* Chat Window (Slide-in Panel) */}
+        <ChatWindow
+          isOpen={isOpen}
+          isTyping={isTyping}
+          previousMessages={previousMessages}
+          currentChat={currentChat}
+          error={error}
+          uploadedFileName={uploadedMedia?.file.name}
+          // @ts-ignore
+          chatContentRef={chatContentRef}
+          primaryColor={primaryColor}
+          isFullscreen={isFullscreen}
+          name={name}
+          onClose={toggleChat}
+          onClearChat={handleClearChat}
+          onSendMessage={handleSendMessage}
+          onFileUpload={handleFileUpload}
+          onRemoveFile={handleRemoveFile}
+          onToggleFullscreen={toggleFullscreen}
+          welcomeMessages={welcomeMessages}
+          popularQuestions={popularQuestions}
+          popularQuestionsTitle={popularQuestionsTitle}
+          statusMessage={statusMessage}
+        />
 
-      {/* Toggle Button */}
-      {!isOpen && <ChatToggleButton onClick={toggleChat} position={position} primaryColor={primaryColor} />}
+        {/* Toggle Button */}
+        {!isOpen && (
+          <React.Suspense fallback={null}>
+            <ChatToggleButton onClick={toggleChat} position={position} primaryColor={primaryColor} />
+          </React.Suspense>
+        )}
     </div>
   );
 };

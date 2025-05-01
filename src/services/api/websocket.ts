@@ -7,7 +7,6 @@ export interface ProcessingStatus {
 let ws: WebSocket | null = null;
 let messageHandler: ((data: ProcessingStatus) => void) | null = null;
 let retryCount = 0;
-const MAX_RETRIES = 1;  // One retry after initial attempt = 2 total attempts
 
 export const initWebSocket = (clientId: string) => {
   // Reset retry count on fresh initialization

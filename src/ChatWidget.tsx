@@ -9,7 +9,6 @@ import { getClientId, authAPI, tokenRefreshTimeout } from './services/api/chat';
 import Overlay from './components/chat/Overlay';
 import ChatWindow from './components/chat/ChatWindow';
 import ChatToggleButton from './components/chat/ChatToggleButton';
-import InitializingLoader from './components/chat/InitializingLoader';
 
 type ButtonPosition = 'top-right' | 'center-right' | 'bottom-right' | 'top-left' | 'center-left' | 'bottom-left';
 

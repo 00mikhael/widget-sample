@@ -1,9 +1,8 @@
 import * as Sentry from '@sentry/react';
 import { browserTracingIntegration } from '@sentry/browser';
-import { Transaction, Hub, Scope } from '@sentry/types';
 import mixpanel from 'mixpanel-browser';
 
-import { SENTRY_DSN, MIXPANEL_TOKEN } from '../config';
+import { SENTRY_DSN, MIXPANEL_TOKEN, IS_PRODUCTION, APP_VERSION, APP_ENV } from '../config';
 
 class MonitoringService {
   private static instance: MonitoringService;
@@ -17,14 +16,16 @@ class MonitoringService {
       ],
       tracesSampleRate: 1.0,
       // Adjust this value in production
-      environment: process.env.NODE_ENV || 'development',
+      environment: APP_ENV,
       // Only capture errors in production
-      enabled: process.env.NODE_ENV === 'production',
+      enabled: IS_PRODUCTION,
+      // Include version for source map association
+      release: `lawma-ai-widget@${APP_VERSION}`,
     });
 
     // Initialize Mixpanel
     mixpanel.init(MIXPANEL_TOKEN, {
-      debug: process.env.NODE_ENV !== 'production',
+      debug: !IS_PRODUCTION,
       track_pageview: true,
       persistence: 'localStorage',
     });
@@ -43,23 +44,23 @@ class MonitoringService {
   }
 
   // Performance monitoring
-  public startPerformanceTransaction(name: string, data?: Record<string, any>): Transaction {
-    const hub = (Sentry as any).getCurrentHub();
-    const transaction = hub.startTransaction({
-      name: name,
-      op: 'widget-transaction',
-      ...data
-    });
+  private startTime: number | null = null;
 
-    hub.configureScope((scope: Scope) => {
-      scope.setSpan(transaction);
-    });
-
-    return transaction;
+  public startPerformanceTransaction(name: string, data?: Record<string, any>): void {
+    this.startTime = performance.now();
   }
 
-  public finishTransaction(transaction: Transaction) {
-    transaction.finish();
+  public finishTransaction(): void {
+    if (this.startTime) {
+      const duration = performance.now() - this.startTime;
+      Sentry.addBreadcrumb({
+        type: 'debug',
+        category: 'performance',
+        message: `Operation took ${duration}ms`,
+        data: { duration }
+      });
+      this.startTime = null;
+    }
   }
 
   // User behavior tracking

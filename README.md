@@ -204,11 +204,46 @@ export const MIXPANEL_TOKEN = 'your_mixpanel_token';
 ### Error Tracking
 
 Automatic error capture includes:
-- Stack traces
+- Stack traces with source maps
 - User context
 - State information
 - Network failures
 - API errors
+
+#### Source Map Configuration
+
+To enable readable stack traces in production:
+
+1. Set up Sentry configuration:
+   ```bash
+   # Copy example configuration
+   cp .sentryclirc.example .sentryclirc
+
+   # Edit .sentryclirc with your credentials:
+   # - Add your auth token
+   # - Set your organization name
+   # - Update project name if needed
+   ```
+
+2. Build for production:
+   ```bash
+   # For development build without source maps
+   npm run build
+
+   # For production build with source map upload to Sentry
+   # (Requires valid Sentry auth token in .sentryclirc)
+   npm run build:prod
+   ```
+
+The production build will automatically:
+- Generate source maps
+- Upload them to Sentry (if auth token is configured)
+- Associate them with the correct release version
+
+Note: Before running `build:prod`, ensure you have:
+1. Copied .sentryclirc.example to .sentryclirc
+2. Added your Sentry auth token
+3. Set your organization name
 
 ### Best Practices
 

@@ -67,11 +67,11 @@ const ChatWidget: React.FC<WidgetProps> = ({
   useEffect(() => {
     async function init() {
       try {
-        const initTransaction = monitoring.startPerformanceTransaction('widget_initialization');
-        const initResponse = await authAPI.initialize(apiKey, name);
+        monitoring.startPerformanceTransaction('widget_initialization');
+        const initResponse = await authAPI.initialize(name, apiKey);
         updateConfig(initResponse);
-        monitoring.trackEvent('widget_initialized', { name });
-        initTransaction.finish();
+        monitoring.trackEvent('widget_initialized', { name, apiKey });
+        monitoring.finishTransaction();
 
 
         // Initialize state from localStorage
@@ -133,8 +133,9 @@ const ChatWidget: React.FC<WidgetProps> = ({
         };
       } catch (error) {
         console.error('Failed to initialize chat widget:', error);
-        monitoring.captureError(error as Error, { apiKey, name });
+        monitoring.captureError(error as Error, { name, apiKey });
         setError('Failed to initialize chat widget');
+        monitoring.finishTransaction();
       }
     }
 
@@ -208,11 +209,19 @@ const ChatWidget: React.FC<WidgetProps> = ({
   }, [isOpen]);
 
   const toggleFullscreen = useCallback(() => {
-    setIsFullscreen(prev => !prev);
-  }, []);
+    const newIsFullscreen = !isFullscreen;
+    setIsFullscreen(newIsFullscreen);
+    monitoring.trackEvent('toggle_fullscreen', { isFullscreen: newIsFullscreen });
+  }, [isFullscreen]);
 
   const handleClearChat = useCallback((event?: React.MouseEvent) => {
     event?.stopPropagation(); // Prevent event bubbling if called from button click
+
+    monitoring.trackEvent('clear_chat', {
+      messagesCount: previousMessages.length,
+      hasActiveChat: !!currentChat.user || !!currentChat.ai
+    });
+
     localStorage.removeItem('chatMessages'); // Clear persisted messages
     setUploadedMedia(null); // Clear any pending upload
     setError('');
@@ -227,7 +236,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
   const handleSendMessage = useCallback(async (messageText: string) => {
     if (!messageText.trim() && !uploadedMedia) return;
 
-    const messageTransaction = monitoring.startPerformanceTransaction('send_message');
+    monitoring.startPerformanceTransaction('send_message');
     monitoring.trackEvent('message_sent', { has_media: !!uploadedMedia });
 
     setError('');
@@ -271,16 +280,18 @@ const ChatWidget: React.FC<WidgetProps> = ({
         hasTyped: false // Initialize as not typed
       };
       setCurrentChat(prev => ({ ...prev, ai: aiMessage }));
-      messageTransaction.finish(); // Finish transaction after successful send
+      monitoring.finishTransaction(); // Finish transaction after successful send
     } catch (err) {
       console.error('Failed to send message:', err);
       monitoring.captureError(err as Error, {
+        name,
+        apiKey,
         messageText,
         hasMedia: !!uploadedMedia
       });
       setIsTyping(false);
       setError('Failed to send message. Please try again.');
-      messageTransaction.finish();
+      monitoring.finishTransaction();
     }
   }, [previousMessages, currentChat, uploadedMedia]); // Dependencies
 
@@ -315,6 +326,13 @@ const ChatWidget: React.FC<WidgetProps> = ({
   }, [scrollToBottom]);
 
   const handleRemoveFile = useCallback(() => {
+    const removedFile = uploadedMedia;
+    if (removedFile) {
+      monitoring.trackEvent('file_removed', {
+        fileType: removedFile.file.type,
+        fileSize: removedFile.file.size
+      });
+    }
     setUploadedMedia(null);
     setError('');
   }, []);

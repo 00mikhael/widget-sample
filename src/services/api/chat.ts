@@ -73,7 +73,7 @@ export interface AuthResponse {
 }
 
 export const authAPI = {
-  initialize: async (apiKey: string, name: string): Promise<AuthResponse> => {
+  initialize: async (name: string, apiKey: string): Promise<AuthResponse> => {
     setApiKey(apiKey);
     widgetName = name;
 

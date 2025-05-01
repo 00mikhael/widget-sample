@@ -1,8 +1,11 @@
 const path = require('path');
+const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
+const version = require('./package.json').version;
 
 module.exports = {
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+  devtool: process.env.NODE_ENV === 'production' ? 'hidden-source-map' : 'eval-source-map',
   devServer: {
     static: {
       directory: path.join(__dirname),
@@ -18,6 +21,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'widget.js',
     publicPath: '',
+    sourceMapFilename: `widget.js.map?v=${version}`,
     library: {
       name: 'LAWMAai',
       type: 'umd',
@@ -95,6 +99,12 @@ module.exports = {
       "fs": false
     }
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.npm_package_version': JSON.stringify(version)
+    })
+  ],
   optimization: {
     minimize: true,
     minimizer: [

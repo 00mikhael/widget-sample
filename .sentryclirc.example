@@ -1,0 +1,16 @@
+[auth]
+token=YOUR_AUTH_TOKEN
+
+[defaults]
+org=your-organization
+project=lawma-ai-widget
+url=https://sentry.io/
+
+[release]
+prefix=lawma-ai-widget@
+
+# Instructions:
+# 1. Copy this file to .sentryclirc
+# 2. Replace YOUR_AUTH_TOKEN with your Sentry auth token
+# 3. Replace your-organization with your Sentry organization name
+# 4. Keep project name as lawma-ai-widget or update it if using a different project

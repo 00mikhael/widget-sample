@@ -1,4 +1,5 @@
 import { WS_BASE_URL, ACCESS_TOKEN } from '../../config';
+import { monitoring } from '../monitoring';
 
 export interface ProcessingStatus {
   status: string;
@@ -9,6 +10,8 @@ let messageHandler: ((data: ProcessingStatus) => void) | null = null;
 let retryCount = 0;
 
 export const initWebSocket = (clientId: string) => {
+  monitoring.startPerformanceTransaction('websocket_connect');
+
   // Reset retry count on fresh initialization
   if (!ws) {
     retryCount = 0;
@@ -33,39 +36,58 @@ export const initWebSocket = (clientId: string) => {
   }
 
   const accessTokenParam = ACCESS_TOKEN ? `?access_token=${ACCESS_TOKEN}` : '';
-  ws = new WebSocket(`${WS_BASE_URL}/ws/${clientId}${accessTokenParam}`);
+  try {
+    ws = new WebSocket(`${WS_BASE_URL}/ws/${clientId}${accessTokenParam}`);
 
-  ws.onmessage = (event) => {
-    try {
-      const data = JSON.parse(event.data);
-      messageHandler?.(data);
-    } catch (error) {
-      console.error('Failed to parse WebSocket message:', error);
-    }
-  };
+    ws.onmessage = (event) => {
+      monitoring.startPerformanceTransaction('websocket_message');
+      try {
+        const data = JSON.parse(event.data);
+        messageHandler?.(data);
+      } catch (error) {
+        monitoring.captureError(error as Error, {
+          message: event.data,
+          context: 'websocket_message_parsing'
+        });
+        console.error('Failed to parse WebSocket message:', error);
+      } finally {
+        monitoring.finishTransaction();
+      }
+    };
 
-  // Reconnection logic with exactly one retry
-  ws.onclose = () => {
-    if (retryCount === 0) {
-      retryCount++;
-      setTimeout(() => {
-        if (messageHandler) {
-          initWebSocket(clientId);
-        }
-      }, 1000);
-    } else {
-      console.log('WebSocket reconnection attempt failed');
-    }
-  };
+    // Reconnection logic with exactly one retry
+    ws.onclose = () => {
+      if (retryCount === 0) {
+        retryCount++;
+        setTimeout(() => {
+          if (messageHandler) {
+            initWebSocket(clientId);
+          }
+        }, 1000);
+      } else {
+        console.log('WebSocket reconnection attempt failed');
+      }
+    };
 
-  // Add error handler
-  ws.onerror = (error) => {
-    console.error('WebSocket error:', error);
-  };
+    // Add error handler
+    ws.onerror = (event) => {
+      const error = event instanceof Error ? event : new Error('WebSocket error occurred');
+      monitoring.captureError(error, { context: 'websocket_error' });
+      console.error('WebSocket error:', error);
+    };
 
-  return {
-    onMessage: (handler: (data: ProcessingStatus) => void) => {
-      messageHandler = handler;
-    }
-  };
-};
+    // Add open handler to track successful connections
+    ws.onopen = () => {
+      monitoring.finishTransaction();
+    };
+
+    return {
+      onMessage: (handler: (data: ProcessingStatus) => void) => {
+        messageHandler = handler;
+      }
+    };
+  } catch (error) {
+    monitoring.captureError(error as Error, { context: 'websocket_connection' });
+    throw error;
+  }
+}

@@ -205,22 +205,15 @@ const ChatWidget: React.FC<WidgetProps> = ({
   const toggleChat = useCallback(() => {
     const newIsOpen = !isOpen;
     setIsOpen(newIsOpen);
-    monitoring.trackEvent('toggle_chat', { isOpen: newIsOpen });
   }, [isOpen]);
 
   const toggleFullscreen = useCallback(() => {
     const newIsFullscreen = !isFullscreen;
     setIsFullscreen(newIsFullscreen);
-    monitoring.trackEvent('toggle_fullscreen', { isFullscreen: newIsFullscreen });
   }, [isFullscreen]);
 
   const handleClearChat = useCallback((event?: React.MouseEvent) => {
     event?.stopPropagation(); // Prevent event bubbling if called from button click
-
-    monitoring.trackEvent('clear_chat', {
-      messagesCount: previousMessages.length,
-      hasActiveChat: !!currentChat.user || !!currentChat.ai
-    });
 
     localStorage.removeItem('chatMessages'); // Clear persisted messages
     setUploadedMedia(null); // Clear any pending upload
@@ -237,7 +230,6 @@ const ChatWidget: React.FC<WidgetProps> = ({
     if (!messageText.trim() && !uploadedMedia) return;
 
     monitoring.startPerformanceTransaction('send_message');
-    monitoring.trackEvent('message_sent', { has_media: !!uploadedMedia });
 
     setError('');
     setIsTyping(true);
@@ -299,7 +291,6 @@ const ChatWidget: React.FC<WidgetProps> = ({
     if (!file || !file.type.startsWith('image/')) {
       setError('Please select an image file.');
       setUploadedMedia(null);
-      monitoring.trackEvent('file_upload_failed', { reason: 'invalid_type' });
       return;
     }
     setError('');
@@ -309,10 +300,6 @@ const ChatWidget: React.FC<WidgetProps> = ({
     reader.onloadend = () => {
       if (typeof reader.result === 'string') {
         setUploadedMedia({ url: reader.result, type: 'image', file: file });
-        monitoring.trackEvent('file_upload_success', {
-          fileType: file.type,
-          fileSize: file.size
-        });
         scrollToBottom(); // Scroll to show file name if input area changes size
       } else {
         setError('Failed to read file.');
@@ -326,13 +313,6 @@ const ChatWidget: React.FC<WidgetProps> = ({
   }, [scrollToBottom]);
 
   const handleRemoveFile = useCallback(() => {
-    const removedFile = uploadedMedia;
-    if (removedFile) {
-      monitoring.trackEvent('file_removed', {
-        fileType: removedFile.file.type,
-        fileSize: removedFile.file.size
-      });
-    }
     setUploadedMedia(null);
     setError('');
   }, []);

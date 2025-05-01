@@ -3,10 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack serve --mode development",
-    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js --mode production",
+    "dev": "webpack serve",
+    "build": "webpack --config webpack.config.js && npm run sentry:sourcemaps",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject ./dist && sentry-cli sourcemaps upload ./dist",
-    "build:prod": "cross-env NODE_ENV=production npm run build && npm run sentry:sourcemaps",
     "start": "next start",
     "lint": "next lint"
   },

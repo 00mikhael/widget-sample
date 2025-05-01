@@ -1,7 +1,7 @@
 // Environment
-export const IS_PRODUCTION = process.env.NODE_ENV === 'production';
-export const APP_VERSION = process.env.npm_package_version || '0.1.0';
-export const APP_ENV = process.env.NODE_ENV || 'development';
+export const IS_PRODUCTION = true;  // Set to false in development builds
+export const APP_VERSION = '0.1.0';
+export const APP_ENV = 'production';
 
 // Constants
 export const AUTH_BASE_URL = 'https://auth-lawma-api-dev-hxezgrckc9hrfcaj.westus2-01.azurewebsites.net/api/v1';

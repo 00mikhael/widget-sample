@@ -1,11 +1,10 @@
 const path = require('path');
-const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const version = require('./package.json').version;
 
 module.exports = {
-  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
-  devtool: process.env.NODE_ENV === 'production' ? 'hidden-source-map' : 'eval-source-map',
+  mode: 'production',  // Change to 'development' for development builds
+  devtool: 'hidden-source-map',  // Change to 'eval-source-map' for development
   devServer: {
     static: {
       directory: path.join(__dirname),
@@ -99,12 +98,7 @@ module.exports = {
       "fs": false
     }
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-      'process.env.npm_package_version': JSON.stringify(version)
-    })
-  ],
+  plugins: [],
   optimization: {
     minimize: true,
     minimizer: [

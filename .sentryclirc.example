@@ -2,9 +2,8 @@
 token=YOUR_AUTH_TOKEN
 
 [defaults]
-org=your-organization
+org=your-organization-name  # Replace with your Sentry organization name
 project=lawma-ai-widget
-url=https://sentry.io/
 
 [release]
 prefix=lawma-ai-widget@

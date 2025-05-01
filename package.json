@@ -9,8 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@sentry/browser": "^9.15.0",
+    "@sentry/react": "^9.15.0",
+    "@sentry/tracing": "^7.120.3",
+    "@types/mixpanel-browser": "^2.54.0",
     "aos": "^2.3.4",
     "core-js": "^3.41.0",
+    "mixpanel-browser": "^2.64.0",
     "next": "^15.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

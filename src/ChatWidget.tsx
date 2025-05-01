@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import '../styles/widget.css';
 import 'aos/dist/aos.css';
 import { Message, CurrentChat, sendMessageAPI } from './components/chat/utils';
+import { monitoring } from './services/monitoring';
 import { updateConfig } from './config';
 import { initWebSocket, ProcessingStatus } from './services/api/websocket';
 import { getClientId, authAPI, tokenRefreshTimeout } from './services/api/chat';
@@ -66,8 +67,11 @@ const ChatWidget: React.FC<WidgetProps> = ({
   useEffect(() => {
     async function init() {
       try {
+        const initTransaction = monitoring.startPerformanceTransaction('widget_initialization');
         const initResponse = await authAPI.initialize(apiKey, name);
         updateConfig(initResponse);
+        monitoring.trackEvent('widget_initialized', { name });
+        initTransaction.finish();
 
 
         // Initialize state from localStorage
@@ -129,6 +133,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
         };
       } catch (error) {
         console.error('Failed to initialize chat widget:', error);
+        monitoring.captureError(error as Error, { apiKey, name });
         setError('Failed to initialize chat widget');
       }
     }
@@ -197,8 +202,10 @@ const ChatWidget: React.FC<WidgetProps> = ({
 
   // --- Event Handlers ---
   const toggleChat = useCallback(() => {
-    setIsOpen(prev => !prev);
-  }, []);
+    const newIsOpen = !isOpen;
+    setIsOpen(newIsOpen);
+    monitoring.trackEvent('toggle_chat', { isOpen: newIsOpen });
+  }, [isOpen]);
 
   const toggleFullscreen = useCallback(() => {
     setIsFullscreen(prev => !prev);
@@ -219,6 +226,9 @@ const ChatWidget: React.FC<WidgetProps> = ({
 
   const handleSendMessage = useCallback(async (messageText: string) => {
     if (!messageText.trim() && !uploadedMedia) return;
+
+    const messageTransaction = monitoring.startPerformanceTransaction('send_message');
+    monitoring.trackEvent('message_sent', { has_media: !!uploadedMedia });
 
     setError('');
     setIsTyping(true);
@@ -261,10 +271,16 @@ const ChatWidget: React.FC<WidgetProps> = ({
         hasTyped: false // Initialize as not typed
       };
       setCurrentChat(prev => ({ ...prev, ai: aiMessage }));
+      messageTransaction.finish(); // Finish transaction after successful send
     } catch (err) {
       console.error('Failed to send message:', err);
+      monitoring.captureError(err as Error, {
+        messageText,
+        hasMedia: !!uploadedMedia
+      });
       setIsTyping(false);
       setError('Failed to send message. Please try again.');
+      messageTransaction.finish();
     }
   }, [previousMessages, currentChat, uploadedMedia]); // Dependencies
 
@@ -272,6 +288,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
     if (!file || !file.type.startsWith('image/')) {
       setError('Please select an image file.');
       setUploadedMedia(null);
+      monitoring.trackEvent('file_upload_failed', { reason: 'invalid_type' });
       return;
     }
     setError('');
@@ -281,6 +298,10 @@ const ChatWidget: React.FC<WidgetProps> = ({
     reader.onloadend = () => {
       if (typeof reader.result === 'string') {
         setUploadedMedia({ url: reader.result, type: 'image', file: file });
+        monitoring.trackEvent('file_upload_success', {
+          fileType: file.type,
+          fileSize: file.size
+        });
         scrollToBottom(); // Scroll to show file name if input area changes size
       } else {
         setError('Failed to read file.');

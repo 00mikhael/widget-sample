@@ -8,6 +8,8 @@ A customizable React chat widget that can be easily integrated into any web appl
 - [Configuration](#configuration)
 - [API Reference](#api-reference)
 - [Features](#features)
+- [Mobile Responsiveness](#mobile-responsiveness)
+- [Monitoring and Analytics](#monitoring-and-analytics)
 
 ## Installation
 
@@ -145,3 +147,89 @@ The widget automatically switches to full-width mode when:
 - Manual fullscreen toggle is clicked
 
 This ensures optimal usability on mobile devices while maintaining a contained experience on larger screens.
+
+## Monitoring and Analytics
+
+The chat widget includes comprehensive monitoring capabilities using Sentry and Mixpanel. This provides insights into performance, errors, and user behavior.
+
+### Setup
+
+1. Create accounts and get API keys from:
+   - [Sentry](https://sentry.io)
+   - [Mixpanel](https://mixpanel.com)
+
+2. Set your API keys in `src/config.ts`:
+```typescript
+// Monitoring configuration
+export const SENTRY_DSN = 'your_sentry_dsn';
+export const MIXPANEL_TOKEN = 'your_mixpanel_token';
+```
+
+### Monitored Events
+
+#### Performance Monitoring (Sentry)
+- Widget initialization time
+- Message sending latency
+- Error tracking with stack traces
+- Automatic transaction tracking
+
+#### User Behavior Analytics (Mixpanel)
+- Widget initialization
+- Chat toggling (open/close)
+- Message sending with context
+- File upload success/failure tracking
+
+### Event Details
+
+1. **Widget Initialization**
+   - Event: `widget_initialized`
+   - Tracked data: widget name
+   - Performance measurement from load to ready state
+
+2. **Chat Toggle**
+   - Event: `toggle_chat`
+   - Tracked data: open/close state
+   - User interaction patterns
+
+3. **Message Sending**
+   - Event: `message_sent`
+   - Tracked data: message type, media presence
+   - Performance timing for message delivery
+
+4. **File Uploads**
+   - Success Event: `file_upload_success`
+   - Failure Event: `file_upload_failed`
+   - Tracked data: file type, size, failure reasons
+
+### Error Tracking
+
+Automatic error capture includes:
+- Stack traces
+- User context
+- State information
+- Network failures
+- API errors
+
+### Best Practices
+
+1. Configure sampling rates for production:
+```javascript
+tracesSampleRate: 0.1 // Adjust based on traffic
+```
+
+2. Set up error alerts in Sentry for:
+   - High error rates
+   - Critical failures
+   - Performance degradation
+
+3. Create Mixpanel dashboards for:
+   - User engagement metrics
+   - Feature adoption rates
+   - Usage patterns
+   - Conversion tracking
+
+4. Regularly analyze:
+   - Error patterns
+   - Performance bottlenecks
+   - User behavior trends
+   - Feature usage statistics

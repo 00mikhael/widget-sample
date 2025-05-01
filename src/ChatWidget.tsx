@@ -70,8 +70,15 @@ const ChatWidget: React.FC<WidgetProps> = ({
         monitoring.startPerformanceTransaction('widget_initialization');
         const initResponse = await authAPI.initialize(name, apiKey);
         updateConfig(initResponse);
-        monitoring.trackEvent('widget_initialized', { name, apiKey });
         monitoring.finishTransaction();
+        monitoring.identifyUser(apiKey)
+        monitoring.setUserProperties({
+          name,
+          apiKey,
+          clientId: getClientId(),
+        });
+        monitoring.trackEvent('widget_initialized', { name, apiKey });
+
 
 
         // Initialize state from localStorage

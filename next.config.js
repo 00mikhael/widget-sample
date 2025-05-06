@@ -30,7 +30,6 @@ const nextConfig = {
   // Disable image optimization since we're building for CDN
   images: {
     unoptimized: true,
-    domains: ['gstatic.com'],
   },
   // Disable unnecessary features
   reactStrictMode: true

@@ -2,6 +2,7 @@ import React from 'react';
 import { useInternetStatus } from '../../hooks/useInternetStatus';
 import { AiOutlineDelete as Delete } from "react-icons/ai";
 
+const MAX_NAME_LENGTH = 25
 interface ChatHeaderProps {
   onClose: () => void;
   onClearChat: (event: React.MouseEvent) => void;
@@ -40,7 +41,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
               />
             </div>
           )}
-          <h3 id="chat-widget-title" className="tw-font-semibold tw-text-sm">{name}</h3>
+          <h3 id="chat-widget-title" className="tw-font-semibold tw-text-sm">{name?.length > MAX_NAME_LENGTH ? name.slice(0, MAX_NAME_LENGTH) + '...' : name}</h3>
         </div>
       </div>
       <div className="tw-flex tw-gap-2">

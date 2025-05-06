@@ -9,6 +9,7 @@ import { getClientId, tokenRefreshTimeout } from './services/api/chat';
 import Overlay from './components/chat/Overlay';
 import ChatWindow from './components/chat/ChatWindow';
 import ChatToggleButton from './components/chat/ChatToggleButton';
+import WidgetErrorBoundary from './components/ErrorBoundary';
 
 type ButtonPosition = 'top-right' | 'center-right' | 'bottom-right' | 'top-left' | 'center-left' | 'bottom-left';
 
@@ -399,7 +400,11 @@ const chatWidgetExports = {
     }
 
     const root = createRoot(container);
-    root.render(<ChatWidget {...options} />);
+    root.render(
+      <WidgetErrorBoundary>
+        <ChatWidget {...options} />
+      </WidgetErrorBoundary>
+    );
   }
 };
 

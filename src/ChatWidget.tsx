@@ -87,13 +87,24 @@ const ChatWidget: React.FC<WidgetProps> = ({
         monitoring.trackEvent('widget_initialized', { name, apiKey });
 
 
-        // Initialize state from localStorage
+        // Check URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const shouldOpenFullscreen = urlParams.get('askai') === 'active';
+
+        // Initialize state from localStorage or URL params
         const storedIsOpen = localStorage.getItem('chatIsOpen');
         const storedIsFullscreen = localStorage.getItem('chatIsFullscreen');
         const storedChat = localStorage.getItem('chatMessages');
 
-        setIsOpen(storedIsOpen === 'true');
-        setIsFullscreen(storedIsFullscreen === 'true');
+        // Set initial states based on URL parameter or localStorage
+        if (shouldOpenFullscreen) {
+          setIsOpen(true);
+          setIsFullscreen(true);
+          document.body.classList.add('overflow-hidden');
+        } else {
+          setIsOpen(storedIsOpen === 'true');
+          setIsFullscreen(storedIsFullscreen === 'true');
+        }
 
         // Restore chat messages if they exist
         if (storedChat) {
@@ -155,20 +166,35 @@ const ChatWidget: React.FC<WidgetProps> = ({
     init();
   }, []); // Empty dependency array ensures this runs only once on mount
 
-  // --- LocalStorage Sync ---
+  // --- LocalStorage Sync and URL Parameter Check ---
   useEffect(() => {
     // Don't run this effect on initial mount before initialization is complete
     if (!initialized) return;
 
-    if (isOpen) {
-      localStorage.setItem('chatIsOpen', 'true');
+    // Check URL parameters on initialization and URL changes
+    const urlParams = new URLSearchParams(window.location.search);
+    const shouldOpenFullscreen = urlParams.get('askai') === 'active';
+
+    if (shouldOpenFullscreen) {
+      // Force fullscreen if URL parameter is present
+      setIsOpen(true);
+      setIsFullscreen(true);
       document.body.classList.add('overflow-hidden');
-      scrollToBottom(); // Scroll when opening
+      localStorage.setItem('chatIsOpen', 'true');
+      localStorage.setItem('chatIsFullscreen', 'true');
+      scrollToBottom();
     } else {
-      localStorage.removeItem('chatIsOpen');
-      document.body.classList.remove('overflow-hidden');
+      // Normal localStorage sync behavior
+      if (isOpen) {
+        localStorage.setItem('chatIsOpen', 'true');
+        document.body.classList.add('overflow-hidden');
+        scrollToBottom();
+      } else {
+        localStorage.removeItem('chatIsOpen');
+        document.body.classList.remove('overflow-hidden');
+      }
     }
-  }, [isOpen, initialized]);
+  }, [isOpen, initialized, window.location.search]);
 
   // Sync fullscreen state with localStorage
   useEffect(() => {
@@ -214,16 +240,36 @@ const ChatWidget: React.FC<WidgetProps> = ({
     }
   }, [previousMessages, currentChat, isTyping, isOpen, scrollToBottom]);
 
+  // URL Parameter Management
+  const updateUrlParams = useCallback((isActive: boolean) => {
+    const url = new URL(window.location.href);
+    if (isActive) {
+      url.searchParams.set('askai', 'active');
+    } else {
+      url.searchParams.delete('askai');
+    }
+    window.history.replaceState({}, '', url);
+  }, []);
+
   // --- Event Handlers ---
   const toggleChat = useCallback(() => {
     const newIsOpen = !isOpen;
     setIsOpen(newIsOpen);
-  }, [isOpen]);
+    // Remove URL param when closing widget
+    if (!newIsOpen) {
+      updateUrlParams(false);
+    } else if (isFullscreen) {
+      // Restore URL param if reopening in fullscreen
+      updateUrlParams(true);
+    }
+  }, [isOpen, isFullscreen, updateUrlParams]);
 
   const toggleFullscreen = useCallback(() => {
     const newIsFullscreen = !isFullscreen;
     setIsFullscreen(newIsFullscreen);
-  }, [isFullscreen]);
+    // Update URL param based on fullscreen state
+    updateUrlParams(newIsFullscreen && isOpen);
+  }, [isFullscreen, isOpen, updateUrlParams]);
 
   const handleClearChat = useCallback((event?: React.MouseEvent) => {
     event?.stopPropagation(); // Prevent event bubbling if called from button click

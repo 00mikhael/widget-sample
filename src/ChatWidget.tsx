@@ -20,6 +20,7 @@ interface WidgetProps {
   welcomeMessages?: string[];
   popularQuestions?: string[];
   popularQuestionsTitle?: string;
+  logo_url?: string;
 }
 
 const ChatWidget: React.FC<WidgetProps> = ({
@@ -30,6 +31,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
   welcomeMessages = ["Ask me anything..."],
   popularQuestions = [],
   popularQuestionsTitle = "Popular Questions",
+  logo_url,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
@@ -362,6 +364,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
         popularQuestions={popularQuestions}
         popularQuestionsTitle={popularQuestionsTitle}
         statusMessage={statusMessage}
+        logo_url={logo_url}
       />
 
       {/* Toggle Button */}

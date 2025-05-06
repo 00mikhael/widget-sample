@@ -34,6 +34,11 @@ const performTokenRefresh = async (retryCount = 0): Promise<void> => {
     if (retryCount < MAX_TOKEN_REFRESH_RETRIES) {
       await performTokenRefresh(retryCount + 1);
     } else {
+      console.error('Token refresh failed after all retries:', {
+        maxRetries: MAX_TOKEN_REFRESH_RETRIES + 1,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString()
+      });
       throw new Error('Token refresh retry limit exceeded');
     }
   }

@@ -9,6 +9,7 @@ interface ChatHeaderProps {
   isFullscreen: boolean;
   onToggleFullscreen: () => void;
   name: string;
+  logo_url?: string;
 }
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({
@@ -16,7 +17,8 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   onClearChat,
   isFullscreen,
   onToggleFullscreen,
-  name
+  name,
+  logo_url
 }) => {
   const isOnline = useInternetStatus();
 
@@ -24,11 +26,20 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
     <div className="tw-flex tw-items-center tw-justify-between tw-bg-gradient-to-r tw-from-[var(--chat-primary-color)] tw-to-[var(--chat-primary-darker)] tw-p-4 tw-text-white tw-shadow-md tw-relative tw-z-10">
       <div className="tw-flex tw-items-center tw-gap-2">
         <div className="tw-flex tw-items-center">
-          <div
+          {/* <div
             className={`tw-w-2 tw-h-2 tw-rounded-full ${isOnline ? 'tw-bg-green-400' : 'tw-bg-red-500'
               } tw-animate-pulse tw-mr-2`}
             title={isOnline ? 'Online' : 'Offline'}
-          ></div>
+          ></div> */}
+          {logo_url && (
+            <div className='tw-w-8 tw-h-8 tw-rounded-full tw-overflow-hidden tw-shrink-0 tw-mr-2'>
+              <img
+                src={logo_url}
+                className='tw-w-8 tw-h-8 tw-rounded-full tw-object-cover tw-shrink-0'
+                alt="logo"
+              />
+            </div>
+          )}
           <h3 id="chat-widget-title" className="tw-font-semibold">{name}</h3>
         </div>
       </div>

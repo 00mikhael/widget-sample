@@ -19,6 +19,7 @@ interface ChatWindowProps {
   popularQuestions?: string[];
   popularQuestionsTitle?: string;
   statusMessage?: string;
+  logo_url?: string;
   onClose: () => void;
   onClearChat: (event?: React.MouseEvent) => void;
   onSendMessage: (messageText: string) => void;
@@ -38,6 +39,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   chatContentRef,
   isFullscreen,
   name,
+  logo_url,
   onClose,
   onClearChat,
   onSendMessage,
@@ -88,6 +90,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           isFullscreen={isFullscreen}
           onToggleFullscreen={onToggleFullscreen}
           name={name}
+          logo_url={logo_url}
         />
 
         <div className={`tw-flex-1 tw-w-full tw-mx-auto tw-flex tw-flex-col tw-overflow-hidden ${isFullscreen ? 'tw-max-w-[1100px]' : ''}`}>

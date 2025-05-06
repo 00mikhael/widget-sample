@@ -9,6 +9,7 @@ import { getClientId, tokenRefreshTimeout } from './services/api/chat';
 import Overlay from './components/chat/Overlay';
 import ChatWindow from './components/chat/ChatWindow';
 import ChatToggleButton from './components/chat/ChatToggleButton';
+import WidgetErrorBoundary from './components/ErrorBoundary';
 
 type ButtonPosition = 'top-right' | 'center-right' | 'bottom-right' | 'top-left' | 'center-left' | 'bottom-left';
 
@@ -20,6 +21,7 @@ interface WidgetProps {
   welcomeMessages?: string[];
   popularQuestions?: string[];
   popularQuestionsTitle?: string;
+  logo_url?: string;
 }
 
 const ChatWidget: React.FC<WidgetProps> = ({
@@ -30,6 +32,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
   welcomeMessages = ["Ask me anything..."],
   popularQuestions = [],
   popularQuestionsTitle = "Popular Questions",
+  logo_url,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
@@ -362,6 +365,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
         popularQuestions={popularQuestions}
         popularQuestionsTitle={popularQuestionsTitle}
         statusMessage={statusMessage}
+        logo_url={logo_url}
       />
 
       {/* Toggle Button */}
@@ -396,7 +400,11 @@ const chatWidgetExports = {
     }
 
     const root = createRoot(container);
-    root.render(<ChatWidget {...options} />);
+    root.render(
+      <WidgetErrorBoundary>
+        <ChatWidget {...options} />
+      </WidgetErrorBoundary>
+    );
   }
 };
 

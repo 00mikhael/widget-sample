@@ -40,7 +40,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
               />
             </div>
           )}
-          <h3 id="chat-widget-title" className="tw-font-semibold">{name}</h3>
+          <h3 id="chat-widget-title" className="tw-font-semibold tw-text-sm">{name}</h3>
         </div>
       </div>
       <div className="tw-flex tw-gap-2">

@@ -73,18 +73,9 @@ const ChatWidget: React.FC<WidgetProps> = ({
   useEffect(() => {
     async function init() {
       try {
-        monitoring.startPerformanceTransaction('widget_initialization');
         const initResponse = await authAPI.initialize(name, apiKey);
         updateConfig(initResponse);
-        monitoring.finishTransaction();
-        monitoring.identifyUser(apiKey);
         const clientId = await getClientId();
-        monitoring.setUserProperties({
-          name,
-          apiKey,
-          clientId,
-        });
-        monitoring.trackEvent('widget_initialized', { name, apiKey });
 
 
         // Check URL parameters
@@ -159,7 +150,6 @@ const ChatWidget: React.FC<WidgetProps> = ({
         console.error('Failed to initialize chat widget:', error);
         monitoring.captureError(error as Error, { name, apiKey });
         setError('Failed to initialize chat widget');
-        monitoring.finishTransaction();
       }
     }
 
@@ -288,8 +278,6 @@ const ChatWidget: React.FC<WidgetProps> = ({
   const handleSendMessage = useCallback(async (messageText: string) => {
     if (!messageText.trim() && !uploadedMedia) return;
 
-    monitoring.startPerformanceTransaction('send_message');
-
     setError('');
     setIsTyping(true);
 
@@ -333,18 +321,12 @@ const ChatWidget: React.FC<WidgetProps> = ({
         hasTyped: false // Initialize as not typed
       };
       setCurrentChat(prev => ({ ...prev, ai: aiMessage }));
-      monitoring.finishTransaction(); // Finish transaction after successful send
+      // Send complete
     } catch (err) {
       console.error('Failed to send message:', err);
-      monitoring.captureError(err as Error, {
-        name,
-        apiKey,
-        messageText,
-        hasMedia: !!uploadedMedia
-      });
+      monitoring.captureError(err as Error);
       setIsTyping(false);
       setError('Failed to send message. Please try again.');
-      monitoring.finishTransaction();
     }
   }, [previousMessages, currentChat, uploadedMedia]); // Dependencies
 

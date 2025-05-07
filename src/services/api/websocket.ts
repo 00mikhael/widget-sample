@@ -10,7 +10,6 @@ let messageHandler: ((data: ProcessingStatus) => void) | null = null;
 let retryCount = 0;
 
 export const initWebSocket = (clientId: string) => {
-  monitoring.startPerformanceTransaction('websocket_connect');
 
   // Reset retry count on fresh initialization
   if (!ws) {
@@ -40,7 +39,6 @@ export const initWebSocket = (clientId: string) => {
     ws = new WebSocket(`${WS_BASE_URL}/ws/${clientId}${accessTokenParam}`);
 
     ws.onmessage = (event) => {
-      monitoring.startPerformanceTransaction('websocket_message');
       try {
         const data = JSON.parse(event.data);
         messageHandler?.(data);
@@ -51,7 +49,6 @@ export const initWebSocket = (clientId: string) => {
         });
         console.error('Failed to parse WebSocket message:', error);
       } finally {
-        monitoring.finishTransaction();
       }
     };
 
@@ -78,7 +75,6 @@ export const initWebSocket = (clientId: string) => {
 
     // Add open handler to track successful connections
     ws.onopen = () => {
-      monitoring.finishTransaction();
     };
 
     return {

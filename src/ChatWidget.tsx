@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
-import '../styles/widget.css';
+import './styles/widget.css';
 import { Message, CurrentChat, sendMessageAPI, authAPI } from './components/chat/utils';
 import { monitoring } from './services/monitoring';
 import { updateConfig } from './config';

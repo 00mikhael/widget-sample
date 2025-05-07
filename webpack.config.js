@@ -14,7 +14,7 @@ module.exports = {
     port: 3001,
   },
   entry: {
-    widget: ['./styles/widget.css', './src/ChatWidget.tsx']
+    widget: ['./src/styles/widget.css', './src/ChatWidget.tsx']
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

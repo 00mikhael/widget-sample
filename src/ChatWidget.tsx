@@ -58,7 +58,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
 
     const initWS = async () => {
       const clientId = await getClientId();
-      const wsService = initWebSocket(clientId);
+      const wsService = initWebSocket(clientId, name, apiKey);
       wsService.onMessage((data: ProcessingStatus) => {
         console.log('WebSocket message received:', data);
         setStatusMessage(capitalizeFirstLetter(data.status));
@@ -324,7 +324,7 @@ const ChatWidget: React.FC<WidgetProps> = ({
       // Send complete
     } catch (err) {
       console.error('Failed to send message:', err);
-      monitoring.captureError(err as Error);
+      monitoring.captureError(err as Error, { name, apiKey });
       setIsTyping(false);
       setError('Failed to send message. Please try again.');
     }

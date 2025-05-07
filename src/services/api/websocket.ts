@@ -9,7 +9,7 @@ let ws: WebSocket | null = null;
 let messageHandler: ((data: ProcessingStatus) => void) | null = null;
 let retryCount = 0;
 
-export const initWebSocket = (clientId: string) => {
+export const initWebSocket = (clientId: string, name: string, apiKey: string) => {
 
   // Reset retry count on fresh initialization
   if (!ws) {
@@ -44,6 +44,8 @@ export const initWebSocket = (clientId: string) => {
         messageHandler?.(data);
       } catch (error) {
         monitoring.captureError(error as Error, {
+          name,
+          apiKey,
           message: event.data,
           context: 'websocket_message_parsing'
         });
@@ -58,7 +60,7 @@ export const initWebSocket = (clientId: string) => {
         retryCount++;
         setTimeout(() => {
           if (messageHandler) {
-            initWebSocket(clientId);
+            initWebSocket(clientId, name, apiKey);
           }
         }, 1000);
       } else {
@@ -69,7 +71,11 @@ export const initWebSocket = (clientId: string) => {
     // Add error handler
     ws.onerror = (event) => {
       const error = event instanceof Error ? event : new Error('WebSocket error occurred');
-      monitoring.captureError(error, { context: 'websocket_error' });
+      monitoring.captureError(error, {
+        name,
+        apiKey,
+        context: 'websocket_error_onerror'
+      });
       console.error('WebSocket error:', error);
     };
 
@@ -83,7 +89,11 @@ export const initWebSocket = (clientId: string) => {
       }
     };
   } catch (error) {
-    monitoring.captureError(error as Error, { context: 'websocket_connection' });
+    monitoring.captureError(error as Error, {
+      name,
+      apiKey,
+      context: 'websocket_connection_trycatch'
+    });
     throw error;
   }
 }

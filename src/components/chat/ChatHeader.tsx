@@ -44,14 +44,14 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
           <h3 id="chat-widget-title" className="tw-font-semibold tw-text-sm">{name?.length > MAX_NAME_LENGTH ? name.slice(0, MAX_NAME_LENGTH) + '...' : name}</h3>
         </div>
       </div>
-      <div className="tw-flex tw-gap-2">
+      <div className="tw-flex">
         {/* Clear Chat Button */}
         <button
           onClick={onClearChat}
           className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl hover:tw-scale-110 hover:primary-darken tw-transition-all tw-duration-200 tw-transform active:tw-scale-95"
           aria-label="Clear chat history"
         >
-          <DeleteIcon className="tw-w-5 tw-h-5" />
+          <DeleteIcon />
         </button>
 
         {/* Fullscreen Toggle Button */}
@@ -61,11 +61,11 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
           aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
         >
           {isFullscreen ? (
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="tw-w-5 tw-h-5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="tw-w-4 tw-h-4">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 9V4.5M9 9H4.5M15 9V4.5M15 9H19.5M9 15v4.5M9 15H4.5M15 15v4.5M15 15H19.5" />
             </svg>
           ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="tw-w-5 tw-h-5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="tw-w-4 tw-h-4">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
             </svg>
           )}

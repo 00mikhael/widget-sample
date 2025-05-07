@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import AttachIcon from './icons/attach.svg';
+import SendIcon from './icons/send.svg';
 interface ChatInputProps {
   error: string;
   uploadedFileName?: string;
@@ -86,7 +87,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
             onBlur={() => !messageInput && setIsExpanded(false)}
             placeholder={'Ask me anything...'}
             className={`
-              tw-w-full tw-p-3 tw-text-gray-800 tw-placeholder-gray-400
+              tw-w-full tw-text-sm tw-p-3 tw-text-gray-800 tw-placeholder-gray-400
               tw-bg-transparent tw-border-none tw-resize-none
               focus:tw-ring-0 focus:tw-outline-none focus:tw-shadow-none
               tw-transition-all tw-duration-200
@@ -128,10 +129,10 @@ const ChatInput: React.FC<ChatInputProps> = ({
             />
             <button
               onClick={handleAttachClick}
-              className="tw-p-2 tw-text-gray-500 hover:primary-text tw-transition-colors"
+              className="tw-bg-white"
               aria-label="Attach image file"
             >
-              <AttachIcon className="tw-w-5 tw-h-5" />
+              <AttachIcon className="tw-bg-white" />
             </button>
 
             {/* Error message */}
@@ -144,13 +145,11 @@ const ChatInput: React.FC<ChatInputProps> = ({
           {canSend && (
             <button
               onClick={handleSend}
-              className="tw-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded-lg primary-bg tw-text-white hover:primary-darken tw-transition-all tw-duration-200 tw-transform hover:tw-scale-110 active:tw-scale-95 disabled:tw-opacity-50"
+              className="tw-flex tw-items-center tw-justify-center tw-w-6 tw-h-6 tw-rounded-lg primary-bg tw-text-white hover:primary-darken tw-transition-all tw-duration-200 tw-transform hover:tw-scale-110 active:tw-scale-95 disabled:tw-opacity-50"
               aria-label="Send message"
             // disabled={!canSend} // Button is conditionally rendered instead
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="tw-w-4 tw-h-4">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-              </svg>
+              <SendIcon className='tw-w-3 tw-h-3' />
             </button>
           )}
         </div>

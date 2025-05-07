@@ -1,6 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { MdAttachFile } from "react-icons/md";
-
+import AttachIcon from './icons/attach.svg';
 interface ChatInputProps {
   error: string;
   uploadedFileName?: string;
@@ -132,7 +131,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
               className="tw-p-2 tw-text-gray-500 hover:primary-text tw-transition-colors"
               aria-label="Attach image file"
             >
-              <MdAttachFile className='tw-transform tw-rotate-45' size={20} />
+              <AttachIcon className="tw-w-5 tw-h-5" />
             </button>
 
             {/* Error message */}

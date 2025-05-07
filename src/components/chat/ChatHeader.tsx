@@ -1,6 +1,6 @@
 import React from 'react';
 import { useInternetStatus } from '../../hooks/useInternetStatus';
-import { AiOutlineDelete as Delete } from "react-icons/ai";
+import DeleteIcon from './icons/delete.svg';
 
 const MAX_NAME_LENGTH = 25
 interface ChatHeaderProps {
@@ -51,7 +51,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
           className="tw-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded-3xl hover:tw-scale-110 hover:primary-darken tw-transition-all tw-duration-200 tw-transform active:tw-scale-95"
           aria-label="Clear chat history"
         >
-          <Delete size={20} className="tw-text-red-500" />
+          <DeleteIcon className="tw-w-5 tw-h-5" />
         </button>
 
         {/* Fullscreen Toggle Button */}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ReactTyped } from 'react-typed';
-import type { Typed } from 'react-typed';
+import Typed from 'typed.js';
 import { Message, CurrentChat } from './utils';
 import ChatMessage from './ChatMessage';
 import TypingIndicator from './TypingIndicator';
@@ -36,6 +35,43 @@ const ChatContent: React.FC<ChatContentProps> = ({
 }) => {
   const showWelcome = previousMessages.length === 0 && !currentChat.user && !currentChat.ai && !isTyping;
   const typedInstanceRef = useRef<Typed | null>(null);
+  const typedElementRef = useRef<HTMLSpanElement>(null);
+
+  // Initialize welcome message typing effect
+  useEffect(() => {
+    if (showWelcome && typedElementRef.current && welcomeMessages?.length) {
+      // Destroy previous instance if it exists
+      if (typedInstanceRef.current) {
+        typedInstanceRef.current.destroy();
+      }
+
+      // Process welcome messages to respect max length
+      const processedMessages = welcomeMessages.map(msg => {
+        if (msg?.length > MAX_MESSAGE_LENGTH) {
+          return msg.slice(0, MAX_MESSAGE_LENGTH) + '...';
+        }
+        return msg;
+      });
+
+      // Initialize typed.js with the same options as before
+      typedInstanceRef.current = new Typed(typedElementRef.current, {
+        strings: processedMessages,
+        typeSpeed: 20,
+        backSpeed: 30,
+        backDelay: 3000,
+        loop: true,
+        smartBackspace: true,
+        shuffle: false
+      });
+    }
+
+    // Cleanup function
+    return () => {
+      if (typedInstanceRef.current) {
+        typedInstanceRef.current.destroy();
+      }
+    };
+  }, [showWelcome, welcomeMessages]);
 
   // Enhanced auto-scroll effect with smooth scrolling
   useEffect(() => {
@@ -96,22 +132,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       {showWelcome && (
         <>
           <div className={`tw-text-center tw-px-6 welcome-gradient ${isFullscreen ? 'tw-text-3xl tw-pt-20 tw-font-bold' : 'tw-pt-4 tw-h-14'}`}>
-            <ReactTyped
-              key={showWelcome ? 'active' : 'inactive'}
-              strings={welcomeMessages?.map((msg) => {
-                if (msg?.length > MAX_MESSAGE_LENGTH) {
-                  return msg.slice(0, MAX_MESSAGE_LENGTH) + '...';
-                }
-                return msg;
-              })}
-              typeSpeed={20}
-              backSpeed={30}
-              backDelay={3000}
-              loop
-              smartBackspace
-              shuffle={false}
-              typedRef={(typed) => { typedInstanceRef.current = typed; }}
-            />
+            <span ref={typedElementRef}></span>
           </div>
 
           {popularQuestions && popularQuestions.length > 0 && (

@@ -16,13 +16,11 @@
   },
   "dependencies": {
     "@sentry/react": "^9.15.0",
-    "aos": "^2.3.4",
     "core-js": "^3.41.0",
     "next": "^15.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.5.0",
-    "react-typed": "^2.0.12",
     "typed.js": "^2.1.0"
   },
   "devDependencies": {
@@ -33,7 +31,6 @@
     "@eslint/eslintrc": "^2.1.4",
     "@sentry/cli": "^2.43.1",
     "@svgr/webpack": "^8.1.0",
-    "@types/aos": "^3.0.7",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
